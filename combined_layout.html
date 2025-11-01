@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GrantFlow - Combined Layouts</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cb0",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#13191f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
+        /* Simple styles for tab navigation */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-button.active {
+            border-color: #2b6cb0;
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#1A202C] dark:text-gray-200">
+
+    <!-- Tab Navigation -->
+    <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 sticky top-0 z-50">
+        <div class="flex justify-center items-center space-x-8">
+            <button class="tab-button text-lg py-2 border-b-2 border-transparent" onclick="showTab('layout1')">Layout 1 (Table)</button>
+            <button class="tab-button text-lg py-2 border-b-2 border-transparent" onclick="showTab('layout2')">Layout 2 (Cards)</button>
+            <button class="tab-button text-lg py-2 border-b-2 border-transparent" onclick="showTab('layout3')">Layout 3 (Details)</button>
+        </div>
+    </div>
+
+    <!-- Layout 1: Table View -->
+    <div id="layout1" class="tab-content">
+        <div class="flex h-screen">
+            <!-- SideNavBar -->
+            <aside class="w-[280px] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col flex-shrink-0">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-primary/20 text-primary p-2 rounded-lg">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                        </div>
+                        <h1 class="text-xl font-bold text-[#1A202C] dark:text-white">GrantFlow</h1>
+                    </div>
+                </div>
+                <nav class="flex-1 px-2 py-4 space-y-2">
+                    <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                        <span class="material-symbols-outlined text-lg">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-primary bg-primary/20 rounded-md text-sm font-medium" href="#">
+                        <span class="material-symbols-outlined text-lg">search</span>
+                        Discover Grants
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        My Shortlist
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                        <span class="material-symbols-outlined text-lg">description</span>
+                        Applications
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                        <span class="material-symbols-outlined text-lg">bar_chart</span>
+                        Analytics
+                    </a>
+                </nav>
+                <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center gap-3">
+                        <img class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar of Eleanor Vance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD0x9HfxYsXk44YQQxNG-vGT-lajPE1bg8sjXg998Cnx8SOwEi_cmnkbSQEkHrRaBOXl3THT5Jbc44Se14E_Iuw-jugU2L0bKkhqWAMj9J8eINNaIrY7CGQrrgbxVZJOoB0hwXcSefRr-8bWV_NqjH0l9vtKkzmB5Qn6S9QsbkKNsQQu8Wx53KQY0MVnFoV1PQbN0VRCV8W_VwUuuySA_hldY5ZxH_4uWsXmctRWR7At_2PeM2UQStwSz09AvwfKf30hOlkANeJ318" />
+                        <div class="flex flex-col">
+                            <h1 class="text-[#121417] dark:text-gray-200 text-sm font-medium leading-normal">Eleanor Vance</h1>
+                            <p class="text-[#718096] dark:text-gray-400 text-xs font-normal leading-normal">Researcher</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-1">
+                        <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                            <span class="material-symbols-outlined text-lg">settings</span>
+                            Settings
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+                            <span class="material-symbols-outlined text-lg">help</span>
+                            Help
+                        </a>
+                    </div>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1 flex overflow-hidden">
+                <!-- Filter Panel -->
+                <div class="w-[280px] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 overflow-y-auto">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+                        <h2 class="text-lg font-semibold text-[#1A202C] dark:text-white">Filters</h2>
+                    </div>
+                    <div class="p-2 flex flex-col h-[calc(100%-144px)]">
+                        <div class="flex-grow overflow-y-auto">
+                            <!-- Accordions for filters -->
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group" open="">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Region</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-2 pb-2">
+                                    <label class="flex items-center gap-x-3 py-1.5">
+                                        <input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary dark:bg-gray-800" type="checkbox" />
+                                        <p class="text-[#1A202C] dark:text-gray-300 text-sm font-normal">North America</p>
+                                    </label>
+                                    <label class="flex items-center gap-x-3 py-1.5">
+                                        <input checked="" class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary dark:bg-gray-800" type="checkbox" />
+                                        <p class="text-[#1A202C] dark:text-gray-300 text-sm font-normal">Europe</p>
+                                    </label>
+                                    <label class="flex items-center gap-x-3 py-1.5">
+                                        <input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary dark:bg-gray-800" type="checkbox" />
+                                        <p class="text-[#1A202C] dark:text-gray-300 text-sm font-normal">Asia</p>
+                                    </label>
+                                    <label class="flex items-center gap-x-3 py-1.5">
+                                        <input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary dark:bg-gray-800" type="checkbox" />
+                                        <p class="text-[#1A202C] dark:text-gray-300 text-sm font-normal">Global</p>
+                                    </label>
+                                </div>
+                            </details>
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Discipline</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-2 pb-2">
+                                    <p class="text-[#718096] dark:text-gray-400 text-sm">Checkboxes for disciplines here.</p>
+                                </div>
+                            </details>
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Funder Type</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-2 pb-2">
+                                    <p class="text-[#718096] dark:text-gray-400 text-sm">Checkboxes for funder types here.</p>
+                                </div>
+                            </details>
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group" open="">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Amount Range</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-4 pb-8">
+                                    <div class="relative h-1 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+                                        <div class="absolute h-1 rounded-full bg-primary" style="left: 10%; right: 25%;"></div>
+                                        <div class="absolute -top-1.5" style="left: 10%;">
+                                            <div class="relative">
+                                                <div class="size-4 rounded-full bg-primary ring-2 ring-white dark:ring-gray-900 cursor-pointer"></div>
+                                                <p class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-[#718096]">$50k</p>
+                                            </div>
+                                        </div>
+                                        <div class="absolute -top-1.5" style="right: 25%;">
+                                            <div class="relative">
+                                                <div class="size-4 rounded-full bg-primary ring-2 ring-white dark:ring-gray-900 cursor-pointer"></div>
+                                                <p class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-[#718096]">$500k</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Deadline</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="p-2 scale-[0.8] origin-top-left -ml-2 -mt-2">
+                                    <div class="flex min-w-72 max-w-[336px] flex-1 flex-col gap-0.5">
+                                        <div class="flex items-center p-1 justify-between">
+                                            <button class="flex size-8 items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"><span class="material-symbols-outlined text-base">chevron_left</span></button>
+                                            <p class="text-[#1A202C] dark:text-gray-200 text-sm font-semibold">October 2024</p>
+                                            <button class="flex size-8 items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"><span class="material-symbols-outlined text-base">chevron_right</span></button>
+                                        </div>
+                                        <div class="grid grid-cols-7 text-xs text-center">
+                                            <span class="h-8 flex items-center justify-center text-[#718096]">S</span><span class="h-8 flex items-center justify-center text-[#718096]">M</span><span class="h-8 flex items-center justify-center text-[#718096]">T</span><span class="h-8 flex items-center justify-center text-[#718096]">W</span><span class="h-8 flex items-center justify-center text-[#718096]">T</span><span class="h-8 flex items-center justify-center text-[#718096]">F</span><span class="h-8 flex items-center justify-center text-[#718096]">S</span>
+                                            <button class="h-8 text-gray-400 dark:text-gray-500 col-start-3">1</button>
+                                            <button class="h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">2</button>
+                                            <button class="h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">3</button>
+                                            <button class="h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">4</button>
+                                            <button class="h-8 bg-primary/20 text-primary rounded-l-full">5</button>
+                                            <button class="h-8 bg-primary/20 text-primary">6</button>
+                                            <button class="h-8 bg-primary/20 text-primary">7</button>
+                                            <button class="h-8 bg-primary/20 text-primary">8</button>
+                                            <button class="h-8 bg-primary/20 text-primary">9</button>
+                                            <button class="h-8 bg-primary/20 text-primary">10</button>
+                                            <button class="h-8 bg-primary/20 text-primary">11</button>
+                                            <button class="h-8 bg-primary/20 text-primary">12</button>
+                                            <button class="h-8 bg-primary/20 text-primary">13</button>
+                                            <button class="h-8 bg-primary/20 text-primary">14</button>
+                                            <button class="h-8 bg-primary/20 text-primary">15</button>
+                                            <button class="h-8 bg-primary/20 text-primary">16</button>
+                                            <button class="h-8 bg-primary/20 text-primary">17</button>
+                                            <button class="h-8 bg-primary/20 text-primary">18</button>
+                                            <button class="h-8 bg-primary/20 text-primary">19</button>
+                                            <button class="h-8 bg-primary/20 text-primary">20</button>
+                                            <button class="h-8 bg-primary/20 text-primary">21</button>
+                                            <button class="h-8 bg-primary/20 text-primary">22</button>
+                                            <button class="h-8 bg-primary/20 text-primary">23</button>
+                                            <button class="h-8 bg-primary/20 text-primary">24</button>
+                                            <button class="h-8 bg-primary/20 text-primary">25</button>
+                                            <button class="h-8 bg-primary/20 text-primary">26</button>
+                                            <button class="h-8 bg-primary/20 text-primary">27</button>
+                                            <button class="h-8 bg-primary/20 text-primary">28</button>
+                                            <button class="h-8 bg-primary/20 text-primary">29</button>
+                                            <button class="h-8 bg-primary/20 text-primary rounded-r-full">30</button>
+                                            <button class="h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">31</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                            <details class="flex flex-col border-b border-b-[#E2E8F0] dark:border-b-gray-700 py-2 group">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Eligibility</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-2 pb-2">
+                                    <p class="text-[#718096] dark:text-gray-400 text-sm">Checkboxes for eligibility here.</p>
+                                </div>
+                            </details>
+                            <details class="flex flex-col py-2 group">
+                                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                                    <p class="text-[#1A202C] dark:text-gray-200 text-sm font-medium leading-normal">Tags</p>
+                                    <span class="material-symbols-outlined text-[#718096] group-open:rotate-180 transition-transform">expand_more</span>
+                                </summary>
+                                <div class="px-2 pt-2 pb-2">
+                                    <p class="text-[#718096] dark:text-gray-400 text-sm">Tag input component here.</p>
+                                </div>
+                            </details>
+                        </div>
+                        <div class="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 px-2">
+                            <div class="flex flex-col space-y-2">
+                                <button class="w-full bg-primary text-white text-sm font-semibold py-2 px-4 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark">Apply Filters</button>
+                                <button class="w-full bg-transparent text-gray-700 dark:text-gray-300 text-sm font-semibold py-2 px-4 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark">Clear All</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Results Area -->
+                <div class="flex-1 flex flex-col overflow-y-auto">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="relative flex-grow">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                                <input class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-transparent dark:text-gray-200 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Search by keyword, funder, or title..." type="text" />
+                            </div>
+                            <button class="flex-shrink-0 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-semibold py-2 px-4 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark">Save Search</button>
+                            <button class="flex-shrink-0 bg-primary text-white text-sm font-semibold py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark">Create Alert</button>
+                            <button class="flex-shrink-0 flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm font-medium py-2 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <span class="material-symbols-outlined text-base">star</span>
+                                Shortlist (3)
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 overflow-x-auto">
+                        <div class="align-middle inline-block min-w-full">
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-800">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Opportunity</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Funder</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Amount</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Deadline</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Match %</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
+                                        <!-- Table Rows -->
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">AI for Social Good Initiative</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">National Science Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$500k - $1.5M</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Oct 31, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>92%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-green-500 h-1.5 rounded-full" style="width: 92%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Renewable Energy Research Grant</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Dept. of Energy</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$250,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Nov 15, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>88%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-green-500 h-1.5 rounded-full" style="width: 88%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Viewed</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Arts &amp; Humanities Fellowship</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Edison Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$75,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Dec 01, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>85%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 85%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300">Shortlisted</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-yellow-500 hover:text-yellow-600 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <!-- Add 9 more dummy rows -->
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Community Health Project</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Robert Wood Johnson Fdn.</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$120,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Jan 20, 2025</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>82%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 82%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Early-Career STEM Award</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Google.org</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$80,000 - $150,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Nov 30, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>79%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 79%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Climate Innovation Prize</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Gates Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$2,000,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Feb 01, 2025</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>75%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 75%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Viewed</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Digital Literacy for Seniors</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">AARP Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$25,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Oct 25, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>71%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-orange-500 h-1.5 rounded-full" style="width: 71%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Marine Biology Scholarship</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Oceanographic Institute</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$15,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Mar 15, 2025</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>68%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-orange-500 h-1.5 rounded-full" style="width: 68%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Astrophysics Data Project</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">NASA</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$450,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Dec 12, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>65%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-orange-500 h-1.5 rounded-full" style="width: 65%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Viewed</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Local Journalism Fund</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Knight Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$50,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Rolling</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>61%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-red-500 h-1.5 rounded-full" style="width: 61%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Urban Greening Grant</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">The Nature Conservancy</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$95,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Nov 05, 2024</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>58%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-red-500 h-1.5 rounded-full" style="width: 58%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Viewed</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Education Equity Fund</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Ford Foundation</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">$300,000</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">Jan 10, 2025</td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2">
+                                                    <span>55%</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                        <div class="bg-red-500 h-1.5 rounded-full" style="width: 55%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">New</span></td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                <button class="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">Details</button>
+                                                <button class="text-gray-500 hover:text-primary dark:hover:text-primary-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">star_outline</span></button>
+                                                <button class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"><span class="material-symbols-outlined text-lg">visibility_off</span></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Layout 2: Card View -->
+    <div id="layout2" class="tab-content">
+        <div class="flex h-screen">
+            <!-- SideNavBar -->
+            <aside class="flex flex-col w-[280px] bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-4 shrink-0">
+                <div class="flex flex-col justify-between h-full">
+                    <div class="flex flex-col gap-6">
+                        <div class="flex items-center gap-3 px-2">
+                            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="GrantFlow logo abstract blue circular pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3-B1lAKjFNDH-4YcwB_QITEjFNnmGmNc_x_ZRXEMYxu1gZmFlFFg50PFarmjz-oACVaXSd8LYnmynuNCU7a5wF12K1JufL0i1WfisGyfgJT8kd1PNLpQSvRVzvDhKzwzNi-1-OgI3NqY5yee4GR4sBEiaxkG0vAqx1pXkpHAHibCnTCQM7PGyfMGtMvToDtfd7o9SF0nU_fN2XLKXh2cGa5tCTXmXo6aHBnaukUDEqd6WYMcTMiSc6IWLqn44bWv6LmZPtuQ1SbCX");'></div>
+                            <div class="flex flex-col">
+                                <h1 class="text-[#121417] dark:text-white text-base font-bold leading-normal">GrantFlow</h1>
+                                <p class="text-[#677583] dark:text-gray-400 text-sm font-normal leading-normal">AI Grant Discovery</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300" href="#">
+                                <span class="material-symbols-outlined text-lg">search</span>
+                                <p class="text-sm font-medium leading-normal">Discover</p>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300" href="#">
+                                <span class="material-symbols-outlined text-lg">folder_managed</span>
+                                <p class="text-sm font-medium leading-normal">My Projects</p>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300" href="#">
+                                <span class="material-symbols-outlined text-lg">analytics</span>
+                                <p class="text-sm font-medium leading-normal">Analytics</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                            <span class="truncate">New Project</span>
+                        </button>
+                        <div class="flex flex-col gap-1">
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300" href="#">
+                                <span class="material-symbols-outlined text-lg">settings</span>
+                                <p class="text-sm font-medium leading-normal">Settings</p>
+                            </a>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300" href="#">
+                                <span class="material-symbols-outlined text-lg">help</span>
+                                <p class="text-sm font-medium leading-normal">Help Center</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1 flex overflow-hidden">
+                <div class="flex-1 overflow-y-auto p-8">
+                    <!-- PageHeading -->
+                    <div class="flex flex-wrap justify-between gap-3 mb-6">
+                        <div class="flex min-w-72 flex-col gap-2">
+                            <p class="text-[#121417] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Discover Grants</p>
+                            <p class="text-[#677583] dark:text-gray-400 text-base font-normal leading-normal">Showing 12 results based on your criteria</p>
+                        </div>
+                    </div>
+                    <!-- Search and Actions -->
+                    <div class="flex flex-wrap items-center gap-4 mb-6">
+                        <!-- SearchBar -->
+                        <div class="flex-grow min-w-[300px]">
+                            <label class="flex flex-col min-w-40 h-12 w-full">
+                                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                                    <div class="text-[#677583] flex bg-[#f1f2f4] dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg border-none">
+                                        <span class="material-symbols-outlined">search</span>
+                                    </div>
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-[#121417] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-[#f1f2f4] dark:bg-gray-800 h-full placeholder:text-[#677583] dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" placeholder="Search by keyword, funder..." value="" />
+                                </div>
+                            </label>
+                        </div>
+                        <!-- ButtonGroup -->
+                        <div class="flex items-center gap-3 flex-wrap justify-start">
+                            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f1f2f4] dark:bg-gray-800 text-[#121417] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Save Search</span>
+                            </button>
+                            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f1f2f4] dark:bg-gray-800 text-[#121417] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Create Alert</span>
+                            </button>
+                        </div>
+                        <div class="flex-grow sm:flex-grow-0"></div>
+                        <!-- SingleButton -->
+                        <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-[#121417] dark:text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-800">
+                            <span class="material-symbols-outlined text-lg">bookmark</span>
+                            <span class="truncate">Shortlist (3)</span>
+                        </button>
+                    </div>
+                    <!-- Grant Cards Grid -->
+                    <div class="grid grid-cols-1 @xl:grid-cols-2 @4xl:grid-cols-3 gap-6">
+                        <!-- Grant Card Example 1 -->
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">Community Arts Project Grant</h3>
+                                <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                    <span class="font-bold text-lg">92%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">National Endowment for the Arts</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$50,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Dec 15, 2024</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">North America</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">Non-profit</span>
+                                <span class="text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 px-2 py-1 rounded-full">New</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Grant Card Example 2 -->
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">STEM Education Initiative</h3>
+                                <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                    <span class="font-bold text-lg">88%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Innovate Foundation</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$250,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Jan 31, 2025</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">Europe</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">University</span>
+                                <span class="text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded-full">Viewed</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- More grant cards... (repeated for demonstration) -->
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">Local Business Growth Fund</h3>
+                                <div class="flex items-center gap-2 text-orange-500 dark:text-orange-400">
+                                    <span class="font-bold text-lg">75%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">City Commerce Board</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$25,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Nov 30, 2024</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">North America</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">For-profit</span>
+                                <span class="text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 px-2 py-1 rounded-full">New</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">Environmental Research Grant</h3>
+                                <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                    <span class="font-bold text-lg">95%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Global Wildlife Fund</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$120,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Feb 28, 2025</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">Asia</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">Research</span>
+                                <span class="text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 px-2 py-1 rounded-full">New</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">Healthcare Innovation Award</h3>
+                                <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                    <span class="font-bold text-lg">85%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">United Health Foundation</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$500,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Mar 15, 2025</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">North America</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">Non-profit</span>
+                                <span class="text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded-full">Viewed</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex flex-col gap-4 hover:shadow-lg hover:border-primary/50 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white pr-4">Digital Literacy for Seniors</h3>
+                                <div class="flex items-center gap-2 text-orange-500 dark:text-orange-400">
+                                    <span class="font-bold text-lg">68%</span>
+                                    <span class="text-xs">Match</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Community Tech Fund</p>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Amount</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">$15,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-500">Deadline</p>
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Dec 01, 2024</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded-full">Australia</span>
+                                <span class="text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-1 rounded-full">Charity</span>
+                                <span class="text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 px-2 py-1 rounded-full">New</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between gap-2">
+                                <button class="flex-1 text-sm font-bold bg-primary text-white h-9 px-4 rounded-lg flex items-center justify-center">View Details</button>
+                                <button class="text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 h-9 px-4 rounded-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-base">bookmark_add</span>
+                                    <span>Save</span>
+                                </button>
+                                <button class="h-9 w-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 rounded-lg">
+                                    <span class="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Layout 3: Details View -->
+    <div id="layout3" class="tab-content">
+        <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+            <!-- TopNavBar -->
+            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#E2E8F0] dark:border-gray-700 px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-20">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-4 text-primary">
+                        <div class="size-6">
+                            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-[#121417] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">GrantFlow</h2>
+                    </div>
+                    <nav class="flex items-center gap-9">
+                        <a class="text-[#121417] dark:text-gray-300 text-sm font-medium leading-normal" href="#">Dashboard</a>
+                        <a class="text-primary dark:text-primary text-sm font-bold leading-normal border-b-2 border-primary pb-1" href="#">Discover Grants</a>
+                        <a class="text-[#121417] dark:text-gray-300 text-sm font-medium leading-normal" href="#">Applications</a>
+                        <a class="text-[#121417] dark:text-gray-300 text-sm font-medium leading-normal" href="#">Reporting</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <label class="flex flex-col min-w-40 !h-10 max-w-64">
+                        <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                            <div class="text-[#677583] flex border-none bg-[#f1f2f4] dark:bg-background-dark dark:border dark:border-gray-600 items-center justify-center pl-4 rounded-l-lg border-r-0">
+                                <span class="material-symbols-outlined text-base">search</span>
+                            </div>
+                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#121417] dark:text-gray-200 focus:outline-0 focus:ring-0 border-none bg-[#f1f2f4] dark:bg-background-dark dark:border dark:border-gray-600 focus:border-none h-full placeholder:text-[#677583] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search" value="" />
+                        </div>
+                    </label>
+                    <div class="flex gap-2">
+                        <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f1f2f4] dark:bg-background-dark dark:border dark:border-gray-600 text-[#121417] dark:text-gray-300 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                            <span class="material-symbols-outlined text-xl">notifications</span>
+                        </button>
+                        <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f1f2f4] dark:bg-background-dark dark:border dark:border-gray-600 text-[#121417] dark:text-gray-300 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                            <span class="material-symbols-outlined text-xl">help</span>
+                        </button>
+                    </div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with a gradient background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuoRYfXpOu7RzWtffyErKVZQbgNwQq3C_RQg48JCqrCLseBCA0E67f98JO1kqFXy6BNcxl_w86WRMBdccJDuoJfPd6hx-L9rU5ldK8FHbFHtQkeXFncBkWJfo53tfVDTkYl2ZqpLnXtyTqaR7LED-2FkpvEZhLuuRM29TzS7aIO0qsjXhY8NdNk2O-P4M8tZtHT28Z4Dxpr4JVbIqRYfelXE6pzVaPVZMpCJcJEn_pdp1bCcx0p1bxjmEIKB-P48TQ9o1XwJ-Aldpa");'></div>
+                </div>
+            </header>
+            <!-- Main Content -->
+            <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Breadcrumbs -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <a class="text-[#677583] dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary" href="#">Discover Grants</a>
+                    <span class="text-[#677583] dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+                    <span class="text-[#121417] dark:text-gray-200 text-sm font-medium leading-normal">NSF CAREER Grant</span>
+                </div>
+                <div class="grid grid-cols-12 gap-8">
+                    <!-- Left Column -->
+                    <div class="col-span-12 lg:col-span-8">
+                        <!-- Page Heading -->
+                        <div class="flex flex-wrap justify-between gap-4 items-start mb-6">
+                            <div class="flex min-w-72 flex-col gap-2">
+                                <p class="text-[#1A202C] dark:text-white text-3xl font-bold leading-tight tracking-tight">NSF Faculty Early Career Development Program (CAREER)</p>
+                                <p class="text-[#677583] dark:text-gray-400 text-base font-normal leading-normal">National Science Foundation</p>
+                            </div>
+                            <div class="flex items-center gap-3 flex-shrink-0">
+                                <button class="flex items-center gap-2 min-w-[84px] max-w-[480px] cursor-pointer justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-700 text-[#1A202C] dark:text-gray-200 border border-[#E2E8F0] dark:border-gray-600 text-sm font-bold leading-normal tracking-[0.015em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                                    <span class="material-symbols-outlined text-xl">bookmark_border</span>
+                                    <span class="truncate">Save</span>
+                                </button>
+                                <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                                    <span class="truncate">Apply Now</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Tab Navigation -->
+                        <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+                            <nav aria-label="Tabs" class="-mb-px flex space-x-8">
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary" href="#">Summary</a>
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500" href="#">Eligibility</a>
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500" href="#">Funding &amp; Amount</a>
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500" href="#">How to Apply</a>
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500" href="#">Attachments</a>
+                                <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-500" href="#">Why it matches</a>
+                            </nav>
+                        </div>
+                        <!-- Tab Content -->
+                        <div class="space-y-8 prose dark:prose-invert max-w-none prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-headings:text-[#1A202C] dark:prose-headings:text-white prose-strong:text-[#1A202C] dark:prose-strong:text-white">
+                            <div id="summary">
+                                <h3 class="text-xl font-bold mb-3">Summary</h3>
+                                <p>The Faculty Early Career Development (CAREER) Program is a Foundation-wide activity that offers the National Science Foundation's most prestigious awards in support of early-career faculty who have the potential to serve as academic role models in research and education and to lead advances in the mission of their department or organization. Activities pursued by early-career faculty should build a firm foundation for a lifetime of leadership in integrating education and research.</p>
+                                <p>This program is a Foundation-wide activity that offers the National Science Foundation's most prestigious awards in support of early-career faculty who have the potential to serve as academic role models in research and education and to lead advances in the mission of their department or organization. Activities pursued by early-career faculty should build a firm foundation for a lifetime of leadership in integrating education and research. NSF encourages submission of CAREER proposals from early-career faculty at all CAREER-eligible organizations and especially encourages women, members of underrepresented minority groups, and persons with disabilities to apply.</p>
+                            </div>
+                            <div id="why-it-matches">
+                                <h3 class="text-xl font-bold mb-4">Why this grant matches your profile</h3>
+                                <ul class="space-y-3 list-disc pl-5">
+                                    <li>Matches your keyword <strong class="bg-primary/20 text-primary dark:bg-primary/30 px-1 py-0.5 rounded">"early-career faculty"</strong>.</li>
+                                    <li>Your profile indicates you are in the <strong class="bg-primary/20 text-primary dark:bg-primary/30 px-1 py-0.5 rounded">"STEM Education"</strong> field.</li>
+                                    <li>The funding range aligns with your specified <strong class="bg-primary/20 text-primary dark:bg-primary/30 px-1 py-0.5 rounded">"project budget"</strong> requirements.</li>
+                                    <li>Matches your location tag for <strong class="bg-primary/20 text-primary dark:bg-primary/30 px-1 py-0.5 rounded">"United States"</strong> based organizations.</li>
+                                </ul>
+                            </div>
+                            <div id="related-opportunities">
+                                <h3 class="text-xl font-bold mb-4">Related Opportunities</h3>
+                                <div class="not-prose space-y-4">
+                                    <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800/50">
+                                        <h4 class="font-bold text-[#1A202C] dark:text-white">DOE Early Career Research Program</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Department of Energy</p>
+                                        <p class="text-sm mt-2 text-gray-600 dark:text-gray-300">Supports the development of individual research programs of outstanding scientists early in their careers...</p>
+                                    </div>
+                                    <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800/50">
+                                        <h4 class="font-bold text-[#1A202C] dark:text-white">NIH Director's New Innovator Award</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">National Institutes of Health</p>
+                                        <p class="text-sm mt-2 text-gray-600 dark:text-gray-300">Supports exceptionally creative early career investigators who propose innovative, high-impact projects...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <aside class="col-span-12 lg:col-span-4 space-y-6">
+                        <div class="p-6 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-[#1A202C] dark:text-white">Key Information</h3>
+                                <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#D69E2E]/20 px-3">
+                                    <p class="text-sm font-medium leading-normal text-[#D69E2E]">95% Match</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Status</span>
+                                    <span class="font-medium text-green-600 dark:text-green-400">Open</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Apply By</span>
+                                    <span class="font-bold text-[#1A202C] dark:text-white">July 24, 2024</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Q&amp;A Deadline</span>
+                                    <span class="font-medium text-[#1A202C] dark:text-white">June 15, 2024</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Award Amount</span>
+                                    <span class="font-medium text-[#1A202C] dark:text-white">$500,000 - $1,000,000</span>
+                                </div>
+                            </div>
+                            <button class="w-full mt-6 flex items-center justify-center gap-2 min-w-[84px] max-w-[480px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                                <span class="material-symbols-outlined text-xl">edit_document</span>
+                                <span class="truncate">Create Application</span>
+                            </button>
+                        </div>
+                        <div class="p-6 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-bold text-[#1A202C] dark:text-white mb-4">Tags</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded bg-[#f1f2f4] dark:bg-gray-700 px-3">
+                                    <p class="text-[#121417] dark:text-gray-300 text-xs font-medium leading-normal">STEM</p>
+                                </div>
+                                <div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded bg-[#f1f2f4] dark:bg-gray-700 px-3">
+                                    <p class="text-[#121417] dark:text-gray-300 text-xs font-medium leading-normal">Early Career</p>
+                                </div>
+                                <div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded bg-[#f1f2f4] dark:bg-gray-700 px-3">
+                                    <p class="text-[#121417] dark:text-gray-300 text-xs font-medium leading-normal">Education</p>
+                                </div>
+                                <div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded bg-[#f1f2f4] dark:bg-gray-700 px-3">
+                                    <p class="text-[#121417] dark:text-gray-300 text-xs font-medium leading-normal">Research</p>
+                                </div>
+                                <div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded bg-[#f1f2f4] dark:bg-gray-700 px-3">
+                                    <p class="text-[#121417] dark:text-gray-300 text-xs font-medium leading-normal">USA</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-bold text-[#1A202C] dark:text-white mb-4">Watchers</h3>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex -space-x-2">
+                                    <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" data-alt="Team member avatar 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-_KQJFE0oczmd8MqVP2123xxcG9qJ_oVyTnyut6Sa-QqBOeDdUYVInxAk5DmQfn-mECKoUmISVIcF68wfPN-NYCeqS88VoblHleXayEglF_5Jt1VwTp5PHdb04acUfwzGMl2P8g1FHXMo4cJGdZ48gNrWA-nsHUwZcGNvDIxBnC1VGJvdfe7IPxpVZzA1HGQaYEzmvgBsjsWdShrWf70FBYyjXtoRxSPu_Ar-UfJlhwUaxIK_jN9NhSns7Gin6g22sDD_G1Hi6IMO" />
+                                    <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" data-alt="Team member avatar 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrcD-VsOJ0V5vMGHGjVW5-snmYCxbogAbb3mNE-OUxtUJBX0jXELn_AaG3bS6hXhr3PsvdFuPn5eIAMlhIsuThI62CU6MV_aUbGYXt6YA_7uygCD-Kfc9LRVtRlNqEafbk2Y_dcgOvTFpGpMIcJkKZ6vw5E1xLZ25qDhRS3242Znbm_6PvWCQN2nlH12zxQw66kKVa3ELcMrb97drJa5Do5F3AlFL4z9u99VzSas9ay5ekA_WuhAPeE_cIanUK3mhuo0braqCQ9r1q" />
+                                    <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" data-alt="Team member avatar 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuERq4oyYdjPZYLCr0s3DF_G9gxx3l9B3Z0OzKR1KL9ayj6OdatCxl9fvtzKMfBK-Uvqod4KrNsBRHQkSnBlizYjk6ZuCOl-e0mvIK-YgLSbOJC0a4fZfRUW_lHnl3RXJSXVX8Jfy1zvOz_QSILrHUiJpZlVKL4CVxMgB7XHpWZbcKQXOdNooWPfTfdS8AeyG1v3PEagc1oGTrtFe_v3N9lDIE_4_u5b9H15oZ7Iy0nFBLZjLZeOIZAig2M-n89Bfdh_NMOiF1FN2M" />
+                                </div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">3 team members watching</span>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected tab content
+            const selectedContent = document.getElementById(tabId);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // Activate the clicked button
+            const selectedButton = document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`);
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+            }
+        }
+
+        // Show the first tab by default
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('layout1');
+        });
+    </script>
+
+</body>
+
+</html>
