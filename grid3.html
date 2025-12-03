@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment 6</title>
+    <link rel="stylesheet" href="grid3.css" />
+  </head>
+  <body>
+      <img src="https://cdn.imgchest.com/files/myd5cr2664b.png" alt="reference" style="position:absolute;top:0;left:0;width:100%;max-width:none;opacity: .3;">
+<button onclick='switchStyle()' style='position: absolute; top:0; right:0;'>Style</button>
+    <div class="container">
+      <div class="box1">1</div>
+   <div class="box2">
+      <div class="knews-logo">K•NEWS</div>
+    </div>
+      <div class="box3">3</div>
+      <div class="box4">4</div>
+      <div class="box5">5</div>
+      <div class="box6">
+      <ul>
+        <li class="glavnaya">ГЛАВНАЯ</li>
+        <li class="vlast">ВЛАСТЬ</li>
+        <li class="obshestvo">ОБЩЕСТВО</li>
+        <li class="proishestviya">ПРОИСШЕСТВИЯ</li>
+        <li class="biznes">БИЗНЕС</li>
+        <li class="vmire">В МИРЕ</li>
+        <li class="razvlecheniya">РАЗВЛЕЧЕНИЯ</li>
+        <li class="kyrgyzcha"> 🇰🇬 КЫРГЫЗЧА</li>
+        <li class="search">🔍</li>
+      </ul>
+    </div>
+      <div class="box7">7</div>
+      </div>
+      <script>
+    function switchStyle() {
+      let style = document.querySelector('.style');
+      if (style.getAttribute('href') == 'grid3.css') {
+        style.setAttribute('href', 'grid2.css');
+      } else {
+        style.setAttribute('href', 'grid3.css');
+      }
+      }
+    </script>
+  </body>
+</html>
