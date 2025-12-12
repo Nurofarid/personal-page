@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment 6</title>
+    <link class="style" rel="stylesheet" href="grid4.css" />
+  </head>
+
+  <body>
+   
+    <img
+      src="https://cdn.imgchest.com/files/myd5cr2664b.png"
+      alt="reference"
+      style="position:absolute;top:0;left:0;width:100%;max-width:none;opacity:.3;"
+    />
+
+    <button onclick="switchStyle()" style="position:absolute; top:0; right:0;">
+      Style
+    </button>
+
+    <div class="container">
+    
+      <div class="box1">
+        <div class="brand">
+          <div class="Safari_kooh">Safari_kooh</div>
+        </div>
+      </div>
+
+     
+      <div class="box2">
+        <div class="knews-logo">K•NEWS</div>
+      </div>
+
+     
+      <div class="box3">
+        <div class="promo promo1">
+          <div class="promo-top">TAJIKISTAN</div>
+          <div class="promo-title">Pamir Highways</div>
+        </div>
+        <div class="promo promo2">
+          <div class="promo-top">BADAKHSHAN</div>
+          <div class="promo-title">Mountain Lakes</div>
+        </div>
+        <div class="promo promo3">
+          <div class="promo-top">HIKING</div>
+          <div class="promo-title">Local Guides</div>
+        </div>
+      </div>
+
+      
+      <div class="box4 hero">
+        <h1>Badakhshan Mountain Tours</h1>
+      </div>
+
+      
+      <div class="box5">
+        <div class="card">
+          <img src="https://cdn.imgchest.com/files/d5313bf0d83f.jpg" alt="tour 1" />
+          <p>Pamir Route • 3–5 days</p>
+        </div>
+        <div class="card">
+          <img src="https://cdn.imgchest.com/files/44124da9a301.jpg" alt="tour 2" />
+          <p>Lake Hike • Easy/Medium</p>
+        </div>
+        <div class="card">
+          <img src="https://cdn.imgchest.com/files/54679f06e221.jpg" alt="tour 3" />
+          <p>Culture Tour • Villages</p>
+        </div>
+      </div>
+
+ 
+      <div class="box6">
+        <ul>
+          <li class="glavnaya">ГЛАВНАЯ</li>
+          <li class="vlast">ВЛАСТЬ</li>
+          <li class="obshestvo">ОБЩЕСТВО</li>
+          <li class="proishestviya">ПРОИСШЕСТВИЯ</li>
+          <li class="biznes">БИЗНЕС</li>
+          <li class="vmire">В МИРЕ</li>
+          <li class="razvlecheniya">РАЗВЛЕЧЕНИЯ</li>
+          <li class="kyrgyzcha">🇰🇬 КЫРГЫЗЧА</li>
+          <li class="search">🔍</li>
+        </ul>
+      </div>
+
+    
+      <div class="box7">
+        <div class="side">
+          <div class="side-title">SPECIAL DEAL</div>
+          <div class="side-big">-30%</div>
+          <div class="side-sub">Book early • Limited spots</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchStyle() {
+        const style = document.querySelector("link.style");
+        if (!style) return; // avoid errors if link missing
+        const current = style.getAttribute("href");
+        style.setAttribute("href", current === "grid4.css" ? "grid2.css" : "grid4.css");
+      }
+    </script>
+  </body>
+</html>
