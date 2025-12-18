@@ -1,0 +1,70 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "chrome",
+            "request": "launch",
+             "name": "Open index.html (Chrome)",
+            "file": "${workspaceFolder}/index.html",
+            // This line points to your Chrome application; keep it as it fixed the previous error.
+            "runtimeExecutable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" 
+        },
+        {
+            "type": "pwa-msedge",
+            "name": "Launch Microsoft Edge",
+            "request": "launch",
+            // The runtimeArgs are only needed if you are manually starting a debugging port.
+            // For a simple launch of a local file, these are often better left out or simplified.
+            "url": "file:///${workspaceFolder}/index.html", 
+            "presentation": {
+                "hidden": true
+            }
+        },
+        {
+            "type": "pwa-msedge",
+            "name": "Launch Microsoft Edge in headless mode",
+            "request": "launch",
+            "runtimeArgs": [
+                "--headless",
+                "--remote-debugging-port=9222"
+            ],
+            "url": "file:///${workspaceFolder}/index.html",
+            "presentation": {
+                "hidden": true
+            }
+        },
+        {
+            "type": "vscode-edge-devtools.debug",
+            "name": "Open Edge DevTools",
+            "request": "attach",
+            // This configuration is typically used with the compound launch below, and it needs a target.
+            // We'll point it to the same local file.
+            "url": "file:///${workspaceFolder}/index.html", 
+            "presentation": {
+                "hidden": true
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch Edge Headless and attach DevTools",
+            "configurations": [
+                "Launch Microsoft Edge in headless mode",
+                "Open Edge DevTools"
+            ]
+        },
+        {
+            "name": "Launch Edge and attach DevTools",
+            // This compound configuration is the one you should use, as it launches the browser
+            // AND then tries to attach the DevTools, preventing the "No available targets" error.
+            "configurations": [
+                "Launch Microsoft Edge",
+                "Open Edge DevTools"
+            ]
+        }
+    ]
+}
