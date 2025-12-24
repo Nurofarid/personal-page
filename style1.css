@@ -37,11 +37,10 @@ body{
   margin:0 auto;
 }
 
-/* Visibility */
+
 .only-kg{display:none !important}
 .only-custom{display:revert}
 
-/* A11y helper */
 .visually-hidden{
   position:absolute!important;
   clip:rect(1px,1px,1px,1px);
