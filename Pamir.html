@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Safari Kooh — Tours in Tajikistan (GBAO / Pamir)</title>
+  <link rel="stylesheet" href="Pamirstyle.css"/>
+</head>
+
+<body>
+  <!-- ========= HEADER ========= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="Pamir.html">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-name">Safari Kooh</div>
+          <div class="brand-tagline" data-i18n="brand_tagline">Get the tour to Tajikistan</div>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a class="nav-link active" href="Pamir.html" data-i18n="nav_home">Home</a>
+        <a class="nav-link" href="#tours" data-i18n="nav_tours">Tours</a>
+        <a class="nav-link" href="tajikistan.html" data-i18n="nav_tajikistan">Tajikistan</a>
+        <a class="nav-link" href="#preparation" data-i18n="nav_preparation">Preparation</a>
+        <a class="nav-link" href="about.html" data-i18n="nav_about">About Us</a>
+        <a class="nav-link" href="#contact" data-i18n="nav_contact">Contact Us</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="lang-switch" id="langToggle" type="button" aria-label="Switch language">
+          EN / RU
+        </button>
+        <a class="btn btn-primary" href="#contact" data-i18n="btn_book">Book / Request</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========= HERO ========= -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <h1 class="hero-title">
+          <span data-i18n="hero_title">Tours in Tajikistan</span>
+          <span class="accent" data-i18n="hero_accent">(GBAO / Pamir)</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero_sub">
+          Hot springs • Mountains • History • Local guides
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#tours" data-i18n="btn_explore">Explore tours</a>
+          <a class="btn btn-secondary" href="#contact" data-i18n="btn_book">Book / Request</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= PACKING + RISKS ========= -->
+    <section class="section" id="preparation">
+      <div class="container">
+        <div class="grid-2">
+          <!-- Packing -->
+          <article class="image-card" style="--bg:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=70');">
+            <div class="image-card-top">
+              <h2 class="image-card-title" data-i18n="packing">Packing</h2>
+              <div class="image-card-hint" data-i18n="hover_hint">Hover / tap for checklist</div>
+            </div>
+
+            <div class="overlay">
+              <h3 data-i18n="packing_title">Packing — what is necessary to take</h3>
+              <ul data-i18n-html="packing_list"></ul>
+              <a class="overlay-link" href="#contact" data-i18n="ask_packing">Ask us if you’re unsure →</a>
+            </div>
+
+            <!-- focusable layer -->
+            <a class="card-focus" href="#packing" aria-label="Open packing checklist"></a>
+          </article>
+
+          <!-- Risks -->
+          <article class="image-card" style="--bg:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=70');">
+            <div class="image-card-top">
+              <h2 class="image-card-title" data-i18n="risks">Risks</h2>
+              <div class="image-card-hint" data-i18n="hover_hint">Hover / tap for checklist</div>
+            </div>
+
+            <div class="overlay">
+              <h3 data-i18n="risks_title">Risks — what can happen</h3>
+              <ul data-i18n-html="risks_list"></ul>
+              <a class="overlay-link" href="#contact" data-i18n="ask_risks">Ask about safety →</a>
+            </div>
+
+            <a class="card-focus" href="#risks" aria-label="Open risks details"></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= TOURS ========= -->
+    <section class="section" id="tours">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title" data-i18n="popular_tours">Popular Tours</h2>
+            <p class="section-subtitle" data-i18n="tours_sub">
+              Hot springs • Historical places • Mountains • Local culture
+            </p>
+          </div>
+
+          <!-- UI only. Real filtering needs JS (optional). -->
+          <div class="pill-group" role="group" aria-label="Tour filters">
+            <button class="pill active" type="button" data-i18n="all_tours">All Tours</button>
+            <button class="pill" type="button" data-i18n="tourists">Tourists</button>
+            <button class="pill" type="button" data-i18n="locals">Locals</button>
+          </div>
+        </div>
+
+        <!-- Horizontal scroll (panorama) -->
+        <div class="carousel" aria-label="Tours carousel">
+          <article class="tour-card">
+            <div class="tour-image" style="--bg:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=70');">
+              <span class="tour-badge">7 Days</span>
+            </div>
+            <div class="tour-body">
+              <div class="tour-title-row">
+                <h3 class="tour-title">Pamir Highway Adventure</h3>
+                <span class="tour-tag tourists" data-i18n="for_tourists">FOR TOURISTS</span>
+              </div>
+              <p class="tour-desc" data-i18n="tour1_desc">
+                Experience the legendary M41 road, ancient fortresses, and Wakhan corridor culture.
+              </p>
+              <p class="tour-meta">🗓 <span data-i18n="next_departure">Next departure:</span> June 18</p>
+              <div class="tour-bottom">
+                <div class="tour-price">
+                  <span class="muted" data-i18n="from">From</span>
+                  <span class="price">$800</span>
+                </div>
+                <a class="btn btn-small" href="#" data-i18n="view_tour">View Tour</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <div class="tour-image" style="--bg:url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=70');">
+              <span class="tour-badge">5 Days</span>
+            </div>
+            <div class="tour-body">
+              <div class="tour-title-row">
+                <h3 class="tour-title">Wakhan Valley Explorer</h3>
+                <span class="tour-tag tourists" data-i18n="for_tourists">FOR TOURISTS</span>
+              </div>
+              <p class="tour-desc" data-i18n="tour2_desc">
+                Discover hot springs, stunning views, local homestays, and historic sites.
+              </p>
+              <p class="tour-meta">🗓 <span data-i18n="next_departure">Next departure:</span> June 22</p>
+              <div class="tour-bottom">
+                <div class="tour-price">
+                  <span class="muted" data-i18n="from">From</span>
+                  <span class="price">$600</span>
+                </div>
+                <a class="btn btn-small" href="#" data-i18n="view_tour">View Tour</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <div class="tour-image" style="--bg:url('https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=1600&q=70');">
+              <span class="tour-badge">10 Days</span>
+            </div>
+            <div class="tour-body">
+              <div class="tour-title-row">
+                <h3 class="tour-title">Bartang Valley Trek</h3>
+                <span class="tour-tag tourists" data-i18n="for_tourists">FOR TOURISTS</span>
+              </div>
+              <p class="tour-desc" data-i18n="tour3_desc">
+                Deep trekking into the wildest valley of the Pamirs. True isolation and beauty.
+              </p>
+              <p class="tour-meta">🗓 <span data-i18n="next_departure">Next departure:</span> July 05</p>
+              <div class="tour-bottom">
+                <div class="tour-price">
+                  <span class="muted" data-i18n="from">From</span>
+                  <span class="price">$1,200</span>
+                </div>
+                <a class="btn btn-small" href="#" data-i18n="view_tour">View Tour</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <div class="tour-image" style="--bg:url('https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1600&q=70');">
+              <span class="tour-badge">2 Days</span>
+            </div>
+            <div class="tour-body">
+              <div class="tour-title-row">
+                <h3 class="tour-title">Hot Springs Weekend</h3>
+                <span class="tour-tag locals" data-i18n="for_locals">FOR LOCALS</span>
+              </div>
+              <p class="tour-desc" data-i18n="tour4_desc">
+                A quick weekend escape to hot springs and mountain viewpoints.
+              </p>
+              <p class="tour-meta">🗓 <span data-i18n="next_departure">Next departure:</span> Weekly</p>
+              <div class="tour-bottom">
+                <div class="tour-price">
+                  <span class="muted" data-i18n="from">From</span>
+                  <span class="price">$120</span>
+                </div>
+                <a class="btn btn-small" href="#" data-i18n="view_tour">View Tour</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Trust strip -->
+        <div class="trust-strip">
+          <div class="trust-item">👣 <span data-i18n="trust_local_guides">Local guides</span></div>
+          <div class="trust-item">👥 <span data-i18n="trust_small_groups">Small groups / private</span></div>
+          <div class="trust-item">🔒 <span data-i18n="trust_secure">Secure booking</span></div>
+          <div class="trust-item">⚡ <span data-i18n="trust_fast_support">Fast support (WA/TG)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= GUIDES + ASK GUIDE + UPDATES ========= -->
+    <section class="section">
+      <div class="container">
+        <div class="grid-2-wide">
+          <!-- LEFT: Guides -->
+          <div>
+            <div class="section-head simple">
+              <div>
+                <h2 class="section-title" data-i18n="guides_title">Travel Guides & Tips</h2>
+                <p class="section-subtitle" data-i18n="guides_sub">
+                  Preparation, culture, road safety, hot springs and trekking tips.
+                </p>
+              </div>
+            </div>
+
+            <div class="guides-grid">
+              <article class="guide-card">
+                <div class="guide-image" style="--bg:url('https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1600&q=70');"></div>
+                <div class="guide-body">
+                  <div class="guide-top">
+                    <span class="chip" data-i18n="chip_culture">Culture</span>
+                    <span class="muted" data-i18n="read_5">5 min read</span>
+                  </div>
+                  <h3 data-i18n="g1_title">Homestay Etiquette in Pamir</h3>
+                  <p data-i18n="g1_desc">Understanding local customs is key to a warm welcome in Pamiri villages.</p>
+                  <a class="link" href="#" data-i18n="read_more">Read more →</a>
+                </div>
+              </article>
+
+              <article class="guide-card">
+                <div class="guide-image" style="--bg:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=70');"></div>
+                <div class="guide-body">
+                  <div class="guide-top">
+                    <span class="chip" data-i18n="chip_preparation">Preparation</span>
+                    <span class="muted" data-i18n="read_3">3 min read</span>
+                  </div>
+                  <h3 data-i18n="g2_title">Best Season for Trekking</h3>
+                  <p data-i18n="g2_desc">July and August are peak months—here’s what to expect in each season.</p>
+                  <a class="link" href="#" data-i18n="read_more">Read more →</a>
+                </div>
+              </article>
+
+              <article class="guide-card">
+                <div class="guide-image" style="--bg:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=70');"></div>
+                <div class="guide-body">
+                  <div class="guide-top">
+                    <span class="chip" data-i18n="chip_trekking">Trekking</span>
+                    <span class="muted" data-i18n="read_6">6 min read</span>
+                  </div>
+                  <h3 data-i18n="g3_title">Top 5 Alpine Lakes</h3>
+                  <p data-i18n="g3_desc">From Karakul to Yashilkul—discover the jewels of the Pamir plateau.</p>
+                  <a class="link" href="#" data-i18n="read_more">Read more →</a>
+                </div>
+              </article>
+
+              <article class="guide-card">
+                <div class="guide-image" style="--bg:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=70');"></div>
+                <div class="guide-body">
+                  <div class="guide-top">
+                    <span class="chip" data-i18n="chip_hot">Hot springs</span>
+                    <span class="muted" data-i18n="read_4">4 min read</span>
+                  </div>
+                  <h3 data-i18n="g4_title">Garm Chashma & Bibi Fatima</h3>
+                  <p data-i18n="g4_desc">Healing waters of the Wakhan—what to know before you go.</p>
+                  <a class="link" href="#" data-i18n="read_more">Read more →</a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- RIGHT: Ask guide + updates + telegram -->
+          <aside class="side-stack">
+            <div class="panel">
+              <h2 class="panel-title" data-i18n="ask_title">Ask a Local Guide</h2>
+              <p class="panel-subtitle" data-i18n="ask_sub">
+                Questions about permits, roads, altitude, or route planning? Ask us.
+              </p>
+
+              <div class="guide-profile">
+                <div class="avatar" aria-hidden="true">SK</div>
+                <div>
+                  <div class="profile-name">Safari Kooh Team</div>
+                  <div class="profile-meta" data-i18n="ask_meta">EN / RU • Khorog, GBAO</div>
+                </div>
+              </div>
+
+              <div class="quick-questions">
+                <button class="chip-btn" type="button" data-i18n="qq1">GBAO permit?</button>
+                <button class="chip-btn" type="button" data-i18n="qq2">Road open today?</button>
+                <button class="chip-btn" type="button" data-i18n="qq3">Best time for hot springs?</button>
+                <button class="chip-btn" type="button" data-i18n="qq4">Altitude tips</button>
+              </div>
+
+              <form class="form">
+                <label class="label">
+                  <span data-i18n="your_name">Your name</span>
+                  <input class="input" type="text" data-i18n-placeholder="ph_name" placeholder="Your Name"/>
+                </label>
+
+                <label class="label">
+                  <span data-i18n="your_question">Your question</span>
+                  <textarea class="textarea" rows="3" data-i18n-placeholder="ph_question" placeholder="Ask a question..."></textarea>
+                </label>
+
+                <div class="radio-row">
+                  <label class="radio"><input type="radio" name="contact" checked> <span data-i18n="wa">WhatsApp</span></label>
+                  <label class="radio"><input type="radio" name="contact"> <span data-i18n="tg">Telegram</span></label>
+                  <label class="radio"><input type="radio" name="contact"> <span data-i18n="email">Email</span></label>
+                </div>
+
+                <button class="btn btn-primary btn-full" type="button" data-i18n="send_question">Send Question</button>
+                <a class="btn btn-secondary btn-full" href="#contact" data-i18n="ask_whatsapp">Ask on WhatsApp instead</a>
+
+                <div class="small-note" data-i18n="reply_time">✅ Typical reply time: under 24 hours</div>
+              </form>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head-row">
+                <h3 class="panel-title small" data-i18n="updates_title">Travel Updates</h3>
+                <span class="mini-badge" data-i18n="updated_today">Last updated: Today</span>
+              </div>
+
+              <div class="updates">
+                <div class="update-row">
+                  <span data-i18n="u_road">Road Status</span>
+                  <span class="status ok" data-i18n="u_open">Open</span>
+                </div>
+                <div class="update-row">
+                  <span data-i18n="u_permit">GBAO Permit</span>
+                  <span class="status warn" data-i18n="u_required">Required</span>
+                </div>
+                <div class="update-row">
+                  <span data-i18n="u_weather">Weather</span>
+                  <span class="status warn" data-i18n="u_windy">Windy</span>
+                </div>
+                <div class="update-row">
+                  <span data-i18n="u_safety">Safety Note</span>
+                  <span class="status ok" data-i18n="u_normal">Normal</span>
+                </div>
+              </div>
+
+              <a class="btn btn-secondary btn-full" href="#telegram" data-i18n="get_updates">Get updates on Telegram</a>
+            </div>
+
+            <div class="panel" id="telegram">
+              <h3 class="panel-title small" data-i18n="tg_title">Join our Telegram community</h3>
+              <p class="panel-subtitle" data-i18n="tg_sub">Get road updates, travel tips, and ask questions.</p>
+              <a class="btn btn-primary btn-full" href="#" data-i18n="tg_join">Join Channel</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= FOOTER ========= -->
+    <footer class="footer" id="contact">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <div class="brand footer-brand-row">
+            <div class="brand-logo" aria-hidden="true"></div>
+            <div class="brand-text">
+              <div class="brand-name">Safari Kooh</div>
+              <div class="brand-tagline" data-i18n="footer_slogan">To see the roof of the world.</div>
+            </div>
+          </div>
+
+          <div class="contact-list">
+            <div class="contact-item">📞 +992 000 00 0000</div>
+            <div class="contact-item">✉️ hello@safarikooh.com</div>
+            <div class="contact-item">📍 Khorog, Tajikistan (GBAO)</div>
+          </div>
+
+          <div class="social-row">
+            <a class="icon-btn" href="#" aria-label="Instagram">📷</a>
+            <a class="icon-btn" href="#" aria-label="Telegram">✈️</a>
+            <a class="icon-btn" href="#" aria-label="WhatsApp">💬</a>
+          </div>
+        </div>
+
+        <div class="footer-panel">
+          <h3 class="footer-title" data-i18n="footer_rules_title">Rules for booking & Safety</h3>
+
+          <div class="rules-grid">
+            <div class="rule-block">
+              <div class="rule-title">1. <span data-i18n="footer_booking">Booking</span></div>
+              <div class="rule-text" data-i18n="rule_booking">
+                Deposit (20–30%) required to reserve dates and guides.
+              </div>
+            </div>
+            <div class="rule-block">
+              <div class="rule-title">2. <span data-i18n="footer_payment">Payment</span></div>
+              <div class="rule-text" data-i18n="rule_payment">
+                Cash (USD/TJS) on arrival or bank transfer (confirmed during booking).
+              </div>
+            </div>
+            <div class="rule-block">
+              <div class="rule-title">3. <span data-i18n="footer_documents">Documents</span></div>
+              <div class="rule-text" data-i18n="rule_documents">
+                Valid passport & (for many routes) GBAO permit / checkpoint documents.
+              </div>
+            </div>
+            <div class="rule-block">
+              <div class="rule-title">4. <span data-i18n="footer_cancel">Cancellation</span></div>
+              <div class="rule-text" data-i18n="rule_cancel">
+                Free cancellation up to 7 days before the tour (partner costs may apply).
+              </div>
+            </div>
+          </div>
+
+          <div class="warning">
+            ⚠️ <strong data-i18n="footer_weather">Weather & Roads Flexibility:</strong>
+            <span data-i18n="footer_weather_text">itineraries may change due to landslides or weather in high mountains. Safety first.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <span>© 2026 Safari Kooh. <span data-i18n="footer_rights">All rights reserved.</span></span>
+        <div class="footer-links">
+          <a href="#" data-i18n="privacy">Privacy Policy</a>
+          <a href="#" data-i18n="terms">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="i18n.js"></script>
+</body>
+</html>
