@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>University Grant Management System - Staff Portal</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Lexend Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Library Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased transition-colors duration-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Shared Components ---
+
+        const Sidebar = () => {
+            const navigate = useNavigate();
+            const location = useLocation();
+
+            const menuItems = [
+                { path: "/staff-dashboard", label: "Dashboard", icon: "dashboard" },
+                { path: "/grant-portfolio", label: "Grants", icon: "folder_open" },
+                { path: "/finance-selection", label: "Finances", icon: "account_balance" },
+                { path: "/notifications", label: "Notifications", icon: "notifications", badge: "25" },
+                { path: "#", label: "Settings", icon: "settings" },
+            ];
+
+            return (
+                <aside className="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors duration-200 hidden lg:flex">
+                    <div className="p-6 flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
+                            <span className="material-symbols-outlined">account_balance</span>
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                            <h1 className="text-base font-bold leading-tight truncate">University GMS</h1>
+                            <p className="text-slate-500 dark:text-slate-400 text-xs truncate">Finance Portal</p>
+                        </div>
+                    </div>
+                    <nav className="flex-1 overflow-y-auto px-3 py-2 flex flex-col gap-1">
+                        <p className="px-3 mb-2 text-slate-400 text-[10px] font-bold uppercase tracking-wider">Main Menu</p>
+                        {menuItems.map(item => (
+                            <Link 
+                                key={item.label}
+                                to={item.path} 
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium group ${location.pathname === item.path ? 'bg-primary/10 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'}`}
+                            >
+                                <span className={`material-symbols-outlined text-xl group-hover:scale-110 transition-transform ${location.pathname === item.path ? 'fill-1' : ''}`}>{item.icon}</span>
+                                <span>{item.label}</span>
+                                {item.badge && <span className="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{item.badge}</span>}
+                            </Link>
+                        ))}
+                    </nav>
+                    <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" style={{backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCp3uLiEwd1Azz2Znjdq1Ddjj8ZQ6UBxgKRbgHeMG5Ipo-cqUigzmzfR6Z3tPvsQCEwa7x76niSXkR9F9Ewg1Z9STrir3Pi9so3zWHu-MNy8HIYyKjG3syasBK_2QyiZJYoQWP7FyUesVWWumHEZLtLU_3tNW3HsVZholgfs-KYfwfO5GTb7wmh7xP3psEzyP4zE1O66_EeJ0nlNKgM6SQl4r2by6zBif4snujVbu_74q58gkYEkqNwdzITXsi1xEMwA7SsW_eCR3A')"}}></div>
+                            <div className="flex flex-col overflow-hidden">
+                                <p className="text-sm font-medium text-slate-900 dark:text-white truncate">Sarah Jenkins</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Finance Officer</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            );
+        };
+
+        const Header = ({ title }) => {
+            const navigate = useNavigate();
+            return (
+                <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex-shrink-0 z-10 sticky top-0">
+                    <div className="flex items-center gap-4">
+                        <button className="lg:hidden text-slate-500 hover:text-primary">
+                            <span className="material-symbols-outlined">menu</span>
+                        </button>
+                        <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">{title}</h2>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="relative group hidden md:block">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                <span className="material-symbols-outlined text-[20px]">search</span>
+                            </div>
+                            <input className="block w-64 rounded-lg border-0 bg-slate-100 dark:bg-slate-800 py-2 pl-10 pr-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-900 transition-all" placeholder="Search grants, reports..." type="text"/>
+                        </div>
+                        <button onClick={() => navigate('/notifications')} className="relative p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <span className="material-symbols-outlined text-[24px]">notifications</span>
+                            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-slate-900"></span>
+                        </button>
+                        <button className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <span className="material-symbols-outlined text-[24px]">help</span>
+                        </button>
+                    </div>
+                </header>
+            );
+        };
+
+        // --- Pages ---
+
+        const LoginPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col items-center justify-center p-4">
+                    <main className="w-full max-w-[480px]">
+                        <div className="flex justify-center mb-8">
+                            <div className="h-16 w-16 bg-white dark:bg-gray-800 rounded-lg shadow-sm flex items-center justify-center overflow-hidden border border-gray-100 dark:border-gray-700">
+                                <span className="material-symbols-outlined text-primary text-4xl">school</span>
+                            </div>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+                            <div className="h-2 w-full bg-primary"></div>
+                            <div className="px-8 py-10">
+                                <div className="text-center mb-8">
+                                    <h1 className="text-[#111318] dark:text-white text-2xl font-bold leading-tight mb-2">Grant Management System</h1>
+                                    <h2 className="text-[#637588] dark:text-gray-400 text-lg font-medium">Staff Portal</h2>
+                                </div>
+                                <form className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal" htmlFor="email">University Email</label>
+                                        <div className="relative">
+                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#637588] dark:text-gray-400">
+                                                <span className="material-symbols-outlined text-[20px]">mail</span>
+                                            </span>
+                                            <input className="flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111318] dark:text-white dark:bg-gray-900 focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-[#dbdfe6] dark:border-gray-600 focus:border-primary h-12 placeholder:text-[#939aa6] pl-10 pr-4 text-base font-normal leading-normal transition-colors" id="email" placeholder="staff@university.edu" type="email" defaultValue="sarah.jenkins@university.edu"/>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal" htmlFor="password">Password</label>
+                                            <a className="text-primary hover:text-blue-700 text-sm font-medium transition-colors" href="#">Forgot password?</a>
+                                        </div>
+                                        <div className="relative">
+                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#637588] dark:text-gray-400">
+                                                <span className="material-symbols-outlined text-[20px]">lock</span>
+                                            </span>
+                                            <input className="flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111318] dark:text-white dark:bg-gray-900 focus:outline-0 focus:ring-2 focus:ring-primary/20 border border-[#dbdfe6] dark:border-gray-600 focus:border-primary h-12 placeholder:text-[#939aa6] pl-10 pr-12 text-base font-normal leading-normal transition-colors" id="password" placeholder="Enter your password" type="password" defaultValue="password123"/>
+                                            <button className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#637588] dark:text-gray-400 hover:text-primary transition-colors cursor-pointer" type="button">
+                                                <span className="material-symbols-outlined text-[20px]">visibility</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => navigate('/staff-dashboard')} className="w-full bg-primary hover:bg-blue-700 text-white font-bold h-12 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md" type="button">
+                                        <span>Sign In</span>
+                                        <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700 px-8 py-4 flex flex-col items-center justify-center gap-2">
+                                <p className="text-[#637588] dark:text-gray-400 text-xs text-center">Need help accessing your account? <a className="text-primary hover:underline" href="#">Contact IT Support</a></p>
+                            </div>
+                        </div>
+                        <p className="mt-8 text-center text-[#939aa6] dark:text-gray-500 text-xs">© 2024 University Grant Office. All rights reserved.</p>
+                    </main>
+                    <div className="fixed top-0 left-0 w-full h-1/2 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent -z-10 pointer-events-none"></div>
+                </div>
+            );
+        };
+
+        const StaffDashboard = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex h-screen w-full overflow-hidden">
+                    <Sidebar />
+                    <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+                        <Header title="Staff Dashboard" />
+                        <div className="flex-1 overflow-y-auto p-6 md:p-8 scroll-smooth">
+                            <div className="max-w-7xl mx-auto flex flex-col gap-8">
+                                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                                    <div className="flex flex-col gap-2">
+                                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Welcome back, Sarah</h2>
+                                        <p className="text-slate-500 dark:text-slate-400 text-base font-medium">Tuesday, October 24, 2023</p>
+                                    </div>
+                                    <div className="flex flex-wrap gap-3">
+                                        <button onClick={() => navigate('/grant-portfolio')} className="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-slate-700 dark:text-slate-200 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                                            <span className="material-symbols-outlined text-[20px]">folder_open</span> Open Grant
+                                        </button>
+                                        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-lg shadow-md shadow-primary/30 text-sm font-bold transition-all">
+                                            <span className="material-symbols-outlined text-[20px]">add_circle</span> Create Report
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    {[
+                                        { title: "Due Today", value: "5", label: "Pending tasks", icon: "assignment_late", color: "text-primary", bg: "bg-blue-50" },
+                                        { title: "Overdue", value: "2", label: "Require immediate attention", icon: "warning", color: "text-red-500", bg: "bg-red-50" },
+                                        { title: "Active Grants", value: "12", label: "Total portfolio: $4.2M", icon: "folder_special", color: "text-emerald-600", bg: "bg-emerald-50" },
+                                        { title: "Compliance Risks", value: "3", label: "Missing evidence", icon: "flag", color: "text-amber-600", bg: "bg-amber-50" },
+                                    ].map(stat => (
+                                        <div key={stat.title} className="bg-white dark:bg-[#1a2233] p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-between h-32 hover:border-primary/50 transition-colors">
+                                            <div className="flex justify-between items-start">
+                                                <div className={`p-2 ${stat.bg} dark:bg-slate-800 rounded-lg ${stat.color}`}>
+                                                    <span className="material-symbols-outlined">{stat.icon}</span>
+                                                </div>
+                                                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{stat.title}</span>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{stat.value}</h3>
+                                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div className="lg:col-span-2 flex flex-col gap-6">
+                                        <div className="bg-white dark:bg-[#1a2233] rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+                                            <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                                                <h3 className="text-lg font-bold text-slate-900 dark:text-white">My Tasks Today</h3>
+                                                <a className="text-sm font-semibold text-primary hover:text-blue-700" href="#">View all</a>
+                                            </div>
+                                            <div className="divide-y divide-slate-100 dark:divide-slate-700">
+                                                {[
+                                                    { title: "Review Budget Adjustment Request", meta: "Grant #2024-A • PI: Dr. Emily Chen", priority: "High Priority", priorityColor: "bg-red-100 text-red-700" },
+                                                    { title: "Approve Travel Expense Report", meta: "Grant #1988-C • PI: James Wilson", priority: "Review", priorityColor: "bg-blue-100 text-blue-700" },
+                                                    { title: "Quarterly Check-in preparation", meta: "NSF Grant Cluster", priority: "Routine", priorityColor: "bg-slate-100 text-slate-600" },
+                                                ].map((task, i) => (
+                                                    <div key={i} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-start gap-4 group cursor-pointer">
+                                                        <div className="mt-1"><input className="rounded border-slate-300 text-primary focus:ring-primary h-5 w-5 cursor-pointer" type="checkbox"/></div>
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${task.priorityColor} uppercase tracking-wide`}>{task.priority}</span>
+                                                                <span className="text-xs text-slate-400">Due 5:00 PM</span>
+                                                            </div>
+                                                            <h4 className="text-base font-semibold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">{task.title}</h4>
+                                                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{task.meta}</p>
+                                                        </div>
+                                                        <button className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-primary transition-all"><span className="material-symbols-outlined">arrow_forward</span></button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-6">
+                                        <div className="bg-red-50 dark:bg-red-900/10 rounded-xl shadow-sm border border-red-100 dark:border-red-900/30 overflow-hidden">
+                                            <div className="px-5 py-4 flex items-center gap-3">
+                                                <span className="material-symbols-outlined text-red-600 dark:text-red-400">warning</span>
+                                                <h3 className="text-lg font-bold text-red-900 dark:text-red-300">Evidence Missing</h3>
+                                            </div>
+                                            <div className="px-5 pb-5">
+                                                <p className="text-sm text-red-800 dark:text-red-200/70 mb-4">Grants with transactions missing receipts. Action required.</p>
+                                                <div className="flex flex-col gap-3">
+                                                    {["Grant #101", "Grant #2024-A"].map((g, i) => (
+                                                        <div key={i} className="bg-white dark:bg-red-950/30 p-3 rounded-lg border border-red-100 dark:border-red-900/20 shadow-sm flex justify-between items-center group cursor-pointer hover:shadow-md transition-shadow">
+                                                            <div><p className="text-sm font-bold text-slate-900 dark:text-white">{g}</p><p className="text-xs text-slate-500 dark:text-slate-400">1+ Transactions</p></div>
+                                                            <span className="material-symbols-outlined text-slate-400 group-hover:text-red-500">chevron_right</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer className="mt-12 mb-6 text-center text-xs text-slate-400 dark:text-slate-600">
+                                <p>© 2023 University Grant Management System. All rights reserved.</p>
+                            </footer>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const GrantPortfolio = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex h-screen w-full overflow-hidden">
+                    <Sidebar />
+                    <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+                        <Header title="Grant Portfolio List" />
+                        <div className="flex-1 overflow-y-auto px-6 py-8 w-full max-w-[1400px] mx-auto">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                        <Link to="/staff-dashboard" className="hover:text-primary">Home</Link>
+                                        <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                                        <span className="font-medium text-[#111318] dark:text-white">Portfolio List</span>
+                                    </div>
+                                    <h1 className="text-3xl font-bold tracking-tight text-[#111318] dark:text-white mb-2">Grant Portfolio List</h1>
+                                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                                        <span className="material-symbols-outlined text-[20px]">location_on</span>
+                                        <span className="text-sm font-medium">Region: Global</span>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <div className="bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-xl p-4 min-w-[160px]">
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Active</p>
+                                        <p className="text-2xl font-bold text-primary mt-1">12</p>
+                                    </div>
+                                    <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 rounded-xl p-4 min-w-[160px]">
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Urgent Actions</p>
+                                        <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">3</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-white dark:bg-[#1A202C] rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 mb-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                                    <label className="flex flex-col gap-1.5"><span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</span><select className="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 rounded-lg text-sm"><option>All Statuses</option></select></label>
+                                    <label className="flex flex-col gap-1.5"><span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Donor</span><input className="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 rounded-lg text-sm" placeholder="Search..." /></label>
+                                    <label className="flex flex-col gap-1.5"><span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">PI</span><input className="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 rounded-lg text-sm" placeholder="Search PI..." /></label>
+                                    <div className="lg:col-span-2 flex gap-2">
+                                        <button className="flex-1 bg-primary text-white font-medium rounded-lg text-sm px-4 py-2.5">Apply Filters</button>
+                                        <button className="bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2.5 text-gray-600"><span className="material-symbols-outlined text-[20px]">refresh</span></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-white dark:bg-[#1A202C] rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50 border-b">
+                                        <tr>
+                                            <th className="px-6 py-4">Grant Name</th>
+                                            <th className="px-6 py-4">Donor</th>
+                                            <th className="px-6 py-4">PI</th>
+                                            <th className="px-6 py-4">Dates</th>
+                                            <th className="px-6 py-4 text-center">Status</th>
+                                            <th className="px-6 py-4 text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                                        {[
+                                            { name: "Urban Water Systems Resilience", id: "G-2023-88", donor: "Gates Foundation", pi: "Dr. Sarah Johnson", dates: "Jan 01, 23 - Dec 31, 24", status: "Active", statusColor: "bg-green-100 text-green-800" },
+                                            { name: "Sustainable Water Purification", id: "G-2024-889", donor: "NSF", pi: "Dr. Sarah Jenkins", dates: "Jan 01, 24 - Dec 31, 26", status: "Active", statusColor: "bg-green-100 text-green-800" },
+                                            { name: "Public Health Survey II", id: "G-2021-99", donor: "WHO", pi: "Dr. Alan K.", dates: "Jan 01, 21 - Dec 31, 23", status: "Closing", statusColor: "bg-gray-100 text-gray-800" },
+                                        ].map((g, i) => (
+                                            <tr key={i} className="hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors">
+                                                <td className="px-6 py-4 font-medium"><Link to="/grant-detail" className="text-primary hover:underline"><div>{g.name}</div><div className="text-xs text-gray-500 font-normal">ID: {g.id}</div></Link></td>
+                                                <td className="px-6 py-4">{g.donor}</td>
+                                                <td className="px-6 py-4">{g.pi}</td>
+                                                <td className="px-6 py-4 text-gray-500">{g.dates}</td>
+                                                <td className="px-6 py-4 text-center"><span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${g.statusColor}`}>{g.status}</span></td>
+                                                <td className="px-6 py-4 text-right"><button onClick={() => navigate('/grant-detail')} className="text-primary border border-primary/30 rounded-lg text-xs px-3 py-1.5 hover:bg-primary hover:text-white transition-all">Open Grant</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const GrantDetail = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex h-screen w-full overflow-hidden">
+                    <Sidebar />
+                    <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+                        <Header title="Grant Workspace" />
+                        <div className="flex-1 overflow-y-auto w-full max-w-[1400px] mx-auto p-6 md:p-8 space-y-6">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <nav className="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                                    <Link to="/grant-portfolio" className="hover:text-primary">Grants</Link>
+                                    <span className="material-symbols-outlined text-base mx-2">chevron_right</span>
+                                    <span className="font-medium text-slate-900 dark:text-white">G-2024-889</span>
+                                </nav>
+                                <div className="flex items-center gap-3">
+                                    <button onClick={() => navigate('/financial-workspace')} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-all shadow-md">
+                                        <span className="material-symbols-outlined text-[20px]">attach_money</span> Financial Workspace
+                                    </button>
+                                </div>
+                            </div>
+
+                            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                                <div className="p-6 md:p-8">
+                                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-8">
+                                        <div className="flex-1">
+                                            <div className="flex flex-wrap items-center gap-3 mb-3">
+                                                <span className="text-sm font-mono font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">G-2024-889</span>
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">Active</span>
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">Medium Risk</span>
+                                            </div>
+                                            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white leading-tight">Sustainable Water Purification in Arid Regions</h2>
+                                        </div>
+                                        <div className="hidden lg:flex flex-col items-end min-w-[200px]">
+                                            <p className="text-sm text-slate-500 mb-1">Grant Utilization</p>
+                                            <div className="flex items-baseline gap-1"><span className="text-2xl font-bold text-slate-900 dark:text-white">64%</span><span className="text-xs text-slate-500">of $1.2M</span></div>
+                                            <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full mt-2 overflow-hidden"><div className="h-full bg-primary rounded-full" style={{width: "64%"}}></div></div>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t">
+                                        <div className="flex items-start gap-3"><span className="material-symbols-outlined p-2 bg-slate-50 dark:bg-slate-800 rounded-lg">account_balance</span><div><p className="text-[10px] uppercase font-bold text-slate-400">Donor</p><p className="text-sm font-medium">National Science Foundation</p></div></div>
+                                        <div className="flex items-start gap-3"><span className="material-symbols-outlined p-2 bg-slate-50 dark:bg-slate-800 rounded-lg">person</span><div><p className="text-[10px] uppercase font-bold text-slate-400">PI</p><p className="text-sm font-medium">Dr. Sarah Jenkins</p></div></div>
+                                        <div className="flex items-start gap-3"><span className="material-symbols-outlined p-2 bg-slate-50 dark:bg-slate-800 rounded-lg">date_range</span><div><p className="text-[10px] uppercase font-bold text-slate-400">Duration</p><p className="text-sm font-medium">Jan 2024 - Dec 2026</p></div></div>
+                                        <div className="flex items-start gap-3"><span className="material-symbols-outlined p-2 bg-slate-50 dark:bg-slate-800 rounded-lg">domain</span><div><p className="text-[10px] uppercase font-bold text-slate-400">Department</p><p className="text-sm font-medium">Environmental Engineering</p></div></div>
+                                    </div>
+                                </div>
+                                <div className="px-6 border-t bg-slate-50 dark:bg-slate-800/30">
+                                    <nav className="flex space-x-8 overflow-x-auto scrollbar-hide">
+                                        <a className="border-b-2 border-primary py-4 px-1 text-sm font-medium text-primary flex items-center gap-2" href="#"><span className="material-symbols-outlined text-[18px]">dashboard</span> Overview</a>
+                                        <a className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-slate-500" href="#"><span className="material-symbols-outlined text-[18px]">check_circle</span> Tasks</a>
+                                        <a className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-slate-500" href="#"><span className="material-symbols-outlined text-[18px]">folder</span> Documents</a>
+                                    </nav>
+                                </div>
+                            </section>
+
+                            <div className="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 rounded-r-lg flex items-start gap-3">
+                                <span className="material-symbols-outlined text-amber-600">priority_high</span>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-bold text-amber-800 dark:text-amber-400">Action Required: Missing Evidence</h3>
+                                    <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">"Q3 Site Inspection" is complete but missing photographic evidence. Required by Oct 30.</p>
+                                </div>
+                                <button className="text-sm font-medium text-amber-700 underline">Resolve</button>
+                            </div>
+
+                            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                                <div className="xl:col-span-2 space-y-6">
+                                    <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 shadow-sm">
+                                        <h3 className="text-lg font-bold mb-6">Milestones</h3>
+                                        <div className="relative">
+                                            <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 rounded-full -z-0"></div>
+                                            <div className="absolute top-1/2 left-0 w-1/2 h-1 bg-primary -translate-y-1/2 rounded-full -z-0"></div>
+                                            <div className="relative z-10 flex justify-between w-full">
+                                                <div className="flex flex-col items-center gap-2"><div className="size-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"><span className="material-symbols-outlined text-sm">check</span></div><p className="text-xs font-bold">Awarded</p></div>
+                                                <div className="flex flex-col items-center gap-2"><div className="size-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"><span className="material-symbols-outlined text-sm">check</span></div><p className="text-xs font-bold">Review</p></div>
+                                                <div className="flex flex-col items-center gap-2"><div className="size-8 rounded-full bg-white border-2 border-primary text-primary flex items-center justify-center font-bold text-sm">3</div><p className="text-xs font-bold text-primary">Data</p></div>
+                                                <div className="flex flex-col items-center gap-2 opacity-30"><div className="size-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-sm">4</div><p className="text-xs font-bold">Analysis</p></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const FinancialWorkspace = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex h-screen w-full overflow-hidden">
+                    <Sidebar />
+                    <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+                        <Header title="Financial Workspace" />
+                        <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                            <div className="max-w-7xl mx-auto space-y-6">
+                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                    <div>
+                                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">G-2023-4491 Financials</h1>
+                                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500">
+                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[18px]">person</span> PI: Prof. A. Smith</span>
+                                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[18px]">calendar_today</span> Jan 1, 2023 - Dec 31, 2024</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border rounded-lg text-sm font-medium"><span className="material-symbols-outlined text-[20px]">file_download</span> Export</button>
+                                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">Save Changes</button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    {[
+                                        { label: "Total Awarded", value: "$150,000.00", meta: "100% Funded", color: "text-slate-900" },
+                                        { label: "Total Spent", value: "$84,210.00", meta: "56.1% of Budget", color: "text-slate-900" },
+                                        { label: "Remaining Balance", value: "$65,790.00", meta: "On track", color: "text-primary" },
+                                        { label: "Burn Rate", value: "$7,017/mo", meta: "Slightly elevated", color: "text-slate-900" },
+                                    ].map((m, i) => (
+                                        <div key={i} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 shadow-sm">
+                                            <p className="text-slate-500 text-sm font-medium mb-1">{m.label}</p>
+                                            <h3 className={`text-2xl font-bold ${m.color} dark:text-white`}>{m.value}</h3>
+                                            <p className="mt-2 text-xs text-slate-500 font-medium">{m.meta}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-hidden">
+                                    <div className="p-6 border-b flex justify-between items-center"><h3 className="font-bold">Budget Detail</h3><button className="text-primary text-sm font-medium">View All</button></div>
+                                    <table className="w-full text-left text-sm">
+                                        <thead className="bg-slate-50 dark:bg-slate-800/50 font-semibold border-b">
+                                            <tr><th className="px-6 py-4">Cost Category</th><th className="px-6 py-4 text-right">Planned</th><th className="px-6 py-4 text-right">Spent</th><th className="px-6 py-4 text-right">Variance</th><th className="px-6 py-4 text-center">Status</th></tr>
+                                        </thead>
+                                        <tbody className="divide-y">
+                                            {[
+                                                { cat: "Personnel", planned: "60k", spent: "35k", var: "25k", status: "OK", statusCol: "bg-green-100 text-green-700" },
+                                                { cat: "Equipment", planned: "25k", spent: "26.5k", var: "-1.5k", status: "Over", statusCol: "bg-red-100 text-red-700" },
+                                                { cat: "Travel", planned: "15k", spent: "8.2k", var: "6.8k", status: "OK", statusCol: "bg-green-100 text-green-700" },
+                                            ].map((r, i) => (
+                                                <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50"><td className="px-6 py-4 font-medium">{r.cat}</td><td className="px-6 py-4 text-right">${r.planned}</td><td className="px-6 py-4 text-right">${r.spent}</td><td className="px-6 py-4 text-right">${r.var}</td><td className="px-6 py-4 text-center"><span className={`px-2 py-1 rounded-full text-[10px] font-bold ${r.statusCol}`}>{r.status}</span></td></tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const FinanceGrantSelection = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex min-h-screen flex-col">
+                    <Header title="Finance Selection" />
+                    <main className="flex-1 px-6 py-8 md:px-12 lg:px-20">
+                        <div className="mx-auto max-w-7xl space-y-8">
+                            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                                <div>
+                                    <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Finance Grant Selection</h2>
+                                    <p className="mt-2 text-slate-500 dark:text-slate-400">Manage post-award financials and monitor compliance deadlines for active grants.</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm p-4">
+                                <div className="flex flex-col md:flex-row gap-4">
+                                    <div className="relative flex-1">
+                                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                                        <input className="w-full rounded-lg border-slate-200 bg-slate-50 py-2.5 pl-10 text-sm" placeholder="Search by Grant Name or ID" />
+                                    </div>
+                                    <button className="bg-primary text-white font-bold py-2.5 px-6 rounded-lg">Apply Filters</button>
+                                </div>
+                            </div>
+
+                            <div className="overflow-hidden rounded-xl border bg-white dark:bg-slate-900 shadow-sm">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="border-b bg-slate-50 dark:bg-slate-800 text-xs uppercase font-semibold text-slate-500">
+                                        <tr><th className="px-6 py-4">Grant Name</th><th className="px-6 py-4">Due Date</th><th className="px-6 py-4">Budget Progress</th><th className="px-6 py-4 text-right">Action</th></tr>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {[
+                                            { name: "Climate Resilience in Urban Areas", id: "2024-098", due: "Oct 15, 2023", prog: 75 },
+                                            { name: "STEM Education Initiative 2024", id: "2024-112", due: "Nov 20, 2024", prog: 42 },
+                                            { name: "Public Health Data Systems", id: "2023-055", due: "Dec 01, 2024", prog: 12 },
+                                        ].map((g, i) => (
+                                            <tr key={i} className="hover:bg-blue-50/50">
+                                                <td className="px-6 py-4"><div><strong>{g.name}</strong></div><div className="text-xs text-slate-500">#{g.id}</div></td>
+                                                <td className="px-6 py-4"><span className={i === 0 ? "text-red-500 font-bold" : ""}>{g.due}</span></td>
+                                                <td className="px-6 py-4"><div className="h-1.5 w-32 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-primary" style={{width: `${g.prog}%`}}></div></div></td>
+                                                <td className="px-6 py-4 text-right"><button onClick={() => navigate('/financial-workspace')} className="bg-primary text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase">Open Workspace</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const NotificationsCenter = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex h-screen w-full flex-col overflow-hidden">
+                    <Header title="Notifications & Alerts Center" />
+                    <div className="flex flex-1 overflow-hidden">
+                        <Sidebar />
+                        <main className="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8">
+                            <div className="max-w-[1200px] mx-auto flex flex-col gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border-l-4 border-red-500 shadow-sm flex items-start justify-between"><div><p className="text-gray-500 text-sm font-medium">Overdue Items</p><p className="text-3xl font-bold">12</p></div><span className="material-symbols-outlined text-red-500 fill-1">error</span></div>
+                                    <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border-l-4 border-amber-500 shadow-sm flex items-start justify-between"><div><p className="text-gray-500 text-sm font-medium">At-Risk</p><p className="text-3xl font-bold">5</p></div><span className="material-symbols-outlined text-amber-500 fill-1">warning</span></div>
+                                    <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border-l-4 border-blue-500 shadow-sm flex items-start justify-between"><div><p className="text-gray-500 text-sm font-medium">Evidence</p><p className="text-3xl font-bold">8</p></div><span className="material-symbols-outlined text-blue-500">description</span></div>
+                                    <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border shadow-sm flex items-start justify-between"><div><p className="text-gray-500 text-sm font-medium">Total Alerts</p><p className="text-3xl font-bold">25</p></div><span className="material-symbols-outlined text-gray-500">inbox</span></div>
+                                </div>
+
+                                <div className="flex flex-col gap-3">
+                                    <div className="group flex flex-col md:flex-row gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-l-red-500 hover:shadow-md transition-all">
+                                        <div className="size-12 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600 shrink-0"><span className="material-symbols-outlined fill-1">priority_high</span></div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between mb-1"><h3 className="font-bold text-lg text-slate-900 dark:text-white">Annual Progress Report Overdue</h3><span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-bold">Escalation</span></div>
+                                            <p className="text-slate-500 text-sm mb-2">Grant G-402 (Biology Dept) is 5 days overdue. Failure to submit may result in funding suspension.</p>
+                                            <div className="text-xs text-slate-400 flex gap-4"><span>Assigned: Prof. A. Miller</span><span>2 hours ago</span></div>
+                                        </div>
+                                        <div className="flex flex-col gap-2 min-w-[140px]"><button className="bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Contact PI</button><button className="text-gray-500 text-xs font-bold">Dismiss</button></div>
+                                    </div>
+
+                                    <div className="group flex flex-col md:flex-row gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-l-amber-500 hover:shadow-md transition-all">
+                                        <div className="size-12 rounded-full bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 shrink-0"><span className="material-symbols-outlined fill-1">schedule</span></div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between mb-1"><h3 className="font-bold text-lg text-slate-900 dark:text-white">Final Expenditure Report Due</h3><span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded font-bold">Due 48h</span></div>
+                                            <p className="text-slate-500 text-sm">Project Alpha Research Initiative requires financial reconciliation before closure.</p>
+                                        </div>
+                                        <div className="min-w-[140px]"><button onClick={() => navigate('/financial-workspace')} className="w-full bg-primary text-white font-bold py-2 px-4 rounded-lg text-sm">View Report</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <MemoryRouter initialEntries={['/']}>
+                    <Routes>
+                        <Route path="/" element={<LoginPage />} />
+                        <Route path="/staff-dashboard" element={<StaffDashboard />} />
+                        <Route path="/grant-portfolio" element={<GrantPortfolio />} />
+                        <Route path="/grant-detail" element={<GrantDetail />} />
+                        <Route path="/financial-workspace" element={<FinancialWorkspace />} />
+                        <Route path="/finance-selection" element={<FinanceGrantSelection />} />
+                        <Route path="/notifications" element={<NotificationsCenter />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        };
+
+        const container = document.getElementById('root');
+        const root = createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html>
