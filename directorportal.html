@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Director Portal — University Grant Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #f5f6fa;
+  --sb: #0c1a35;
+  --sb2: #152847;
+  --sbt: #7a90bb;
+  --sbta: #e8f0ff;
+  --sbab: #1e3a6e;
+  --pr: #1d4ed8;
+  --pr-l: #dbeafe;
+  --pr-g: rgba(29,78,216,0.12);
+  --ok: #059669;
+  --ok-l: #d1fae5;
+  --wa: #d97706;
+  --wa-l: #fef3c7;
+  --er: #dc2626;
+  --er-l: #fee2e2;
+  --or: #ea580c;
+  --or-l: #ffedd5;
+  --te: #0891b2;
+  --te-l: #cffafe;
+  --vi: #7c3aed;
+  --vi-l: #ede9fe;
+  --tx: #0f172a;
+  --tx2: #475569;
+  --tx3: #94a3b8;
+  --bd: #e2e8f0;
+  --cd: #ffffff;
+  --r: 12px;
+  --sh: 0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:13.5px}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* ── LOGIN ── */
+#sc-login{background:linear-gradient(150deg,#060f22 0%,#0c1e42 55%,#1d4ed8 100%);align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden}
+#sc-login::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.login-box{background:#fff;border-radius:18px;padding:50px 44px;width:430px;box-shadow:0 32px 80px rgba(0,0,0,.4);position:relative;z-index:1;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.login-eyebrow{display:inline-flex;align-items:center;gap:7px;background:#dbeafe;color:var(--pr);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:22px}
+.login-logo-icon{width:58px;height:58px;background:linear-gradient(135deg,var(--pr),#3b82f6);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px;box-shadow:0 8px 28px rgba(29,78,216,.35)}
+.login-box h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:4px}
+.login-box .sub{font-size:12.5px;color:var(--tx2);margin-bottom:30px}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);display:block;margin-bottom:7px}
+.inp{width:100%;padding:12px 16px;border:1.5px solid var(--bd);border-radius:10px;font-family:inherit;font-size:13.5px;outline:none;transition:all .2s;background:#fafbfc;margin-bottom:18px}
+.inp:focus{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--pr),#3b82f6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;letter-spacing:.3px}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(29,78,216,.4)}
+.forgot{text-align:center;margin-top:14px;font-size:12px;color:var(--pr);cursor:pointer;font-weight:600}
+
+/* ── APP SHELL ── */
+.app{display:flex;width:100%;min-height:100vh}
+.sidebar{width:224px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.sb-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--pr),#3b82f6);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sb-logo span{font-size:13px;font-weight:800;color:#fff}
+.sb-logo small{display:block;font-size:10px;color:var(--sbt);font-weight:400}
+.sb-section{padding:14px 10px 6px}
+.sb-sec-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sbt);padding:0 8px;margin-bottom:6px}
+.ni{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;color:var(--sbt);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:1px}
+.ni:hover{background:rgba(255,255,255,.06);color:#c8d8f0}
+.ni.active{background:var(--sbab);color:var(--sbta);font-weight:600}
+.ni-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nb{margin-left:auto;background:var(--er);color:#fff;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.nb.orange{background:var(--or)}
+.sb-foot{padding:14px 16px;margin-top:auto;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.uav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--te));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:12px;flex-shrink:0}
+.un{font-size:12.5px;font-weight:700;color:#fff}
+.ur{font-size:10.5px;color:var(--sbt)}
+.lb-btn{margin-left:auto;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:none;color:var(--sbt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.lb-btn:hover{background:rgba(220,38,38,.2);color:#fca5a5}
+
+/* ── TOPBAR ── */
+.main{margin-left:224px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--bd);padding:0 26px;height:62px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--bd),0 2px 8px rgba(0,0,0,.03)}
+.country-switcher{display:flex;align-items:center;gap:8px;padding:7px 14px;background:var(--pr-l);border:1.5px solid #bcd0ff;border-radius:9px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:700;color:var(--pr)}
+.country-switcher:hover{background:#c7dcff}
+.country-flag{font-size:18px}
+.tb-search{flex:1;max-width:340px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--bd);border-radius:9px;padding:0 13px;height:38px;transition:all .2s}
+.tb-search:focus-within{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.tb-search input{border:none;background:transparent;font-family:inherit;font-size:13px;flex:1;outline:none;color:var(--tx)}
+.tb-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.tbi{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;position:relative;transition:all .15s}
+.tbi:hover{background:var(--bg);border-color:#c8d0e0}
+.tbd{position:absolute;top:-5px;right:-5px;background:var(--er);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.pp{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 7px;border-radius:9px;border:1.5px solid var(--bd);background:#fff;cursor:pointer}
+.pp:hover{background:var(--bg)}
+.pav{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--te));color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* ── CONTENT ── */
+.content{padding:26px;flex:1;overflow-y:auto}
+.pg-title{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.pg-sub{font-size:12.5px;color:var(--tx2);margin-top:4px}
+.sg{margin-bottom:22px}
+
+/* ── CARDS ── */
+.card{background:var(--cd);border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh)}
+.ch{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:13.5px;font-weight:700}
+.cb{padding:20px}
+.cb-sm{padding:14px 18px}
+
+/* ── STAT CARDS ── */
+.sc{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:20px 22px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.sc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.1);border-color:var(--pr)}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.sc.er::after{background:var(--er)}.sc.wa::after{background:var(--wa)}.sc.ok::after{background:var(--ok)}.sc.pr::after{background:var(--pr)}.sc.te::after{background:var(--te)}.sc.or::after{background:var(--or)}.sc.vi::after{background:var(--vi)}
+.sc-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:10px}
+.sc-val{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1}
+.sc-val.er{color:var(--er)}.sc-val.wa{color:var(--wa)}.sc-val.ok{color:var(--ok)}.sc-val.pr{color:var(--pr)}.sc-val.te{color:var(--te)}.sc-val.or{color:var(--or)}.sc-val.vi{color:var(--vi)}
+.sc-sub{font-size:11.5px;color:var(--tx3);margin-top:6px}
+.sc-icon{position:absolute;top:16px;right:16px;font-size:22px;opacity:.15}
+
+/* ── BADGES ── */
+.bx{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-r{background:var(--er-l);color:#991b1b}.b-y{background:var(--wa-l);color:#92400e}.b-g{background:var(--ok-l);color:#065f46}.b-b{background:var(--pr-l);color:#1e3a8a}.b-o{background:var(--or-l);color:#9a3412}.b-gr{background:#f1f5f9;color:#475569}.b-t{background:var(--te-l);color:#164e63}.b-v{background:var(--vi-l);color:#5b21b6}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:6px}
+.btn-bl{background:var(--pr);color:#fff}.btn-bl:hover{background:#1d40af;box-shadow:0 4px 12px rgba(29,78,216,.3)}
+.btn-ol{background:#fff;color:var(--tx);border:1.5px solid var(--bd)}.btn-ol:hover{background:var(--bg);border-color:#c8d0e0}
+.btn-gn{background:var(--ok);color:#fff}.btn-gn:hover{background:#047857}
+.btn-rd{background:var(--er);color:#fff}.btn-rd:hover{background:#b91c1c}
+.btn-or{background:var(--or);color:#fff}.btn-or:hover{background:#c2410c}
+.btn-vi{background:var(--vi);color:#fff}.btn-vi:hover{background:#6d28d9}
+.btn-gh{background:transparent;color:var(--tx2);border:none}.btn-gh:hover{background:var(--bg);color:var(--tx)}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g42{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);background:#f8fafc;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody td{padding:12px 14px;border-bottom:1px solid #f1f5f9;font-size:13px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .1s}
+tbody tr:hover{background:#fafbff}
+.mono{font-family:'Fira Code',monospace;font-size:12px}
+
+/* ── PROGRESS BAR ── */
+.pb{background:#e2e8f0;border-radius:99px;height:7px;overflow:hidden}
+.pf{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.pf-b{background:var(--pr)}.pf-g{background:var(--ok)}.pf-y{background:var(--wa)}.pf-r{background:var(--er)}.pf-t{background:var(--te)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--bd);margin-bottom:20px}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--pr);border-bottom-color:var(--pr)}
+.tp{display:none}.tp.active{display:block}
+
+/* ── FILTERS ── */
+.fbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.fsel{padding:8px 12px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:12.5px;background:#fff;color:var(--tx);outline:none;cursor:pointer;transition:border .15s}
+.fsel:focus{border-color:var(--pr)}
+.sf{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--bd);border-radius:8px;padding:0 13px;height:38px;transition:all .15s}
+.sf:focus-within{border-color:var(--pr);box-shadow:0 0 0 3px var(--pr-g)}
+.sf input{border:none;background:transparent;font-family:inherit;font-size:13px;flex:1;outline:none;width:200px}
+
+/* ── MILESTONE TIMELINE ── */
+.ml-wrap{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:10px 0 20px}
+.ml-item{display:flex;flex-direction:column;align-items:center;min-width:120px;flex:1;position:relative}
+.ml-item:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.ml-item.done:not(:last-child)::after{background:var(--ok)}
+.ml-item.active-ml:not(:last-child)::after{background:linear-gradient(90deg,var(--ok) 50%,var(--bd) 50%)}
+.ml-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:1;position:relative;flex-shrink:0}
+.ml-dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.ml-dot.active-ml{background:var(--pr);border-color:var(--pr);color:#fff;box-shadow:0 0 0 4px rgba(29,78,216,.2)}
+.ml-dot.risk{background:var(--wa);border-color:var(--wa);color:#fff}
+.ml-dot.over{background:var(--er);border-color:var(--er);color:#fff}
+.ml-lbl{font-size:11px;font-weight:700;text-align:center;margin-top:8px;line-height:1.3}
+.ml-date{font-size:10px;color:var(--tx3);margin-top:3px;text-align:center}
+.ml-status{font-size:10px;font-weight:700;margin-top:3px;text-align:center}
+.ml-status.done{color:var(--ok)}.ml-status.active-ml{color:var(--pr)}.ml-status.risk{color:var(--wa)}.ml-status.over{color:var(--er)}
+
+/* ── GRANT WORKSPACE HEADER ── */
+.ws-head{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:22px 26px;margin-bottom:20px;box-shadow:var(--sh)}
+.ws-ht{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+.ws-gn{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.ws-gc{font-size:11px;color:var(--tx2);font-family:'Fira Code',monospace;margin-top:3px}
+.ws-meta{display:flex;gap:26px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--bd)}
+.ws-mi span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);display:block;margin-bottom:3px}
+.ws-mi strong{font-size:13.5px;font-weight:700}
+
+/* ── WIZARD ── */
+.wiz-wrap{max-width:820px;margin:0 auto}
+.wiz-progress{display:flex;align-items:center;gap:0;margin-bottom:32px}
+.wiz-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.wiz-step:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.wiz-step.done:not(:last-child)::after,.wiz-step.curr:not(:last-child)::after{background:linear-gradient(90deg,var(--pr) 0%,var(--bd) 100%)}
+.wiz-step.done:not(:last-child)::after{background:var(--pr)}
+.wiz-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;z-index:1;position:relative;flex-shrink:0;color:var(--tx3)}
+.wiz-dot.done{background:var(--pr);border-color:var(--pr);color:#fff}
+.wiz-dot.curr{background:var(--pr);border-color:var(--pr);color:#fff;box-shadow:0 0 0 4px rgba(29,78,216,.2)}
+.wiz-sl{font-size:10.5px;font-weight:700;text-align:center;margin-top:7px;color:var(--tx3)}
+.wiz-sl.done,.wiz-sl.curr{color:var(--pr)}
+.wiz-card{background:#fff;border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh);padding:32px}
+.wiz-title{font-size:19px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
+.wiz-desc{font-size:13px;color:var(--tx2);margin-bottom:28px;line-height:1.5}
+.field-group{margin-bottom:20px}
+.field-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);display:block;margin-bottom:7px}
+.field-inp{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;font-size:13.5px;outline:none;transition:all .2s;background:#fafbfc;color:var(--tx)}
+.field-inp:focus{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.field-sel{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;font-size:13.5px;outline:none;background:#fff;cursor:pointer;color:var(--tx)}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.upload-box{border:2px dashed var(--bd);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.upload-box:hover{border-color:var(--pr);background:#f0f5ff}
+.upload-box .ubi{font-size:28px;margin-bottom:8px}
+.upload-box .ubl{font-size:13px;font-weight:600;color:var(--tx2)}
+.upload-box .ubh{font-size:11px;color:var(--tx3);margin-top:3px}
+.role-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--bd);border-radius:9px;margin-bottom:8px;transition:border .15s}
+.role-row:hover{border-color:var(--pr)}
+.role-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.task-gen-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;background:#fafbfc}
+.tgr-num{width:24px;height:24px;border-radius:50%;background:var(--pr-l);color:var(--pr);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.reminder-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;background:#fafbfc}
+.toggle{position:relative;display:inline-block;width:38px;height:21px}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:21px;transition:.3s}
+.slider:before{position:absolute;content:"";height:15px;width:15px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked+.slider{background:var(--pr)}
+input:checked+.slider:before{transform:translateX(17px)}
+.chain-box{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:20px}
+.chain-node{background:var(--pr-l);border:1.5px solid #bcd0ff;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--pr);white-space:nowrap}
+.chain-arrow{font-size:18px;color:var(--tx3);padding:0 8px}
+.publish-check{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:10px}
+.publish-check.done{background:var(--ok-l);border:1px solid #6ee7b7}
+.publish-check.todo{background:var(--er-l);border:1px solid #fca5a5}
+.pc-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pc-icon.done{background:var(--ok);color:#fff}
+.pc-icon.todo{background:var(--er);color:#fff}
+
+/* ── NOTIF / ESCALATIONS ── */
+.esc-row{display:flex;gap:14px;padding:14px 20px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background .1s}
+.esc-row:hover{background:#fafbff}
+.esc-row.unread{background:#f0f6ff}
+.esc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.esc-title{font-size:13px;font-weight:700}
+.esc-desc{font-size:12px;color:var(--tx2);margin-top:2px;line-height:1.4}
+.esc-meta{font-size:11px;color:var(--tx3);margin-top:4px}
+.esc-link{font-size:12px;color:var(--pr);font-weight:600;margin-top:4px;display:inline-block}
+.ud{width:8px;height:8px;border-radius:50%;background:var(--pr);flex-shrink:0;margin-top:7px}
+
+/* ── AUDIT LOG ── */
+.al-row{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start}
+.al-time{font-size:10.5px;font-family:'Fira Code',monospace;color:var(--tx3);width:140px;flex-shrink:0;padding-top:2px}
+.al-user{font-size:12px;font-weight:700;width:120px;flex-shrink:0}
+.al-action{font-size:12px;color:var(--tx);flex:1}
+.al-tag{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;flex-shrink:0}
+.at-u{background:#dbeafe;color:#1d4ed8}.at-s{background:var(--ok-l);color:#065f46}.at-a{background:var(--te-l);color:#164e63}.at-sy{background:#f1f5f9;color:#475569}.at-al{background:var(--er-l);color:#991b1b}.at-ch{background:var(--vi-l);color:#5b21b6}
+
+/* ── COUNTRY SELECTION ── */
+#sc-country{background:linear-gradient(150deg,#060f22 0%,#0c1e42 60%,#0f3569 100%);align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden;padding:40px 20px}
+#sc-country::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.cs-header{text-align:center;margin-bottom:40px;position:relative;z-index:1}
+.cs-header h1{font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px}
+.cs-header p{font-size:14px;color:#93c5fd}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;width:100%;position:relative;z-index:1}
+.cc{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:28px 26px;cursor:pointer;transition:all .25s;backdrop-filter:blur(8px)}
+.cc:hover{background:rgba(255,255,255,.12);border-color:rgba(100,150,255,.5);transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.cc-top{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cc-flag{font-size:36px;line-height:1}
+.cc-name{font-size:18px;font-weight:800;color:#fff}
+.cc-sub{font-size:12px;color:#93c5fd;margin-top:2px}
+.cc-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.cs-stat{background:rgba(0,0,0,.25);border-radius:9px;padding:10px 12px}
+.cs-stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7aa0cc;margin-bottom:4px}
+.cs-stat-val{font-size:18px;font-weight:800;color:#fff}
+.cs-stat-val.red{color:#f87171}.cs-stat-val.orange{color:#fb923c}.cs-stat-val.yellow{color:#fbbf24}.cs-stat-val.green{color:#34d399}
+.cc-pb{margin-bottom:18px}
+.cc-pb-lbl{font-size:11px;color:#93c5fd;margin-bottom:5px;font-weight:600}
+.cc-pb-bar{background:rgba(255,255,255,.15);border-radius:99px;height:7px;overflow:hidden}
+.cc-pb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#34d399,#10b981)}
+.cc-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--pr),#3b82f6);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s}
+.cc-btn:hover{box-shadow:0 8px 24px rgba(29,78,216,.5);transform:translateY(-1px)}
+.cs-all-btn{margin-top:20px;position:relative;z-index:1;padding:12px 32px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;backdrop-filter:blur(8px)}
+.cs-all-btn:hover{background:rgba(255,255,255,.18)}
+
+/* ── DEADLINE CHANGE REQUEST ── */
+.dcr-card{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:20px;margin-bottom:12px;transition:box-shadow .15s}
+.dcr-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.dcr-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.dcr-change{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg);border-radius:8px;font-size:12.5px}
+.dcr-old{color:var(--er);font-weight:700;text-decoration:line-through}
+.dcr-arr{color:var(--tx3);font-size:16px}
+.dcr-new{color:var(--ok);font-weight:700}
+
+/* ── MISC ── */
+.fb{display:flex;align-items:center;justify-content:space-between}
+.fg{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.div{height:1px;background:var(--bd);margin:18px 0}
+.alert-b{border-radius:10px;padding:13px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.alert-b.er{background:var(--er-l);border:1px solid #fca5a5}
+.alert-b.wa{background:var(--wa-l);border:1px solid #fcd34d}
+.alert-b p{font-size:13px;font-weight:600}
+.section-head{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .3s ease both}
+.fu:nth-child(1){animation-delay:.05s}.fu:nth-child(2){animation-delay:.1s}.fu:nth-child(3){animation-delay:.15s}.fu:nth-child(4){animation-delay:.2s}.fu:nth-child(5){animation-delay:.25s}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN ══════════════════════ -->
+<div id="sc-login" class="screen active">
+  <div class="login-box">
+    <div class="login-eyebrow">🏛️ Director Portal</div>
+    <div style="margin-bottom:24px;">
+      <div class="login-logo-icon">🎓</div>
+      <h1>Grant Management System</h1>
+      <p class="sub">Director & Senior Leadership Portal</p>
+    </div>
+    <label class="lbl">Email Address</label>
+    <input class="inp" type="email" value="director@university.edu" placeholder="director@university.edu">
+    <label class="lbl">Password</label>
+    <input class="inp" type="password" value="password" placeholder="••••••••">
+    <button class="btn-login" onclick="goTo('country')">Sign In to Director Portal →</button>
+    <div class="forgot">Forgot password?</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ COUNTRY SELECTION ══════════════════════ -->
+<div id="sc-country" class="screen" style="flex-direction:column;">
+  <div class="cs-header">
+    <div style="font-size:13px;color:#93c5fd;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">🎓 GMS Director Portal</div>
+    <h1>Select a Country</h1>
+    <p>Choose a country to enter its grant management dashboard</p>
+  </div>
+  <div class="cs-grid">
+    <!-- Tajikistan -->
+    <div class="cc" onclick="enterCountry('Tajikistan','🇹🇯')">
+      <div class="cc-top"><div class="cc-flag">🇹🇯</div><div><div class="cc-name">Tajikistan</div><div class="cc-sub">12 Active Grants · ORD Office</div></div></div>
+      <div class="cc-stats">
+        <div class="cs-stat"><div class="cs-stat-lbl">Active Grants</div><div class="cs-stat-val green">12</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Overdue Tasks</div><div class="cs-stat-val red">8</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Reports Due (14d)</div><div class="cs-stat-val orange">5</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">At Risk Items</div><div class="cs-stat-val yellow">3</div></div>
+      </div>
+      <div class="cc-pb"><div class="cc-pb-lbl">On-time Performance — 74%</div><div class="cc-pb-bar"><div class="cc-pb-fill" style="width:74%"></div></div></div>
+      <button class="cc-btn">Enter Tajikistan →</button>
+    </div>
+    <!-- Kyrgyzstan -->
+    <div class="cc" onclick="enterCountry('Kyrgyzstan','🇰🇬')">
+      <div class="cc-top"><div class="cc-flag">🇰🇬</div><div><div class="cc-name">Kyrgyzstan</div><div class="cc-sub">9 Active Grants · ORD Office</div></div></div>
+      <div class="cc-stats">
+        <div class="cs-stat"><div class="cs-stat-lbl">Active Grants</div><div class="cs-stat-val green">9</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Overdue Tasks</div><div class="cs-stat-val red">4</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Reports Due (14d)</div><div class="cs-stat-val orange">3</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">At Risk Items</div><div class="cs-stat-val yellow">6</div></div>
+      </div>
+      <div class="cc-pb"><div class="cc-pb-lbl">On-time Performance — 82%</div><div class="cc-pb-bar"><div class="cc-pb-fill" style="width:82%"></div></div></div>
+      <button class="cc-btn">Enter Kyrgyzstan →</button>
+    </div>
+    <!-- Kazakhstan -->
+    <div class="cc" onclick="enterCountry('Kazakhstan','🇰🇿')">
+      <div class="cc-top"><div class="cc-flag">🇰🇿</div><div><div class="cc-name">Kazakhstan</div><div class="cc-sub">7 Active Grants · ORD Office</div></div></div>
+      <div class="cc-stats">
+        <div class="cs-stat"><div class="cs-stat-lbl">Active Grants</div><div class="cs-stat-val green">7</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Overdue Tasks</div><div class="cs-stat-val red">2</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Reports Due (14d)</div><div class="cs-stat-val orange">4</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">At Risk Items</div><div class="cs-stat-val yellow">1</div></div>
+      </div>
+      <div class="cc-pb"><div class="cc-pb-lbl">On-time Performance — 91%</div><div class="cc-pb-bar"><div class="cc-pb-fill" style="width:91%"></div></div></div>
+      <button class="cc-btn">Enter Kazakhstan →</button>
+    </div>
+    <!-- Afghanistan -->
+    <div class="cc" onclick="enterCountry('Afghanistan','🇦🇫')">
+      <div class="cc-top"><div class="cc-flag">🇦🇫</div><div><div class="cc-name">Afghanistan</div><div class="cc-sub">5 Active Grants · ORD Office</div></div></div>
+      <div class="cc-stats">
+        <div class="cs-stat"><div class="cs-stat-lbl">Active Grants</div><div class="cs-stat-val green">5</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Overdue Tasks</div><div class="cs-stat-val red">11</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">Reports Due (14d)</div><div class="cs-stat-val orange">6</div></div>
+        <div class="cs-stat"><div class="cs-stat-lbl">At Risk Items</div><div class="cs-stat-val yellow">9</div></div>
+      </div>
+      <div class="cc-pb"><div class="cc-pb-lbl">On-time Performance — 58%</div><div class="cc-pb-bar"><div class="cc-pb-fill" style="width:58%"></div></div></div>
+      <button class="cc-btn">Enter Afghanistan →</button>
+    </div>
+  </div>
+  <button class="cs-all-btn" onclick="enterCountry('All Countries','🌍')">🌍 View All Countries Overview</button>
+</div>
+
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div id="sc-dashboard" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small id="sb-country-lbl">Tajikistan</small></div></div>
+      <div class="sb-section">
+        <div class="sb-sec-lbl">Navigation</div>
+        <div class="ni active" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-sec-lbl">Country</div>
+        <div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div>
+      </div>
+      <div class="sb-foot">
+        <div class="uav">DR</div>
+        <div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div>
+        <button class="lb-btn" onclick="goTo('login')">⏏</button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag" id="tb-flag">🇹🇯</span> <span id="tb-country">Tajikistan</span> ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search grant, donor, PI, keyword…"></div>
+        <div class="tb-right">
+          <div class="tbi" onclick="goTo('escalations')">🔔<span class="tbd">8</span></div>
+          <button class="btn btn-sm btn-ol">📥 Export Dashboard</button>
+          <div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600;">Dr. Rashidov</span><span style="color:var(--tx3)">▾</span></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="fb sg fu">
+          <div><div class="pg-title" id="dash-title">Tajikistan — Grant Dashboard</div><div class="pg-sub">Post-award monitoring · Director view · All values in USD</div></div>
+          <div class="fg">
+            <button class="btn btn-sm btn-bl" onclick="goTo('new-grant')">➕ New Grant Setup</button>
+            <button class="btn btn-sm btn-ol">📄 Download PDF Summary</button>
+          </div>
+        </div>
+
+        <!-- KPI STATS -->
+        <div class="g42 sg">
+          <div class="sc pr fu" onclick="goTo('grants')"><div class="sc-icon">📋</div><div class="sc-lbl">Active Grants</div><div class="sc-val pr">12</div><div class="sc-sub">3 closing soon</div></div>
+          <div class="sc er fu" onclick="goTo('escalations')"><div class="sc-icon">⚠️</div><div class="sc-lbl">Overdue Tasks</div><div class="sc-val er">8</div><div class="sc-sub">Immediate action needed</div></div>
+          <div class="sc wa fu"><div class="sc-icon">🎯</div><div class="sc-lbl">At-Risk Items</div><div class="sc-val wa">3</div><div class="sc-sub">Needs monitoring</div></div>
+          <div class="sc or fu" onclick="goTo('escalations')"><div class="sc-icon">📄</div><div class="sc-lbl">Reports Due (14d)</div><div class="sc-val or">5</div><div class="sc-sub">Narrative + Financial</div></div>
+          <div class="sc te fu"><div class="sc-icon">📸</div><div class="sc-lbl">Evidence Missing</div><div class="sc-val te">7</div><div class="sc-sub">Tasks blocked</div></div>
+          <div class="sc vi fu"><div class="sc-icon">💰</div><div class="sc-lbl">Financial Reports Pending</div><div class="sc-val vi">2</div><div class="sc-sub">Awaiting approval</div></div>
+          <div class="sc ok fu"><div class="sc-icon">✅</div><div class="sc-lbl">On Track</div><div class="sc-val ok">74%</div><div class="sc-sub">Projects performing</div></div>
+          <div class="sc pr fu"><div class="sc-icon">💵</div><div class="sc-lbl">Total Portfolio</div><div class="sc-val pr" style="font-size:20px">$4.8M</div><div class="sc-sub">Across 12 grants</div></div>
+        </div>
+
+        <!-- CHARTS ROW 1 -->
+        <div class="g2 sg">
+          <div class="card fu">
+            <div class="ch"><div class="ct">📊 Tasks Completed vs Overdue</div><select class="fsel" style="font-size:11.5px;padding:4px 8px"><option>Last 6 months</option><option>This year</option></select></div>
+            <div class="cb"><canvas id="taskBarChart" height="190"></canvas></div>
+          </div>
+          <div class="card fu">
+            <div class="ch"><div class="ct">📈 Budget vs Actual Spending</div><div class="fg"><span class="bx b-b" style="font-size:10px">● Planned</span><span class="bx b-g" style="font-size:10px">● Actual</span></div></div>
+            <div class="cb"><canvas id="budgetLineChart" height="190"></canvas></div>
+          </div>
+        </div>
+
+        <!-- CHARTS ROW 2 -->
+        <div class="g3 sg">
+          <div class="card fu">
+            <div class="ch"><div class="ct">🥧 Grants by Status</div></div>
+            <div class="cb" style="display:flex;align-items:center;gap:16px">
+              <div style="width:140px;height:140px;flex-shrink:0"><canvas id="statusDonut"></canvas></div>
+              <div style="flex:1;font-size:12px;display:flex;flex-direction:column;gap:7px">
+                <div class="fb"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#059669;display:inline-block"></span>Active</span><strong>7</strong></div>
+                <div class="fb"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#1d4ed8;display:inline-block"></span>Reporting</span><strong>3</strong></div>
+                <div class="fb"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>At Risk</span><strong>2</strong></div>
+                <div class="fb"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#94a3b8;display:inline-block"></span>Closing</span><strong>1</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="card fu">
+            <div class="ch"><div class="ct">📋 Reporting On-time vs Late</div></div>
+            <div class="cb"><canvas id="reportBar" height="150"></canvas></div>
+          </div>
+          <div class="card fu">
+            <div class="ch"><div class="ct">📸 Evidence Completeness</div></div>
+            <div class="cb" style="display:flex;flex-direction:column;gap:12px">
+              <div><div class="fb" style="margin-bottom:5px;font-size:12px;font-weight:600"><span>Agriculture Training</span><span style="color:var(--ok)">88%</span></div><div class="pb"><div class="pf pf-g" style="width:88%"></div></div></div>
+              <div><div class="fb" style="margin-bottom:5px;font-size:12px;font-weight:600"><span>Water Infrastructure</span><span style="color:var(--wa)">62%</span></div><div class="pb"><div class="pf pf-y" style="width:62%"></div></div></div>
+              <div><div class="fb" style="margin-bottom:5px;font-size:12px;font-weight:600"><span>Rural Health Initiative</span><span style="color:var(--ok)">95%</span></div><div class="pb"><div class="pf pf-g" style="width:95%"></div></div></div>
+              <div><div class="fb" style="margin-bottom:5px;font-size:12px;font-weight:600"><span>Education Fund</span><span style="color:var(--er)">41%</span></div><div class="pb"><div class="pf pf-r" style="width:41%"></div></div></div>
+              <div><div class="fb" style="margin-bottom:5px;font-size:12px;font-weight:600"><span>Climate Resilience</span><span style="color:var(--ok)">78%</span></div><div class="pb"><div class="pf pf-b" style="width:78%"></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERT LISTS -->
+        <div class="g3 sg">
+          <!-- Overdue -->
+          <div class="card fu">
+            <div class="ch"><div class="ct">🔴 Overdue Items (Top 10)</div><span class="bx b-r">8 overdue</span></div>
+            <div style="max-height:320px;overflow-y:auto">
+              <table><thead><tr><th>Grant</th><th>Task</th><th>Days</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><strong style="cursor:pointer;color:var(--pr)" onclick="goTo('workspace')">Agriculture</strong></td><td style="font-size:11.5px">Workshop Report</td><td><span class="bx b-r">4d</span></td><td><button class="btn btn-xs btn-rd" onclick="goTo('workspace')">View</button></td></tr>
+                <tr><td><strong style="cursor:pointer;color:var(--pr)" onclick="goTo('workspace')">Water Infra</strong></td><td style="font-size:11.5px">Field Visit Photos</td><td><span class="bx b-r">2d</span></td><td><button class="btn btn-xs btn-rd" onclick="goTo('workspace')">View</button></td></tr>
+                <tr><td><strong style="cursor:pointer;color:var(--pr)">Education Fund</strong></td><td style="font-size:11.5px">Procurement Docs</td><td><span class="bx b-r">7d</span></td><td><button class="btn btn-xs btn-rd">View</button></td></tr>
+                <tr><td><strong style="cursor:pointer;color:var(--pr)">Rural Health</strong></td><td style="font-size:11.5px">Beneficiary Survey</td><td><span class="bx b-r">1d</span></td><td><button class="btn btn-xs btn-rd">View</button></td></tr>
+                <tr><td><strong style="cursor:pointer;color:var(--pr)">Climate</strong></td><td style="font-size:11.5px">Milestone Sign-off</td><td><span class="bx b-r">3d</span></td><td><button class="btn btn-xs btn-rd">View</button></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <!-- Reports Due -->
+          <div class="card fu">
+            <div class="ch"><div class="ct">📄 Reports Due Soon</div><span class="bx b-o">5 due</span></div>
+            <div style="max-height:320px;overflow-y:auto">
+              <table><thead><tr><th>Grant</th><th>Type</th><th>Due</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong style="font-size:12px">Agriculture</strong></td><td style="font-size:11px">Narrative Q2</td><td style="color:var(--er);font-weight:700;font-size:11.5px">OVERDUE</td><td><span class="bx b-y">Draft</span></td></tr>
+                <tr><td><strong style="font-size:12px">Water Infra</strong></td><td style="font-size:11px">Financial Q2</td><td style="font-size:11.5px;color:var(--wa)">May 20</td><td><span class="bx b-b">Prepared</span></td></tr>
+                <tr><td><strong style="font-size:12px">Rural Health</strong></td><td style="font-size:11px">Quarterly</td><td style="font-size:11.5px">May 28</td><td><span class="bx b-g">Submitted</span></td></tr>
+                <tr><td><strong style="font-size:12px">Education</strong></td><td style="font-size:11px">Financial H1</td><td style="font-size:11.5px">Jun 15</td><td><span class="bx b-gr">Not Started</span></td></tr>
+                <tr><td><strong style="font-size:12px">Climate</strong></td><td style="font-size:11px">Annual</td><td style="font-size:11.5px">Jun 30</td><td><span class="bx b-gr">Not Started</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <!-- High Risk -->
+          <div class="card fu">
+            <div class="ch"><div class="ct">⚠️ High Risk Grants</div><span class="bx b-y">3 at risk</span></div>
+            <div class="cb" style="display:flex;flex-direction:column;gap:12px">
+              <div style="padding:12px 14px;background:var(--er-l);border-radius:9px;border:1px solid #fca5a5">
+                <div class="fb"><strong style="font-size:13px;cursor:pointer;color:var(--er)" onclick="goTo('workspace')">Agriculture Training</strong><span class="bx b-r">Critical</span></div>
+                <div style="font-size:12px;color:#991b1b;margin-top:5px">• 3 tasks overdue<br>• Evidence missing<br>• Report not submitted</div>
+              </div>
+              <div style="padding:12px 14px;background:var(--wa-l);border-radius:9px;border:1px solid #fcd34d">
+                <div class="fb"><strong style="font-size:13px;cursor:pointer;color:var(--wa)">Education Fund</strong><span class="bx b-y">At Risk</span></div>
+                <div style="font-size:12px;color:#92400e;margin-top:5px">• Procurement delayed 7 days<br>• Low spending alert</div>
+              </div>
+              <div style="padding:12px 14px;background:var(--wa-l);border-radius:9px;border:1px solid #fcd34d">
+                <div class="fb"><strong style="font-size:13px;cursor:pointer;color:var(--wa)">Water Infrastructure</strong><span class="bx b-y">Watch</span></div>
+                <div style="font-size:12px;color:#92400e;margin-top:5px">• Field photos missing<br>• Q2 report due soon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ GRANTS LIST ══════════════════════ -->
+<div id="sc-grants" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small id="sb-country-lbl2">Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni active"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search grants…"></div>
+        <div class="tb-right"><div class="tbi" onclick="goTo('escalations')">🔔<span class="tbd">8</span></div><button class="btn btn-sm btn-bl" onclick="goTo('new-grant')">➕ New Grant Setup</button><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-title">Grants — Tajikistan</div><div class="pg-sub">12 grants · Director oversight view</div></div><button class="btn btn-sm btn-ol">📥 Export All</button></div>
+        <div class="fbar">
+          <div class="sf"><span style="color:var(--tx3)">🔍</span><input placeholder="Search by grant, donor, PI…"></div>
+          <select class="fsel"><option>All Status</option><option>Awarded</option><option>Active</option><option>Reporting</option><option>Closing</option><option>Closed</option></select>
+          <select class="fsel"><option>All Risk</option><option>Normal</option><option>At Risk</option><option>Overdue</option></select>
+          <select class="fsel"><option>All Donors</option><option>USAID</option><option>World Bank</option><option>EU</option><option>ADB</option></select>
+          <select class="fsel"><option>All PIs</option><option>Dr. Jenkins</option><option>Prof. Alimov</option></select>
+        </div>
+        <div class="card">
+          <div class="tw">
+            <table>
+              <thead><tr><th>Grant Name</th><th>Donor</th><th>PI</th><th>Period</th><th>Next Report</th><th>Overdue</th><th>Evidence</th><th>Budget Spent</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong style="cursor:pointer;color:var(--pr)" onclick="goTo('workspace')">Agriculture Training Program</strong><br><span class="mono" style="color:var(--tx3)">GMS-2023-001</span></td>
+                  <td>USAID</td><td>Dr. Jenkins</td>
+                  <td style="font-size:11.5px">Jan 2023 – Dec 2025</td>
+                  <td style="color:var(--er);font-weight:700;font-size:12px">OVERDUE</td>
+                  <td><span class="bx b-r">3 tasks</span></td>
+                  <td><span class="bx b-r">⚠ 2 missing</span></td>
+                  <td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf pf-y" style="width:62%"></div></div><span style="font-size:11.5px;font-weight:700">62%</span></div></td>
+                  <td><span class="bx b-r">At Risk</span></td>
+                  <td><div class="fg"><button class="btn btn-xs btn-bl" onclick="goTo('workspace')">Open</button><button class="btn btn-xs btn-ol">📥</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong style="cursor:pointer;color:var(--pr)" onclick="goTo('workspace')">Water Infrastructure Grant</strong><br><span class="mono" style="color:var(--tx3)">GMS-2023-004</span></td>
+                  <td>World Bank</td><td>Dr. Jenkins</td>
+                  <td style="font-size:11.5px">Mar 2023 – Mar 2026</td>
+                  <td style="color:var(--wa);font-weight:700;font-size:12px">May 20</td>
+                  <td><span class="bx b-y">1 task</span></td>
+                  <td><span class="bx b-o">⚠ 1 missing</span></td>
+                  <td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf pf-b" style="width:45%"></div></div><span style="font-size:11.5px;font-weight:700">45%</span></div></td>
+                  <td><span class="bx b-y">Active</span></td>
+                  <td><div class="fg"><button class="btn btn-xs btn-bl" onclick="goTo('workspace')">Open</button><button class="btn btn-xs btn-ol">📥</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong style="cursor:pointer;color:var(--pr)">Rural Health Initiative</strong><br><span class="mono" style="color:var(--tx3)">GMS-2022-017</span></td>
+                  <td>EU Commission</td><td>Prof. Alimov</td>
+                  <td style="font-size:11.5px">Jun 2022 – Jun 2026</td>
+                  <td style="font-size:12px">May 28</td>
+                  <td><span class="bx b-gr">None</span></td>
+                  <td><span class="bx b-g">✓ OK</span></td>
+                  <td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf pf-g" style="width:47%"></div></div><span style="font-size:11.5px;font-weight:700">47%</span></div></td>
+                  <td><span class="bx b-g">On Track</span></td>
+                  <td><div class="fg"><button class="btn btn-xs btn-bl">Open</button><button class="btn btn-xs btn-ol">📥</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong style="cursor:pointer;color:var(--pr)">Education Development Fund</strong><br><span class="mono" style="color:var(--tx3)">GMS-2024-002</span></td>
+                  <td>ADB</td><td>Dr. Nazarova</td>
+                  <td style="font-size:11.5px">Feb 2024 – Feb 2027</td>
+                  <td style="font-size:12px">Jun 15</td>
+                  <td><span class="bx b-y">2 tasks</span></td>
+                  <td><span class="bx b-o">⚠ 1 missing</span></td>
+                  <td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:70px"><div class="pf pf-t" style="width:31%"></div></div><span style="font-size:11.5px;font-weight:700">31%</span></div></td>
+                  <td><span class="bx b-y">At Risk</span></td>
+                  <td><div class="fg"><button class="btn btn-xs btn-bl">Open</button><button class="btn btn-xs btn-ol">📥</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ GRANT WORKSPACE ══════════════════════ -->
+<div id="sc-workspace" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small>Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni active" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search within grant…"></div>
+        <div class="tb-right"><div class="tbi">🔔<span class="tbd">8</span></div><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <button class="btn btn-sm btn-ol" onclick="goTo('grants')">← Back to Grants</button>
+          <span class="bx b-r">At Risk</span><span class="bx b-r">3 Tasks Overdue</span>
+        </div>
+        <div class="ws-head">
+          <div class="ws-ht">
+            <div><div class="ws-gn">Agriculture Training Program</div><div class="ws-gc">GMS-2023-001 · USAID · Tajikistan</div></div>
+            <div class="fg">
+              <button class="btn btn-sm btn-ol">📥 Export Excel</button>
+              <button class="btn btn-sm btn-ol">📋 Audit Pack</button>
+              <button class="btn btn-sm btn-vi" onclick="goTo('audit-log')">🔍 Audit Log</button>
+              <button class="btn btn-sm btn-or" onclick="goTo('deadline-changes')">📅 Change Deadline</button>
+            </div>
+          </div>
+          <div class="ws-meta">
+            <div class="ws-mi"><span>Donor</span><strong>USAID</strong></div>
+            <div class="ws-mi"><span>PI</span><strong>Dr. Jenkins</strong></div>
+            <div class="ws-mi"><span>Period</span><strong>Jan 2023 – Dec 2025</strong></div>
+            <div class="ws-mi"><span>Budget</span><strong>$485,000</strong></div>
+            <div class="ws-mi"><span>Status</span><span class="bx b-r">At Risk</span></div>
+            <div class="ws-mi"><span>Country</span><strong>🇹🇯 Tajikistan</strong></div>
+          </div>
+        </div>
+
+        <!-- Milestone Timeline -->
+        <div class="card sg">
+          <div class="ch"><div class="ct">🗓 Milestone Timeline</div><button class="btn btn-sm btn-or" onclick="goTo('deadline-changes')">📅 Request Deadline Change</button></div>
+          <div class="cb">
+            <div class="ml-wrap">
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Contract Signed</div><div class="ml-date">Jan 5, 2023</div><div class="ml-status done">Complete</div></div>
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Handover Complete</div><div class="ml-date">Feb 1, 2023</div><div class="ml-status done">Complete</div></div>
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Budget Released</div><div class="ml-date">Feb 15, 2023</div><div class="ml-status done">Complete</div></div>
+              <div class="ml-item over"><div class="ml-dot over">!</div><div class="ml-lbl">Workshop Series</div><div class="ml-date">May 12, 2025</div><div class="ml-status over">Overdue</div></div>
+              <div class="ml-item active-ml"><div class="ml-dot active-ml">▶</div><div class="ml-lbl">Mid-term Review</div><div class="ml-date">Jun 1, 2025</div><div class="ml-status active-ml">In Progress</div></div>
+              <div class="ml-item"><div class="ml-dot">6</div><div class="ml-lbl">Final Report</div><div class="ml-date">Dec 1, 2025</div><div class="ml-status">Upcoming</div></div>
+              <div class="ml-item"><div class="ml-dot">7</div><div class="ml-lbl">Close-out</div><div class="ml-date">Dec 31, 2025</div><div class="ml-status">Upcoming</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="ws-tabs">
+          <div class="tab active" onclick="switchTab('ws','overview',this)">Overview</div>
+          <div class="tab" onclick="switchTab('ws','tasks',this)">Tasks & Deadlines</div>
+          <div class="tab" onclick="switchTab('ws','reports',this)">Reports</div>
+          <div class="tab" onclick="switchTab('ws','financial',this)">Financial</div>
+          <div class="tab" onclick="switchTab('ws','documents',this)">Documents</div>
+          <div class="tab" onclick="switchTab('ws','evidence',this)">Evidence</div>
+          <div class="tab" onclick="switchTab('ws','ws-audit',this)">Audit Log</div>
+        </div>
+
+        <div id="ws-tab-overview" class="tp active">
+          <div class="g3">
+            <div class="sc pr"><div class="sc-lbl">Total Budget</div><div class="sc-val pr" style="font-size:22px">$485K</div></div>
+            <div class="sc wa"><div class="sc-lbl">Spent to Date</div><div class="sc-val wa" style="font-size:22px">$298K</div><div class="sc-sub">62% utilization</div></div>
+            <div class="sc ok"><div class="sc-lbl">Remaining</div><div class="sc-val ok" style="font-size:22px">$187K</div></div>
+          </div>
+          <div class="g2" style="margin-top:20px">
+            <div class="card"><div class="ch"><div class="ct">Next 3 Deadlines</div></div><div class="cb" style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--er-l);border-radius:8px"><span style="font-size:18px">🔴</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Workshop Completion Report</div><div style="font-size:11.5px;color:var(--er)">OVERDUE — evidence missing</div></div><button class="btn btn-xs btn-rd" onclick="goTo('deadline-changes')">Change Date</button></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--wa-l);border-radius:8px"><span style="font-size:18px">🟡</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Q2 Narrative Report</div><div style="font-size:11.5px;color:var(--wa)">May 20 — Draft in progress</div></div><button class="btn btn-xs btn-or" onclick="goTo('deadline-changes')">Change Date</button></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8fafc;border-radius:8px"><span style="font-size:18px">📋</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Phase 2 Milestone Review</div><div style="font-size:11.5px;color:var(--tx2)">Jun 1 — Not started</div></div><button class="btn btn-xs btn-ol" onclick="goTo('deadline-changes')">Change Date</button></div>
+            </div></div>
+            <div class="card"><div class="ch"><div class="ct">Director Actions</div></div><div class="cb" style="display:flex;flex-direction:column;gap:10px">
+              <button class="btn btn-or" style="justify-content:center;padding:12px">🚩 Flag a Concern</button>
+              <button class="btn btn-vi" style="justify-content:center;padding:12px">💬 Send Comment to ORD / PI</button>
+              <button class="btn btn-ol" style="justify-content:center;padding:12px">📋 View Escalation History</button>
+              <button class="btn btn-ol" style="justify-content:center;padding:12px">📥 Download Audit Pack</button>
+            </div></div>
+          </div>
+        </div>
+
+        <div id="ws-tab-tasks" class="tp">
+          <div class="fb" style="margin-bottom:16px"><div class="fg"><span class="bx b-r">3 Overdue</span><span class="bx b-y">2 At Risk</span></div><button class="btn btn-sm btn-or" onclick="goTo('deadline-changes')">📅 Bulk Edit Deadlines</button></div>
+          <div class="card"><div class="tw">
+            <table><thead><tr><th>Task</th><th>Owner</th><th>Due Date</th><th>Status</th><th>Evidence</th><th>Submitted To</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Submit Workshop Completion Report</strong><br><span style="font-size:11px;color:var(--tx3)">🗨 2 comments</span></td><td>Dr. Jenkins</td><td style="color:var(--er);font-weight:700">May 12 — OVERDUE</td><td><span class="bx b-r">Overdue</span></td><td><span class="bx b-r">⚠ Missing</span></td><td style="font-size:11.5px">Dean, ORD</td><td><div class="fg"><button class="btn btn-xs btn-bl">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-changes')">📅</button></div></td></tr>
+              <tr><td><strong>Q2 Narrative Report</strong></td><td>Dr. Jenkins</td><td style="color:var(--wa);font-weight:700">May 20</td><td><span class="bx b-y">In Progress</span></td><td><span class="bx b-gr">N/A</span></td><td style="font-size:11.5px">ORD, Dean</td><td><div class="fg"><button class="btn btn-xs btn-bl">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-changes')">📅</button></div></td></tr>
+              <tr><td><strong>Phase 2 Milestone Review</strong></td><td>Prof. Alimov</td><td>Jun 1</td><td><span class="bx b-b">Not Started</span></td><td><span class="bx b-gr">N/A</span></td><td style="font-size:11.5px">Director, ORD</td><td><div class="fg"><button class="btn btn-xs btn-bl">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-changes')">📅</button></div></td></tr>
+            </tbody></table>
+          </div></div>
+        </div>
+
+        <div id="ws-tab-reports" class="tp">
+          <div class="g2">
+            <div class="card"><div class="ch"><div class="ct">📝 Narrative Reports</div></div><div class="cb-sm"><table><thead><tr><th>Report</th><th>Due</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+              <tr><td>Q2 2025</td><td style="color:var(--er);font-weight:700">OVERDUE</td><td><span class="bx b-y">Draft</span></td><td>Dr. Jenkins</td></tr>
+              <tr><td>Q1 2025</td><td>Mar 31</td><td><span class="bx b-g">Approved</span></td><td>Dr. Jenkins</td></tr>
+              <tr><td>Annual 2024</td><td>Jan 10</td><td><span class="bx b-g">Submitted</span></td><td>Dr. Jenkins</td></tr>
+            </tbody></table></div></div>
+            <div class="card"><div class="ch"><div class="ct">💰 Financial Reports</div></div><div class="cb-sm"><table><thead><tr><th>Report</th><th>Due</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+              <tr><td>Mid-Year 2025</td><td style="color:var(--er);font-weight:700">OVERDUE</td><td><span class="bx b-y">Draft</span></td><td>Z. Nazarova</td></tr>
+              <tr><td>Q1 2025</td><td>Mar 31</td><td><span class="bx b-g">Approved</span></td><td>Z. Nazarova</td></tr>
+            </tbody></table></div></div>
+          </div>
+        </div>
+
+        <div id="ws-tab-financial" class="tp">
+          <div class="card sg"><div class="ch"><div class="ct">📈 Budget vs Actual — Monthly</div><button class="btn btn-sm btn-ol">📥 Export</button></div><div class="cb"><canvas id="wsFinChart" height="200"></canvas></div></div>
+          <div class="card"><div class="ch"><div class="ct">💰 Budget Lines</div></div><div class="tw"><table><thead><tr><th>Line</th><th>Planned</th><th>Spent</th><th>Remaining</th><th>Utilization</th><th>Status</th></tr></thead><tbody>
+            <tr><td><strong>Personnel</strong></td><td class="mono">$194,000</td><td class="mono">$119,360</td><td class="mono" style="color:var(--ok)">$74,640</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:80px"><div class="pf pf-g" style="width:61%"></div></div><span>61%</span></div></td><td><span class="bx b-g">Normal</span></td></tr>
+            <tr><td><strong>Training</strong></td><td class="mono">$97,000</td><td class="mono">$71,680</td><td class="mono" style="color:var(--ok)">$25,320</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:80px"><div class="pf pf-b" style="width:74%"></div></div><span>74%</span></div></td><td><span class="bx b-g">Normal</span></td></tr>
+            <tr style="background:#fff5f5"><td><strong>Equipment ⚠</strong></td><td class="mono">$97,000</td><td class="mono" style="color:var(--er);font-weight:700">$101,200</td><td class="mono" style="color:var(--er);font-weight:700">-$4,200</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:80px"><div class="pf pf-r" style="width:100%"></div></div><span style="color:var(--er);font-weight:700">104%</span></div></td><td><span class="bx b-r">Overspent</span></td></tr>
+          </tbody></table></div></div>
+        </div>
+
+        <div id="ws-tab-documents" class="tp">
+          <div class="card"><div class="ch"><div class="ct">📁 Document Repository</div></div><div class="cb" style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:var(--bg);border-radius:8px;padding:12px 16px"><div style="font-weight:700;font-size:13px;margin-bottom:8px">📂 Reports</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:#fff;border-radius:7px;border:1px solid var(--bd);margin-bottom:6px"><span>📄</span><div style="flex:1;font-size:12px"><strong>Q1_Narrative_Report.pdf</strong><br><span style="color:var(--tx3)">Dr. Jenkins · Mar 15, 2025 · v2</span></div><span class="bx b-g">Latest Approved</span><button class="btn btn-xs btn-ol">📥</button></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:#fff;border-radius:7px;border:1px solid var(--bd)"><span>📄</span><div style="flex:1;font-size:12px"><strong>Q1_Narrative_Report.pdf</strong><br><span style="color:var(--tx3)">Dr. Jenkins · Feb 28, 2025 · v1</span></div><span class="bx b-gr">Older Version</span><button class="btn btn-xs btn-ol">📥</button></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div id="ws-tab-evidence" class="tp">
+          <div class="alert-b er"><span style="font-size:22px">⚠️</span><div><p style="color:#991b1b">2 tasks have missing evidence — submission is blocked</p></div></div>
+          <div class="g3">
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer"><div style="font-size:32px;margin-bottom:6px">📸</div><div style="font-size:12px;font-weight:600">Workshop Photos</div><div style="font-size:11px;color:var(--tx3);margin-top:2px">Linked: Workshop Report</div><span class="bx b-r" style="margin-top:6px;display:inline-flex">Missing</span></div>
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer"><div style="font-size:32px;margin-bottom:6px">📋</div><div style="font-size:12px;font-weight:600">Attendance Sheet</div><div style="font-size:11px;color:var(--tx3);margin-top:2px">Linked: Workshop Report</div><span class="bx b-r" style="margin-top:6px;display:inline-flex">Missing</span></div>
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer"><div style="font-size:32px;margin-bottom:6px">📄</div><div style="font-size:12px;font-weight:600">Narrative_Report_v2.pdf</div><div style="font-size:11px;color:var(--tx3);margin-top:2px">Dr. Jenkins · May 14</div><span class="bx b-g" style="margin-top:6px;display:inline-flex">Uploaded</span></div>
+          </div>
+        </div>
+
+        <div id="ws-tab-ws-audit" class="tp">
+          <div class="card"><div class="ch"><div class="ct">🔍 Grant Audit Log</div><button class="btn btn-sm btn-ol">Export</button></div><div class="cb">
+            <div class="al-row"><div class="al-time">May 16 · 09:14</div><div class="al-user">Dr. Jenkins</div><div class="al-action">Uploaded <strong>Narrative_Report_v2.pdf</strong></div><div class="al-tag at-u">UPLOAD</div></div>
+            <div class="al-row"><div class="al-time">May 12 · 08:00</div><div class="al-user">System</div><div class="al-action">Task <strong>Workshop Completion Report</strong> marked OVERDUE</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-row"><div class="al-time">Mar 15 · 14:10</div><div class="al-user">Dr. Jenkins</div><div class="al-action">Submitted Q1 Narrative Report to Dean, ORD</div><div class="al-tag at-s">SUBMIT</div></div>
+            <div class="al-row"><div class="al-time">Mar 14 · 11:23</div><div class="al-user">Prof. Alimov</div><div class="al-action">Approved Q1 Narrative Report</div><div class="al-tag at-a">APPROVE</div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ NEW GRANT SETUP WIZARD ══════════════════════ -->
+<div id="sc-new-grant" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small>Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni active"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search…"></div>
+        <div class="tb-right"><div class="tbi">🔔<span class="tbd">8</span></div><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-title">New Grant Setup Wizard</div><div class="pg-sub">Step-by-step grant implementation setup · Director-only</div></div><button class="btn btn-sm btn-ol" onclick="goTo('grants')">← Cancel</button></div>
+
+        <div class="wiz-wrap">
+          <!-- Progress -->
+          <div class="wiz-progress sg">
+            <div class="wiz-step done"><div class="wiz-dot done">✓</div><div class="wiz-sl done">Basic Info</div></div>
+            <div class="wiz-step done"><div class="wiz-dot done">✓</div><div class="wiz-sl done">Roles</div></div>
+            <div class="wiz-step curr"><div class="wiz-dot curr">3</div><div class="wiz-sl curr">Plan</div></div>
+            <div class="wiz-step"><div class="wiz-dot">4</div><div class="wiz-sl">Tasks</div></div>
+            <div class="wiz-step"><div class="wiz-dot">5</div><div class="wiz-sl">Reminders</div></div>
+            <div class="wiz-step"><div class="wiz-dot">6</div><div class="wiz-sl">Routing</div></div>
+            <div class="wiz-step"><div class="wiz-dot">7</div><div class="wiz-sl">Publish</div></div>
+          </div>
+
+          <!-- Wizard Steps (shown via tabs) -->
+          <div id="wiz-step-display">
+
+          <!-- STEP 1: Basic Info -->
+          <div id="wiz-s1" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 1 — Create Grant Workspace</div>
+            <div class="wiz-desc">Enter the basic information for this awarded grant. All fields with * are required.</div>
+            <div class="fg2">
+              <div class="field-group"><label class="field-lbl">Grant Title *</label><input class="field-inp" placeholder="e.g. Agriculture Training Program Phase II"></div>
+              <div class="field-group"><label class="field-lbl">Grant Code / ID *</label><input class="field-inp" placeholder="e.g. GMS-2025-001"></div>
+            </div>
+            <div class="fg3">
+              <div class="field-group"><label class="field-lbl">Country *</label><select class="field-sel"><option>Tajikistan</option><option>Kyrgyzstan</option><option>Kazakhstan</option><option>Afghanistan</option></select></div>
+              <div class="field-group"><label class="field-lbl">Donor *</label><input class="field-inp" placeholder="e.g. USAID"></div>
+              <div class="field-group"><label class="field-lbl">Donor Type</label><select class="field-sel"><option>Bilateral</option><option>Multilateral</option><option>Foundation</option><option>Private</option></select></div>
+            </div>
+            <div class="fg3">
+              <div class="field-group"><label class="field-lbl">Start Date *</label><input class="field-inp" type="date" value="2025-06-01"></div>
+              <div class="field-group"><label class="field-lbl">End Date *</label><input class="field-inp" type="date" value="2027-05-31"></div>
+              <div class="field-group"><label class="field-lbl">Grant Value *</label><input class="field-inp" placeholder="e.g. 485000" type="number"></div>
+            </div>
+            <div class="fg2">
+              <div class="field-group"><label class="field-lbl">School / Department *</label><input class="field-inp" placeholder="e.g. Faculty of Agriculture"></div>
+              <div class="field-group"><label class="field-lbl">Principal Investigator (PI) *</label><input class="field-inp" placeholder="Search PI by name…"></div>
+            </div>
+            <div class="fg2">
+              <div class="field-group"><label class="field-lbl">Reporting Frequency *</label><select class="field-sel"><option>Quarterly</option><option>Monthly</option><option>Annual</option><option>Custom</option></select></div>
+              <div class="field-group"><label class="field-lbl">Implementation Type *</label><select class="field-sel"><option>Programmatic</option><option>Research</option><option>Mixed</option></select></div>
+            </div>
+            <div class="section-head">📎 Required Documents</div>
+            <div class="fg3">
+              <div class="upload-box"><div class="ubi">📄</div><div class="ubl">Signed Grant Agreement</div><div class="ubh">PDF · Required</div></div>
+              <div class="upload-box"><div class="ubi">📊</div><div class="ubl">Approved Budget</div><div class="ubh">Excel or PDF · Required</div></div>
+              <div class="upload-box"><div class="ubi">📋</div><div class="ubl">Workplan / Logframe</div><div class="ubh">PDF, Word · Optional</div></div>
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:10px">
+              <button class="btn btn-ol">💾 Save Draft</button>
+              <button class="btn btn-bl" onclick="showWizStep(2)">Next: Roles & Access →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Roles -->
+          <div id="wiz-s2" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 2 — Roles & Access</div>
+            <div class="wiz-desc">Assign people to this grant. Each role controls what they can see and do.</div>
+            <div class="role-row"><div class="role-icon" style="background:#dbeafe">👨‍🔬</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Principal Investigator (PI) *</div><div style="font-size:11.5px;color:var(--tx2)">Manages tasks, submits reports</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Search PI…"><span class="bx b-r">Required</span></div>
+            <div class="role-row"><div class="role-icon" style="background:#d1fae5">👥</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Project Team Members</div><div style="font-size:11.5px;color:var(--tx2)">See assigned tasks only</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Add members…"><span class="bx b-gr">Optional</span></div>
+            <div class="role-row"><div class="role-icon" style="background:#fef3c7">🏛️</div><div style="flex:1"><div style="font-size:13px;font-weight:700">AOO/PMO Officer</div><div style="font-size:11.5px;color:var(--tx2)">Sets milestones, monitors progress</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Assign officer…"><span class="bx b-r">Required</span></div>
+            <div class="role-row"><div class="role-icon" style="background:#ede9fe">📊</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Finance Officer(s)</div><div style="font-size:11.5px;color:var(--tx2)">Financial reports, budget view</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Assign finance…"><span class="bx b-r">Required</span></div>
+            <div class="role-row"><div class="role-icon" style="background:#ffedd5">💼</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Finance Director</div><div style="font-size:11.5px;color:var(--tx2)">Approves financial reports</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Select…"><span class="bx b-r">Required</span></div>
+            <div class="role-row"><div class="role-icon" style="background:#cffafe">🎓</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Dean / Supervisor</div><div style="font-size:11.5px;color:var(--tx2)">Receives narrative reports</div></div><input class="field-inp" style="width:200px;margin-bottom:0" placeholder="Select…"><span class="bx b-gr">Optional</span></div>
+            <div style="padding:14px 18px;background:var(--bg);border-radius:9px;margin-top:16px;font-size:12.5px;color:var(--tx2)">
+              ℹ️ <strong>Access Rules:</strong> Staff see only their assigned tasks. Salary-sensitive info is restricted. Directors see everything. All changes are audit-logged.
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:16px">
+              <button class="btn btn-ol" onclick="showWizStep(1)">← Back</button>
+              <button class="btn btn-ol">💾 Save Draft</button>
+              <button class="btn btn-bl" onclick="showWizStep(3)">Next: Implementation Plan →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Implementation Plan (ACTIVE) -->
+          <div id="wiz-s3" class="wiz-card">
+            <div class="wiz-title">Step 3 — Implementation Plan & Deliverables</div>
+            <div class="wiz-desc">Build the project plan for this grant. Add milestones, deadlines, owners, and evidence requirements. Directors set and own all deadlines.</div>
+            <div class="fg" style="margin-bottom:16px">
+              <button class="btn btn-bl btn-sm">🏗 Build Plan in System</button>
+              <button class="btn btn-ol btn-sm">📤 Upload Plan (PDF/Word)</button>
+              <button class="btn btn-ol btn-sm">📋 Load from Template</button>
+            </div>
+            <div class="tw">
+              <table>
+                <thead><tr><th style="min-width:200px">Deliverable / Milestone</th><th>Category</th><th>Owner</th><th>Due Date</th><th>Evidence</th><th>Approval</th><th>Submit To</th><th></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><input class="field-inp" style="margin-bottom:0;min-width:180px" value="Kickoff & Team Assembly" placeholder="Milestone name"></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>Activity</option><option>Narrative Report</option><option>Financial Report</option><option>Procurement</option><option>HR</option><option>Compliance</option><option>Audit</option></select></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>PI</option><option>Finance</option><option>HR</option><option>PMO</option><option>ORD</option></select></td>
+                    <td><input class="field-inp" style="margin-bottom:0;width:130px" type="date" value="2025-06-15"></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px;min-width:130px"><option>ORD + Dean</option><option>Finance Director</option><option>Director</option></select></td>
+                    <td><button class="btn btn-xs btn-rd">✕</button></td>
+                  </tr>
+                  <tr>
+                    <td><input class="field-inp" style="margin-bottom:0;min-width:180px" value="Q1 Narrative Report" placeholder="Milestone name"></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>Activity</option><option selected>Narrative Report</option><option>Financial Report</option></select></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>PI</option></select></td>
+                    <td><input class="field-inp" style="margin-bottom:0;width:130px" type="date" value="2025-09-30"></td>
+                    <td><label class="toggle"><input type="checkbox"><span class="slider"></span></label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px;min-width:130px"><option>ORD + Dean</option></select></td>
+                    <td><button class="btn btn-xs btn-rd">✕</button></td>
+                  </tr>
+                  <tr>
+                    <td><input class="field-inp" style="margin-bottom:0;min-width:180px" value="Financial Report — Q1" placeholder="Milestone name"></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>Activity</option><option>Narrative Report</option><option selected>Financial Report</option></select></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px"><option>Finance</option></select></td>
+                    <td><input class="field-inp" style="margin-bottom:0;width:130px" type="date" value="2025-10-15"></td>
+                    <td><label class="toggle"><input type="checkbox"><span class="slider"></span></label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><select class="field-sel" style="font-size:12px;padding:6px 8px;min-width:130px"><option>Finance Director</option></select></td>
+                    <td><button class="btn btn-xs btn-rd">✕</button></td>
+                  </tr>
+                  <tr style="background:#f0f7ff">
+                    <td colspan="8" style="padding:10px">
+                      <button class="btn btn-sm btn-bl" style="margin-right:8px">+ Add Milestone</button>
+                      <button class="btn btn-sm btn-ol">+ Bulk Add Rows</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:16px">
+              <button class="btn btn-ol" onclick="showWizStep(2)">← Back</button>
+              <button class="btn btn-ol">💾 Save Draft</button>
+              <button class="btn btn-bl" onclick="showWizStep(4)">Next: Generate Tasks →</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Tasks -->
+          <div id="wiz-s4" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 4 — Auto-Generate Tasks</div>
+            <div class="wiz-desc">The system generates tasks automatically from your milestones. Review and edit before publishing.</div>
+            <div class="g2" style="margin-bottom:20px">
+              <div style="padding:14px;background:var(--bg);border-radius:9px"><div style="font-size:13px;font-weight:700;margin-bottom:10px">Task Generation Options</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:13px">Create tasks per milestone</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:13px">Include subtasks</span><label class="toggle"><input type="checkbox"><span class="slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:13px">Recurring reports (quarterly)</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0"><span style="font-size:13px">Evidence required rules</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+              </div>
+              <div style="padding:14px;background:var(--ok-l);border-radius:9px;border:1px solid #6ee7b7"><div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">✅ 14 Tasks Generated</div><div style="font-size:12.5px;color:#065f46">From 3 milestones:<br>• 6 activity tasks<br>• 4 narrative report tasks<br>• 3 financial tasks<br>• 1 audit task</div></div>
+            </div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:10px">📋 Preview Generated Tasks</div>
+            <div class="task-gen-row"><div class="tgr-num">1</div><div style="flex:1"><strong>Kickoff Meeting Report</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: PI · Due: Jun 20 · Evidence: Yes · Submit to: ORD + Dean</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="task-gen-row"><div class="tgr-num">2</div><div style="flex:1"><strong>Team Onboarding Documentation</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: HR · Due: Jun 25 · Evidence: Yes · Submit to: ORD</span></div><span class="bx b-b">Standard</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="task-gen-row"><div class="tgr-num">3</div><div style="flex:1"><strong>Q1 Narrative Report</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: PI · Due: Sep 30 · Evidence: Yes · Submit to: ORD + Dean</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="task-gen-row"><div class="tgr-num">4</div><div style="flex:1"><strong>Financial Report — Q1</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: Finance · Due: Oct 15 · Evidence: Yes · Submit to: Finance Director</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div style="padding:10px 14px;background:#f0f7ff;border-radius:8px;margin-top:8px;font-size:12px;color:var(--pr);font-weight:600">+ 10 more tasks generated…</div>
+            <div class="fg" style="justify-content:flex-end;margin-top:16px">
+              <button class="btn btn-ol" onclick="showWizStep(3)">← Back</button>
+              <button class="btn btn-ol">🔄 Regenerate</button>
+              <button class="btn btn-bl" onclick="showWizStep(5)">Next: Reminders →</button>
+            </div>
+          </div>
+
+          <!-- STEP 5: Reminders -->
+          <div id="wiz-s5" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 5 — Reminders & Escalation Rules</div>
+            <div class="wiz-desc">Set automatic reminders and escalation paths. Directors can modify these at any time.</div>
+            <div class="section-head">🔔 Reminder Schedule</div>
+            <div class="reminder-row"><span style="font-size:18px">📅</span><div style="flex:1"><strong>30 days before deadline</strong><br><span style="font-size:12px;color:var(--tx2)">First reminder — email to task owner + PI</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="reminder-row"><span style="font-size:18px">📅</span><div style="flex:1"><strong>14 days before deadline</strong><br><span style="font-size:12px;color:var(--tx2)">Second reminder — email to task owner + PI + Dean</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="reminder-row"><span style="font-size:18px">📅</span><div style="flex:1"><strong>7 days before deadline</strong><br><span style="font-size:12px;color:var(--tx2)">Urgent reminder — email to all + ORD notification</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="reminder-row"><span style="font-size:18px">🚨</span><div style="flex:1"><strong>1 day before deadline</strong><br><span style="font-size:12px;color:var(--tx2)">Final warning — director alert triggered</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="section-head" style="margin-top:20px">📈 Escalation Rules</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+              <div style="padding:14px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--wa);margin-bottom:8px">Level 1 — At Risk</div><div style="font-size:12px;color:var(--tx2);margin-bottom:8px">Due in ≤7 days + Not started / In progress</div><div style="font-size:12px;font-weight:600">Notify: Owner + PI</div></div>
+              <div style="padding:14px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--or);margin-bottom:8px">Level 2 — Overdue</div><div style="font-size:12px;color:var(--tx2);margin-bottom:8px">Deadline passed + No submission</div><div style="font-size:12px;font-weight:600">Notify: Dean + ORD</div></div>
+              <div style="padding:14px;background:var(--er-l);border:1px solid #fca5a5;border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--er);margin-bottom:8px">Level 3 — Critical</div><div style="font-size:12px;color:var(--tx2);margin-bottom:8px">Overdue + Financial or audit risk</div><div style="font-size:12px;font-weight:600">Notify: Director + ORD Lead + Finance Director</div></div>
+            </div>
+            <div class="section-head">⚠️ Special Escalations</div>
+            <div class="reminder-row"><span>📸</span><div style="flex:1"><strong>Evidence missing before audit date</strong></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="reminder-row"><span>💰</span><div style="flex:1"><strong>Financial report overdue</strong></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="reminder-row"><span>🔴</span><div style="flex:1"><strong>Budget overspend alert</strong></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="fg" style="justify-content:flex-end;margin-top:16px">
+              <button class="btn btn-ol" onclick="showWizStep(4)">← Back</button>
+              <button class="btn btn-bl" onclick="showWizStep(6)">Next: Submit Routing →</button>
+            </div>
+          </div>
+
+          <!-- STEP 6: Routing -->
+          <div id="wiz-s6" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 6 — Submit-To Routing & Approvals</div>
+            <div class="wiz-desc">Define where each type of submission goes. Staff will follow these routes automatically — no guessing.</div>
+            <div style="margin-bottom:24px">
+              <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--tx2)">Submission Routing Rules</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px">📝 Narrative Report</div><div class="chain-box"><div class="chain-node">PI (Owner)</div><div class="chain-arrow">→</div><div class="chain-node">Submits</div><div class="chain-arrow">→</div><div class="chain-node">ORD Review</div><div class="chain-arrow">→</div><div class="chain-node">Dean / Supervisor</div><div class="chain-arrow">→</div><div class="chain-node">✅ Approved</div></div></div>
+                <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px">💰 Financial Report</div><div class="chain-box"><div class="chain-node">Finance Officer</div><div class="chain-arrow">→</div><div class="chain-node">Submits</div><div class="chain-arrow">→</div><div class="chain-node">Finance Director</div><div class="chain-arrow">→</div><div class="chain-node">ORD (Awareness)</div><div class="chain-arrow">→</div><div class="chain-node">✅ Approved</div></div></div>
+                <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px">📅 Deadline Change Request</div><div class="chain-box"><div class="chain-node">Any Staff</div><div class="chain-arrow">→</div><div class="chain-node">Requests Change</div><div class="chain-arrow">→</div><div class="chain-node" style="background:#fef3c7;border-color:#fcd34d;color:#92400e">Director Approval Required</div><div class="chain-arrow">→</div><div class="chain-node">Audit Log Updated</div></div></div>
+              </div>
+            </div>
+            <div style="padding:14px 18px;background:var(--bg);border-radius:9px;font-size:12.5px;color:var(--tx2)">
+              📋 <strong>Approval Flow:</strong> Draft → Submitted → In Review → Approved / Needs Changes. Approved files become "Latest Approved Version" in the repository.
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:16px">
+              <button class="btn btn-ol" onclick="showWizStep(5)">← Back</button>
+              <button class="btn btn-bl" onclick="showWizStep(7)">Next: Review & Publish →</button>
+            </div>
+          </div>
+
+          <!-- STEP 7: Publish -->
+          <div id="wiz-s7" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 7 — Review & Publish Grant</div>
+            <div class="wiz-desc">Final review before going live. Check everything is complete, then lock and publish.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Grant Workspace Created</div><div style="font-size:12px;color:var(--ok)">Agriculture Training Program Phase II · GMS-2025-001 · Tajikistan</div></div></div>
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Roles Assigned</div><div style="font-size:12px;color:var(--ok)">6 team members · PI, Finance, ORD, Dean assigned</div></div></div>
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Milestones Entered</div><div style="font-size:12px;color:var(--ok)">3 milestones · 8 deliverables</div></div></div>
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Tasks Generated</div><div style="font-size:12px;color:var(--ok)">14 tasks · owners + due dates assigned</div></div></div>
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Reminders & Escalation Set</div><div style="font-size:12px;color:var(--ok)">30/14/7/1 day reminders · 3-level escalation active</div></div></div>
+              <div class="publish-check done"><div class="pc-icon done">✓</div><div><div style="font-size:13px;font-weight:700">Submit Routing Configured</div><div style="font-size:12px;color:var(--ok)">Narrative → ORD + Dean · Financial → Finance Director</div></div></div>
+            </div>
+            <div class="section-head">🔒 Lock Settings (Director Controls)</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+              <div class="reminder-row"><span>🔒</span><div style="flex:1"><strong>Lock Deadlines</strong><br><span style="font-size:12px;color:var(--tx2)">Staff cannot change deadlines — Director approval required</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label><span class="bx b-g" style="margin-left:8px">Recommended ON</span></div>
+              <div class="reminder-row"><span>📋</span><div style="flex:1"><strong>Deadline Changes Require Director Approval</strong><br><span style="font-size:12px;color:var(--tx2)">Any date change must go through Director review</span></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="reminder-row"><span>🔍</span><div style="flex:1"><strong>All Changes Recorded in Audit Log</strong><br><span style="font-size:12px;color:var(--tx2)">Cannot be turned off — required for compliance</span></div><label class="toggle"><input type="checkbox" checked disabled><span class="slider"></span></label><span class="bx b-r" style="margin-left:8px">Always ON</span></div>
+            </div>
+            <div class="fg">
+              <button class="btn btn-ol" onclick="showWizStep(6)">← Back</button>
+              <button class="btn btn-ol">💾 Save as Template</button>
+              <button class="btn btn-ol">📄 Download Setup PDF</button>
+              <button class="btn btn-gn" style="padding:12px 28px;font-size:14px;" onclick="goTo('grants')">🚀 Publish Grant — Go Live</button>
+            </div>
+          </div>
+
+          </div><!-- end wiz-step-display -->
+
+          <!-- Step Nav Buttons -->
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:20px">
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(1)">1</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(2)">2</button>
+            <button class="btn btn-xs btn-bl" onclick="showWizStep(3)">3</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(4)">4</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(5)">5</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(6)">6</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(7)">7</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DEADLINE CHANGES ══════════════════════ -->
+<div id="sc-deadline-changes" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small>Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni active"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search requests…"></div>
+        <div class="tb-right"><div class="tbi">🔔<span class="tbd">8</span></div><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-title">Deadline Change Requests</div><div class="pg-sub">Awaiting Director approval — all deadlines locked by default</div></div><div class="fg"><span class="bx b-o">3 Pending</span><button class="btn btn-sm btn-ol">📥 Export Log</button></div></div>
+
+        <div class="alert-b wa sg"><span style="font-size:22px">🔒</span><p style="color:#92400e">All grant deadlines are locked. Only Directors can approve changes. Every approved change is recorded in the Audit Log.</p></div>
+
+        <!-- Request 1 -->
+        <div class="dcr-card">
+          <div class="dcr-head">
+            <div><div style="font-size:14px;font-weight:800">Workshop Completion Report — Agriculture Training</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">Requested by: Dr. Jenkins (PI) · May 15, 2025</div></div>
+            <span class="bx b-o">Pending</span>
+          </div>
+          <div class="dcr-change sg" style="margin-bottom:14px">
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Current Deadline</div><div class="dcr-old">May 12, 2025</div></div>
+            <div class="dcr-arr">→</div>
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Requested New Date</div><div class="dcr-new">May 25, 2025</div></div>
+            <div style="flex:1;padding-left:16px"><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Justification</div><div style="font-size:12.5px">Attendance sheets from 3 regional workshops still being collected. Evidence will be complete by May 22.</div></div>
+          </div>
+          <div style="padding:10px 14px;background:var(--bg);border-radius:8px;margin-bottom:14px;font-size:12px;color:var(--tx2)">📋 <strong>Impact:</strong> Linked tasks: Workshop Evidence Upload, Q2 Narrative Report (auto-shifts +13 days if approved)</div>
+          <div class="fg">
+            <input class="field-inp" style="margin-bottom:0;flex:1;font-size:12.5px" placeholder="Add Director comment (optional)…">
+            <button class="btn btn-gn">✅ Approve Change</button>
+            <button class="btn btn-rd">❌ Deny</button>
+          </div>
+        </div>
+
+        <!-- Request 2 -->
+        <div class="dcr-card">
+          <div class="dcr-head">
+            <div><div style="font-size:14px;font-weight:800">Phase 2 Milestone Review — Agriculture Training</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">Requested by: Prof. Alimov (AOO) · May 14, 2025</div></div>
+            <span class="bx b-o">Pending</span>
+          </div>
+          <div class="dcr-change sg" style="margin-bottom:14px">
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Current Deadline</div><div class="dcr-old">Jun 1, 2025</div></div>
+            <div class="dcr-arr">→</div>
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Requested New Date</div><div class="dcr-new">Jun 15, 2025</div></div>
+            <div style="flex:1;padding-left:16px"><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Justification</div><div style="font-size:12.5px">Donor field visit rescheduled to Jun 10. Milestone review should follow field visit.</div></div>
+          </div>
+          <div class="fg">
+            <input class="field-inp" style="margin-bottom:0;flex:1;font-size:12.5px" placeholder="Add Director comment…">
+            <button class="btn btn-gn">✅ Approve Change</button>
+            <button class="btn btn-rd">❌ Deny</button>
+          </div>
+        </div>
+
+        <!-- Request 3 -->
+        <div class="dcr-card">
+          <div class="dcr-head">
+            <div><div style="font-size:14px;font-weight:800">Financial Report Q2 — Water Infrastructure</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">Requested by: Z. Nazarova (Finance) · May 13, 2025</div></div>
+            <span class="bx b-o">Pending</span>
+          </div>
+          <div class="dcr-change sg" style="margin-bottom:14px">
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Current Deadline</div><div class="dcr-old">May 20, 2025</div></div>
+            <div class="dcr-arr">→</div>
+            <div><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Requested New Date</div><div class="dcr-new">May 30, 2025</div></div>
+            <div style="flex:1;padding-left:16px"><div style="font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">Justification</div><div style="font-size:12.5px">Bank reconciliation delayed. World Bank approved extension verbally — written confirmation pending.</div></div>
+          </div>
+          <div class="fg">
+            <input class="field-inp" style="margin-bottom:0;flex:1;font-size:12.5px" placeholder="Add Director comment…">
+            <button class="btn btn-gn">✅ Approve Change</button>
+            <button class="btn btn-rd">❌ Deny</button>
+          </div>
+        </div>
+
+        <!-- Resolved -->
+        <div style="font-size:13px;font-weight:700;color:var(--tx2);margin:20px 0 12px">Recently Resolved</div>
+        <div class="card"><div class="tw"><table><thead><tr><th>Grant</th><th>Task</th><th>Old Date</th><th>New Date</th><th>Decision</th><th>By</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td>Rural Health</td><td>Beneficiary Survey</td><td style="color:var(--er);text-decoration:line-through">Apr 30</td><td style="color:var(--ok)">May 10</td><td><span class="bx b-g">Approved</span></td><td>Dr. Rashidov</td><td style="font-size:11.5px">May 2</td></tr>
+            <tr><td>Education Fund</td><td>Procurement Review</td><td style="color:var(--er);text-decoration:line-through">May 5</td><td>—</td><td><span class="bx b-r">Denied</span></td><td>Dr. Rashidov</td><td style="font-size:11.5px">May 1</td></tr>
+          </tbody></table></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ESCALATIONS ══════════════════════ -->
+<div id="sc-escalations" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small>Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni active"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni" onclick="goTo('audit-log')"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search escalations…"></div>
+        <div class="tb-right"><div class="tbi">🔔<span class="tbd">8</span></div><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-title">Escalations & Notifications</div><div class="pg-sub">8 active escalations — Tajikistan</div></div><button class="btn btn-sm btn-ol">Mark All Read</button></div>
+        <div class="fbar">
+          <select class="fsel"><option>All Types</option><option>Overdue Tasks</option><option>At Risk</option><option>Reports Due</option><option>Evidence Missing</option><option>Financial</option></select>
+          <select class="fsel"><option>All Grants</option><option>Agriculture Training</option><option>Water Infrastructure</option></select>
+          <select class="fsel"><option>All Levels</option><option>Level 1</option><option>Level 2</option><option>Level 3</option></select>
+        </div>
+        <div class="card">
+          <div class="esc-row unread" onclick="goTo('workspace')"><div class="esc-icon" style="background:var(--er-l)">🔴</div><div style="flex:1"><div class="esc-title">Level 3 — Critical: Agriculture Training — 3 Tasks Overdue</div><div class="esc-desc">Workshop Report, Evidence Upload, Q2 Narrative all overdue. Director action required. Risk of donor non-compliance.</div><div class="esc-meta">Agriculture Training Program · Dr. Jenkins · Escalated: May 14, 2025</div><a class="esc-link">→ View Grant</a></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="bx b-r">Level 3</span><div class="ud"></div></div></div>
+          <div class="esc-row unread"><div class="esc-icon" style="background:var(--er-l)">⚠️</div><div style="flex:1"><div class="esc-title">Level 3 — Financial: Agriculture Training — Overspending Detected</div><div class="esc-desc">Equipment budget line exceeded by $4,200. Mid-year financial report overdue. Finance Director notified.</div><div class="esc-meta">Agriculture Training · Z. Nazarova · May 8, 2025</div><a class="esc-link">→ View Financial Workspace</a></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="bx b-r">Level 3</span><div class="ud"></div></div></div>
+          <div class="esc-row unread"><div class="esc-icon" style="background:var(--or-l)">📸</div><div style="flex:1"><div class="esc-title">Level 2 — Evidence: Workshop Report cannot be submitted</div><div class="esc-desc">Photos, attendance sheet, and workshop agenda missing. Evidence required to unlock submission.</div><div class="esc-meta">Agriculture Training · Dr. Jenkins · May 12, 2025</div><a class="esc-link">→ View Evidence</a></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="bx b-o">Level 2</span><div class="ud"></div></div></div>
+          <div class="esc-row unread"><div class="esc-icon" style="background:var(--wa-l)">📄</div><div style="flex:1"><div class="esc-title">Level 2 — Report: Water Infrastructure Q2 Financial due in 4 days</div><div class="esc-desc">Financial Q2 report due May 20. Status: Prepared — awaiting Finance Director signature.</div><div class="esc-meta">Water Infrastructure · Z. Nazarova · May 15, 2025</div><a class="esc-link">→ View Report</a></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="bx b-o">Level 2</span><div class="ud"></div></div></div>
+          <div class="esc-row"><div class="esc-icon" style="background:var(--wa-l)">🎯</div><div style="flex:1"><div class="esc-title">Level 1 — At Risk: Education Fund — Procurement delayed 7 days</div><div class="esc-desc">Procurement documents review task now 7 days late. Low spending alert also flagged on Training budget line.</div><div class="esc-meta">Education Fund · Dr. Nazarova · May 10, 2025</div><a class="esc-link">→ View Grant</a></div><span class="bx b-y">Level 1</span></div>
+          <div class="esc-row"><div class="esc-icon" style="background:var(--wa-l)">💰</div><div style="flex:1"><div class="esc-title">Level 1 — Finance: Water Infrastructure — Low spending on Training line</div><div class="esc-desc">Training budget only 12% utilized. Risk of underspend. Consider budget reallocation.</div><div class="esc-meta">Water Infrastructure · Z. Nazarova · May 12, 2025</div><a class="esc-link">→ View Budget</a></div><span class="bx b-y">Level 1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ AUDIT LOG ══════════════════════ -->
+<div id="sc-audit-log" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-icon">🎓</div><div><span>GMS Director</span><small>Tajikistan</small></div></div>
+      <div class="sb-section"><div class="sb-sec-lbl">Navigation</div>
+        <div class="ni" onclick="goTo('dashboard')"><span class="ni-icon">📊</span> Dashboard</div>
+        <div class="ni" onclick="goTo('grants')"><span class="ni-icon">📋</span> Grants</div>
+        <div class="ni" onclick="goTo('new-grant')"><span class="ni-icon">➕</span> New Grant Setup</div>
+        <div class="ni" onclick="goTo('deadline-changes')"><span class="ni-icon">📅</span> Deadline Changes <span class="nb orange">3</span></div>
+        <div class="ni" onclick="goTo('escalations')"><span class="ni-icon">🚨</span> Escalations <span class="nb">8</span></div>
+        <div class="ni active"><span class="ni-icon">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-section"><div class="sb-sec-lbl">Country</div><div class="ni" onclick="goTo('country')"><span class="ni-icon">🌍</span> Switch Country</div></div>
+      <div class="sb-foot"><div class="uav">DR</div><div><div class="un">Dr. Rashidov</div><div class="ur">Director</div></div><button class="lb-btn" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="country-switcher" onclick="goTo('country')"><span class="country-flag">🇹🇯</span> Tajikistan ▾</div>
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search audit log…"></div>
+        <div class="tb-right"><div class="tbi">🔔<span class="tbd">8</span></div><button class="btn btn-sm btn-ol">📥 Export PDF</button><button class="btn btn-sm btn-ol">🖨 Print</button><div class="pp"><div class="pav">DR</div><span style="font-size:12.5px;font-weight:600">Dr. Rashidov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-title">Full Audit Log — Tajikistan</div><div class="pg-sub">Tamper-proof record of all actions · Read only</div></div></div>
+        <div class="fbar">
+          <div class="sf"><span style="color:var(--tx3)">🔍</span><input placeholder="Search by user, action, grant…"></div>
+          <select class="fsel"><option>All Actions</option><option>Uploads</option><option>Submissions</option><option>Approvals</option><option>Deadline Changes</option><option>Alerts</option><option>Setup</option></select>
+          <select class="fsel"><option>All Grants</option><option>Agriculture Training</option><option>Water Infrastructure</option><option>Rural Health</option></select>
+          <select class="fsel"><option>All Users</option><option>Dr. Jenkins</option><option>Z. Nazarova</option><option>Dr. Rashidov</option><option>System</option></select>
+          <input type="date" class="fsel" value="2025-05-01">
+          <input type="date" class="fsel" value="2025-05-16">
+        </div>
+        <div class="card">
+          <div class="ch fb"><div class="ct">All Activity — 47 records</div><div class="fg"><button class="btn btn-sm btn-ol">📥 Export to PDF</button><button class="btn btn-sm btn-ol">🖨 Print for Auditor</button></div></div>
+          <div class="cb">
+            <div class="al-row"><div class="al-time">May 16 · 09:14 AM</div><div class="al-user">Dr. Jenkins</div><div class="al-action">Uploaded <strong>Narrative_Report_v2.pdf</strong> to Agriculture Training — Workshop Completion task</div><div class="al-tag at-u">UPLOAD</div></div>
+            <div class="al-row"><div class="al-time">May 15 · 16:42 PM</div><div class="al-user">Z. Nazarova</div><div class="al-action">Added budget variance note for Equipment line — Agriculture Training overspend explanation</div><div class="al-tag at-u">NOTE</div></div>
+            <div class="al-row"><div class="al-time">May 15 · 14:10 PM</div><div class="al-user">Dr. Rashidov</div><div class="al-action">Deadline change request <strong>DENIED</strong> for Education Fund — Procurement Review · Comment: "No justification accepted"</div><div class="al-tag at-ch">DL CHANGE</div></div>
+            <div class="al-row"><div class="al-time">May 14 · 11:30 AM</div><div class="al-user">Dr. Jenkins</div><div class="al-action">Submitted Deadline Change Request for Workshop Completion Report: May 12 → May 25</div><div class="al-tag at-ch">DL REQUEST</div></div>
+            <div class="al-row"><div class="al-time">May 12 · 08:00 AM</div><div class="al-user">System</div><div class="al-action">ALERT: Agriculture Training — Workshop Completion Report is now <strong>OVERDUE</strong>. Level 2 escalation triggered.</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-row"><div class="al-time">May 08 · 11:20 AM</div><div class="al-user">System</div><div class="al-action">ALERT: Equipment & Materials budget line exceeded by $4,200 — Agriculture Training. Level 3 escalation triggered.</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-row"><div class="al-time">May 02 · 10:00 AM</div><div class="al-user">Dr. Rashidov</div><div class="al-action">Deadline change request <strong>APPROVED</strong> for Rural Health — Beneficiary Survey: Apr 30 → May 10</div><div class="al-tag at-ch">DL CHANGE</div></div>
+            <div class="al-row"><div class="al-time">Mar 31 · 14:10 PM</div><div class="al-user">Z. Nazarova</div><div class="al-action">Submitted Q1 Financial Report — Agriculture Training — to Finance Director (CFO) and ORD</div><div class="al-tag at-s">SUBMIT</div></div>
+            <div class="al-row"><div class="al-time">Mar 28 · 09:30 AM</div><div class="al-user">A. Komilov (CFO)</div><div class="al-action">Approved Q1 Financial Report — Agriculture Training — status changed to Approved</div><div class="al-tag at-a">APPROVE</div></div>
+            <div class="al-row"><div class="al-time">Jan 15 · 10:00 AM</div><div class="al-user">Dr. Rashidov</div><div class="al-action">Grant Workspace <strong>Published</strong> — Agriculture Training Program · GMS-2023-001 · Tajikistan — 14 tasks generated, reminders set</div><div class="al-tag" style="background:var(--ok-l);color:var(--ok)">PUBLISH</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State
+let currentCountry = 'Tajikistan';
+let currentFlag = '🇹🇯';
+
+// ── Navigation
+function goTo(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sc-' + name);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+  if (name === 'dashboard') setTimeout(initDashCharts, 80);
+  if (name === 'workspace') setTimeout(initWsChart, 80);
+}
+
+// ── Country Selection
+function enterCountry(name, flag) {
+  currentCountry = name;
+  currentFlag = flag;
+  document.querySelectorAll('#tb-country').forEach(el => el && (el.textContent = name));
+  document.querySelectorAll('#tb-flag').forEach(el => el && (el.textContent = flag));
+  document.querySelectorAll('#sb-country-lbl, #sb-country-lbl2').forEach(el => el && (el.textContent = name));
+  document.querySelectorAll('#dash-title').forEach(el => el && (el.textContent = name + ' — Grant Dashboard'));
+  goTo('dashboard');
+}
+
+// ── Wizard Steps
+function showWizStep(n) {
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById('wiz-s' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+  }
+  // Update progress dots
+  document.querySelectorAll('.wiz-step').forEach((s, i) => {
+    s.classList.remove('done','curr');
+    const dot = s.querySelector('.wiz-dot');
+    const lbl = s.querySelector('.wiz-sl');
+    dot.classList.remove('done','curr');
+    lbl.classList.remove('done','curr');
+    if (i + 1 < n) { s.classList.add('done'); dot.classList.add('done'); lbl.classList.add('done'); dot.textContent = '✓'; }
+    else if (i + 1 === n) { s.classList.add('curr'); dot.classList.add('curr'); lbl.classList.add('curr'); dot.textContent = i + 1; }
+    else { dot.textContent = i + 1; }
+  });
+  // Update nav buttons
+  document.querySelectorAll('.wiz-wrap > div:last-child .btn').forEach((b,i) => {
+    b.className = b.className.replace('btn-bl','btn-ol');
+    if (i + 1 === n) b.className = b.className.replace('btn-ol','btn-bl');
+  });
+  window.scrollTo(0, 0);
+}
+
+// ── Tab switching
+function switchTab(prefix, name, el) {
+  document.querySelectorAll('#' + prefix + '-tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="' + prefix + '-tab-"]').forEach(p => p.classList.remove('active'));
+  const pane = document.getElementById(prefix + '-tab-' + name);
+  if (pane) pane.classList.add('active');
+  if (name === 'financial') setTimeout(initWsChart, 50);
+}
+
+// ── Chart Colors
+const C = { pr:'#1d4ed8', ok:'#059669', wa:'#d97706', er:'#dc2626', te:'#0891b2', or:'#ea580c', vi:'#7c3aed', pur:'#8b5cf6', grid:'#f1f5f9', tx2:'#475569' };
+const chartBase = (opts = {}) => ({
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false, ...opts.legend }, tooltip: { backgroundColor:'#0f172a', titleFont:{family:'Plus Jakarta Sans',size:12}, bodyFont:{family:'Plus Jakarta Sans',size:11}, padding:10, cornerRadius:8 } },
+  scales: { x:{ grid:{color:C.grid,drawBorder:false}, ticks:{font:{family:'Plus Jakarta Sans',size:11},color:C.tx2} }, y:{ grid:{color:C.grid,drawBorder:false}, ticks:{font:{family:'Plus Jakarta Sans',size:11},color:C.tx2} } }
+});
+
+let taskBar, budgetLine, statusDonut, reportBar, wsFinChart;
+
+function initDashCharts() {
+  if (taskBar) taskBar.destroy();
+  const c1 = document.getElementById('taskBarChart'); if (!c1) return;
+  taskBar = new Chart(c1, { type:'bar', data:{ labels:['Dec','Jan','Feb','Mar','Apr','May'], datasets:[
+    { label:'Completed', data:[18,22,20,25,19,14], backgroundColor:C.ok, borderRadius:4 },
+    { label:'Overdue',   data:[2,1,3,1,4,8],  backgroundColor:C.er, borderRadius:4 }
+  ]}, options:{ ...chartBase(), plugins:{ ...chartBase().plugins, legend:{display:true,position:'top',labels:{font:{family:'Plus Jakarta Sans',size:11},usePointStyle:true,boxWidth:6,color:C.tx2}} } }});
+
+  if (budgetLine) budgetLine.destroy();
+  const c2 = document.getElementById('budgetLineChart'); if (!c2) return;
+  budgetLine = new Chart(c2, { type:'line', data:{ labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
+    { label:'Planned', data:[320000,580000,820000,1050000,1280000,1500000], borderColor:C.pr, backgroundColor:'rgba(29,78,216,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 },
+    { label:'Actual',  data:[290000,545000,795000,1010000,1240000,null],    borderColor:C.ok, backgroundColor:'rgba(5,150,105,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 }
+  ]}, options:{ ...chartBase(), plugins:{ ...chartBase().plugins, legend:{display:false} } }});
+
+  if (statusDonut) statusDonut.destroy();
+  const c3 = document.getElementById('statusDonut'); if (!c3) return;
+  statusDonut = new Chart(c3, { type:'doughnut', data:{ labels:['Active','Reporting','At Risk','Closing'], datasets:[{ data:[7,3,2,1], backgroundColor:[C.ok,C.pr,C.wa,'#94a3b8'], borderWidth:0, hoverOffset:6 }]}, options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',bodyFont:{family:'Plus Jakarta Sans',size:11},padding:10,cornerRadius:8}} }});
+
+  if (reportBar) reportBar.destroy();
+  const c4 = document.getElementById('reportBar'); if (!c4) return;
+  reportBar = new Chart(c4, { type:'bar', data:{ labels:['Q4 2024','Q1 2025','Q2 2025'], datasets:[
+    { label:'On Time', data:[12,14,9], backgroundColor:C.ok, borderRadius:4 },
+    { label:'Late',    data:[3,2,5],  backgroundColor:C.er, borderRadius:4 }
+  ]}, options:{ ...chartBase(), plugins:{ ...chartBase().plugins, legend:{display:true,position:'top',labels:{font:{family:'Plus Jakarta Sans',size:11},usePointStyle:true,boxWidth:6,color:C.tx2}} }, scales:{ x:{stacked:true,grid:{color:C.grid},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:C.tx2}}, y:{stacked:true,grid:{color:C.grid},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:C.tx2}} }}});
+}
+
+function initWsChart() {
+  if (wsFinChart) wsFinChart.destroy();
+  const c = document.getElementById('wsFinChart'); if (!c) return;
+  wsFinChart = new Chart(c, { type:'line', data:{ labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets:[
+    { label:'Planned', data:[38000,36000,42000,40000,39000,44000,38000,41000,40000,42000,43000,42000], borderColor:C.pr, backgroundColor:'rgba(29,78,216,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 },
+    { label:'Actual',  data:[35200,33800,40100,39600,51600,null,null,null,null,null,null,null], borderColor:C.ok, backgroundColor:'rgba(5,150,105,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 }
+  ]}, options:{ ...chartBase(), plugins:{ ...chartBase().plugins, legend:{display:true,position:'top',labels:{font:{family:'Plus Jakarta Sans',size:11},usePointStyle:true,boxWidth:6,color:C.tx2}} } }});
+}
+
+// ── Init
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('sc-login').classList.contains('active')) goTo('country');
+});
+const obs = new MutationObserver(() => {
+  if (document.getElementById('sc-dashboard')?.classList.contains('active')) initDashCharts();
+});
+obs.observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+</script>
+</body>
+</html>
