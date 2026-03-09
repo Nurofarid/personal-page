@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Staff Portal — University Grant Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f6fa;
+  --sidebar-bg: #0f1c3f;
+  --sidebar-text: #a8b8d8;
+  --sidebar-active: #ffffff;
+  --sidebar-active-bg: #1e3a6e;
+  --primary: #1a56db;
+  --primary-light: #e8f0fe;
+  --success: #0e9f6e;
+  --success-light: #def7ec;
+  --warning: #e3a008;
+  --warning-light: #fdf6b2;
+  --danger: #e02424;
+  --danger-light: #fde8e8;
+  --orange: #ff5a1f;
+  --orange-light: #feecdc;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --radius: 10px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+/* ─── SCREENS ─── */
+.screen { display: none; }
+.screen.active { display: flex; }
+
+/* ─── LOGIN ─── */
+#screen-login {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f1c3f 0%, #1a3a6b 60%, #1a56db 100%);
+  align-items: center; justify-content: center; flex-direction: column;
+}
+.login-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 420px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+}
+.login-logo {
+  text-align: center; margin-bottom: 28px;
+}
+.login-logo .uni-icon {
+  width: 60px; height: 60px;
+  background: var(--primary);
+  border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 12px;
+}
+.login-logo h1 { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.login-logo p { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.login-box label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.login-box input {
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-family: inherit; font-size: 14px;
+  margin-bottom: 18px; outline: none; transition: border 0.2s;
+}
+.login-box input:focus { border-color: var(--primary); }
+.btn-primary {
+  width: 100%; padding: 13px; background: var(--primary); color: #fff;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: background 0.2s;
+}
+.btn-primary:hover { background: #1443b0; }
+.login-footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-secondary); }
+
+/* ─── APP SHELL ─── */
+.app-shell { display: flex; width: 100%; min-height: 100vh; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--sidebar-bg);
+  display: flex; flex-direction: column;
+  padding: 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-logo .logo-icon {
+  width: 34px; height: 34px; background: var(--primary);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.sidebar-logo span { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.2; }
+.sidebar-logo small { display: block; font-size: 10px; color: var(--sidebar-text); font-weight: 400; }
+.sidebar nav { flex: 1; padding: 12px 10px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  color: var(--sidebar-text); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto; background: var(--danger); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px;
+}
+.sidebar-user {
+  padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; gap: 10px;
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--primary); display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #fff; font-size: 13px; flex-shrink: 0;
+}
+.user-info { min-width: 0; }
+.user-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: var(--sidebar-text); }
+
+/* ─── MAIN CONTENT ─── */
+.main-content { margin-left: 220px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ─── TOP BAR ─── */
+.topbar {
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 60px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-search {
+  flex: 1; max-width: 380px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 0 12px; height: 38px;
+}
+.topbar-search input {
+  border: none; background: transparent; font-family: inherit; font-size: 13px;
+  flex: 1; outline: none; color: var(--text);
+}
+.topbar-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 17px; position: relative; transition: background 0.15s;
+}
+.icon-btn:hover { background: var(--bg); }
+.icon-btn .badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--danger); color: #fff; font-size: 9px; font-weight: 700;
+  width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+.profile-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px 6px 8px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: #fff; cursor: pointer; transition: background 0.15s;
+}
+.profile-chip:hover { background: var(--bg); }
+.profile-chip .av { width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.profile-chip span { font-size: 13px; font-weight: 600; }
+
+/* ─── PAGE CONTENT ─── */
+.page { padding: 24px; flex: 1; }
+.page-header { margin-bottom: 20px; }
+.page-title { font-size: 20px; font-weight: 700; }
+.page-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+
+/* ─── CARDS ─── */
+.card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 14px; font-weight: 700; }
+.card-body { padding: 16px 20px; }
+
+/* ─── GRID ─── */
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+
+/* ─── STAT CARDS ─── */
+.stat-card { padding: 18px 20px; border-radius: var(--radius); border: 1px solid var(--border); background: #fff; }
+.stat-card .stat-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-value { font-size: 28px; font-weight: 700; margin: 6px 0 4px; }
+.stat-card .stat-sub { font-size: 12px; color: var(--text-secondary); }
+.stat-card.danger .stat-value { color: var(--danger); }
+.stat-card.warning .stat-value { color: var(--warning); }
+.stat-card.success .stat-value { color: var(--success); }
+.stat-card.primary .stat-value { color: var(--primary); }
+
+/* ─── BADGES ─── */
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-green { background: var(--success-light); color: #065f46; }
+.badge-yellow { background: var(--warning-light); color: #92400e; }
+.badge-red { background: var(--danger-light); color: #9b1c1c; }
+.badge-blue { background: var(--primary-light); color: #1e3a8a; }
+.badge-orange { background: var(--orange-light); color: #9a3412; }
+.badge-gray { background: #f3f4f6; color: #374151; }
+
+/* ─── TASK ITEMS ─── */
+.task-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.task-item:last-child { border-bottom: none; }
+.task-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.task-dot.red { background: var(--danger); }
+.task-dot.yellow { background: var(--warning); }
+.task-dot.green { background: var(--success); }
+.task-info { flex: 1; min-width: 0; }
+.task-name { font-size: 13px; font-weight: 600; }
+.task-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.task-due { font-size: 11px; font-weight: 600; flex-shrink: 0; }
+.task-due.red { color: var(--danger); }
+.task-due.yellow { color: var(--warning); }
+
+/* ─── BUTTONS ─── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.15s; }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-blue { background: var(--primary); color: #fff; }
+.btn-blue:hover { background: #1443b0; }
+.btn-outline { background: #fff; color: var(--text); border: 1.5px solid var(--border); }
+.btn-outline:hover { background: var(--bg); }
+.btn-green { background: var(--success); color: #fff; }
+.btn-green:hover { background: #057a55; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #c81e1e; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-secondary); background: var(--bg); border-bottom: 1px solid var(--border); }
+tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+tbody tr:hover { background: #f9fafb; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ─── TABS ─── */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+.tab { padding: 10px 18px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* ─── FILTERS ─── */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.filter-select {
+  padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 7px;
+  font-family: inherit; font-size: 13px; background: #fff; color: var(--text); outline: none;
+}
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 0 12px; height: 36px; flex: 1; max-width: 300px;
+}
+.search-box input { border: none; background: transparent; font-family: inherit; font-size: 13px; flex: 1; outline: none; }
+
+/* ─── GRANT HEADER ─── */
+.grant-header {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 24px; margin-bottom: 20px;
+}
+.grant-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.grant-title { font-size: 19px; font-weight: 700; }
+.grant-code { font-size: 12px; color: var(--text-secondary); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.grant-meta { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; }
+.grant-meta-item { font-size: 13px; }
+.grant-meta-item span { color: var(--text-secondary); font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 2px; }
+.grant-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ─── TASK PAGE ─── */
+.task-section {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+.task-section-header {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.task-section-num {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--primary);
+  color: #fff; font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.task-section-title { font-size: 14px; font-weight: 700; }
+.task-section-body { padding: 18px 20px; }
+.info-row { display: flex; gap: 0; margin-bottom: 12px; }
+.info-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; width: 140px; flex-shrink: 0; padding-top: 1px; }
+.info-value { font-size: 13px; font-weight: 500; }
+.info-value.deadline-red { color: var(--danger); font-weight: 700; }
+.checklist-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f3f4f6; }
+.checklist-item:last-child { border-bottom: none; }
+.check-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.check-circle.done { background: var(--success); border-color: var(--success); color: #fff; font-size: 11px; }
+.check-label { font-size: 13px; font-weight: 500; }
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: 8px; padding: 18px;
+  text-align: center; cursor: pointer; transition: all 0.15s; margin-bottom: 10px;
+}
+.upload-zone:hover { border-color: var(--primary); background: var(--primary-light); }
+.upload-zone .upload-icon { font-size: 24px; margin-bottom: 6px; }
+.upload-zone p { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.upload-zone small { font-size: 11px; color: #9ca3af; }
+.upload-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.warning-banner {
+  background: var(--danger-light); border: 1px solid #fca5a5; border-radius: 8px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.warning-banner p { font-size: 13px; font-weight: 600; color: #9b1c1c; }
+.submit-to-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.submit-recipient {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg);
+}
+.submit-recipient input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--primary); }
+.submit-recipient label { font-size: 13px; font-weight: 600; flex: 1; cursor: pointer; }
+.submit-recipient .role-tag { font-size: 11px; color: var(--text-secondary); }
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar { background: #e5e7eb; border-radius: 10px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; transition: width 0.3s; }
+.progress-fill.green { background: var(--success); }
+.progress-fill.yellow { background: var(--warning); }
+.progress-fill.red { background: var(--danger); }
+.progress-fill.blue { background: var(--primary); }
+
+/* ─── MILESTONE ─── */
+.milestone-timeline { position: relative; padding-left: 24px; }
+.milestone-timeline::before { content:''; position:absolute; left:7px; top:0; bottom:0; width:2px; background: var(--border); }
+.milestone-item { position: relative; margin-bottom: 20px; }
+.milestone-dot { position: absolute; left: -24px; top: 3px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; }
+.milestone-dot.done { background: var(--success); border-color: var(--success); }
+.milestone-dot.active { background: var(--primary); border-color: var(--primary); }
+.milestone-dot.risk { background: var(--warning); border-color: var(--warning); }
+.milestone-dot.over { background: var(--danger); border-color: var(--danger); }
+.milestone-name { font-size: 13px; font-weight: 600; }
+.milestone-date { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ─── NOTIFICATION ─── */
+.notif-item {
+  display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.notif-item:hover { background: #f9fafb; }
+.notif-item.unread { background: #eff6ff; }
+.notif-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.notif-icon.red { background: var(--danger-light); }
+.notif-icon.yellow { background: var(--warning-light); }
+.notif-icon.blue { background: var(--primary-light); }
+.notif-icon.green { background: var(--success-light); }
+.notif-icon.orange { background: var(--orange-light); }
+.notif-body { flex: 1; }
+.notif-title { font-size: 13px; font-weight: 700; }
+.notif-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.notif-time { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+.notif-link { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 4px; display: inline-block; }
+.unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 6px; }
+
+/* ─── AUDIT LOG ─── */
+.audit-row { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.audit-time { font-size: 11px; font-family: 'DM Mono',monospace; color: var(--text-secondary); width: 130px; flex-shrink: 0; padding-top: 1px; }
+.audit-user { font-size: 12px; font-weight: 700; width: 120px; flex-shrink: 0; }
+.audit-action { font-size: 12px; color: var(--text); flex: 1; }
+.audit-type { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--primary-light); color: var(--primary); font-weight: 700; flex-shrink: 0; }
+
+/* ─── FINANCE ─── */
+.budget-line { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.budget-line:last-child { border-bottom: none; }
+.budget-name { font-size: 13px; font-weight: 600; flex: 1; }
+.budget-val { font-size: 13px; font-family: 'DM Mono',monospace; width: 100px; text-align: right; }
+.budget-val.red { color: var(--danger); font-weight: 700; }
+.budget-val.green { color: var(--success); }
+.budget-progress { width: 100px; }
+
+/* ─── CHART PLACEHOLDER ─── */
+.chart-placeholder {
+  background: var(--bg); border-radius: 8px; height: 180px;
+  display: flex; align-items: flex-end; justify-content: center; gap: 8px; padding: 20px 16px 12px;
+}
+.chart-bar { border-radius: 4px 4px 0 0; width: 28px; }
+.chart-line-placeholder {
+  background: var(--bg); border-radius: 8px; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 12px;
+  position: relative; overflow: hidden;
+}
+.mini-line { position: absolute; bottom: 0; left: 0; right: 0; height: 100%; }
+
+/* ─── SECTION DIVIDER ─── */
+.section-gap { margin-bottom: 20px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-gap { display: flex; gap: 10px; align-items: center; }
+
+/* ─── SCROLL ─── */
+.page { overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 1: LOGIN
+════════════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="uni-icon">🎓</div>
+      <h1>University of Tajikistan</h1>
+      <p>Grant Management System (GMS) — Staff Portal</p>
+    </div>
+    <label>Email Address</label>
+    <input type="email" placeholder="yourname@university.tj" id="login-email" value="jenkins@university.tj">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••" id="login-pass" value="password">
+    <button class="btn-primary" onclick="goTo('home')">Sign In</button>
+    <div class="login-footer">University Grant Management System v2.4 · Secured Portal</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 2: STAFF HOME
+════════════════════════════════════════════ -->
+<div id="screen-home" class="screen">
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🎓</div>
+        <div><span>GMS Portal</span><small>Staff System</small></div>
+      </div>
+      <nav>
+        <div class="nav-item active" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user">
+        <div class="user-avatar">DJ</div>
+        <div class="user-info">
+          <div class="user-name">Dr. Jenkins</div>
+          <div class="user-role">PI / Project Team</div>
+        </div>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search">
+          <span>🔍</span>
+          <input placeholder="Search grants, donors, PI, keywords…">
+        </div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div>
+          <div class="profile-chip">
+            <div class="av">DJ</div>
+            <span>Dr. Jenkins</span>
+            <span>▾</span>
+          </div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-header">
+          <div class="page-title">Welcome back, Dr. Jenkins 👋</div>
+          <div class="page-subtitle">Overview for University Grant Management System — Tajikistan</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid-4 section-gap">
+          <div class="stat-card danger">
+            <div class="stat-label">Overdue Tasks</div>
+            <div class="stat-value">3</div>
+            <div class="stat-sub">Immediate action needed</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-label">Due This Week</div>
+            <div class="stat-value">7</div>
+            <div class="stat-sub">Across 4 grants</div>
+          </div>
+          <div class="stat-card primary">
+            <div class="stat-label">Active Grants</div>
+            <div class="stat-value">12</div>
+            <div class="stat-sub">3 closing soon</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-label">Evidence Missing</div>
+            <div class="stat-value">5</div>
+            <div class="stat-sub">Tasks blocked</div>
+          </div>
+        </div>
+
+        <div class="grid-2 section-gap">
+          <!-- My Tasks Today -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⚡ My Tasks Today</div>
+              <button class="btn btn-sm btn-outline" onclick="goTo('tasks')">View All</button>
+            </div>
+            <div class="card-body">
+              <div class="task-item" onclick="goTo('task-detail')">
+                <div class="task-dot red"></div>
+                <div class="task-info">
+                  <div class="task-name">Submit Workshop Completion Report</div>
+                  <div class="task-meta">Agriculture Training Program · Evidence missing ⚠</div>
+                </div>
+                <div class="task-due red">OVERDUE</div>
+              </div>
+              <div class="task-item" onclick="goTo('task-detail')">
+                <div class="task-dot red"></div>
+                <div class="task-info">
+                  <div class="task-name">Upload Field Visit Photos</div>
+                  <div class="task-meta">Water Infrastructure Grant · Evidence required</div>
+                </div>
+                <div class="task-due red">2 days late</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot yellow"></div>
+                <div class="task-info">
+                  <div class="task-name">Narrative Report — Q2</div>
+                  <div class="task-meta">Rural Health Initiative · Draft in progress</div>
+                </div>
+                <div class="task-due yellow">Due Today</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot yellow"></div>
+                <div class="task-info">
+                  <div class="task-name">Procurement Documents Review</div>
+                  <div class="task-meta">Education Development Fund</div>
+                </div>
+                <div class="task-due yellow">Due Tomorrow</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot green"></div>
+                <div class="task-info">
+                  <div class="task-name">Milestone Sign-off — Phase 1</div>
+                  <div class="task-meta">Climate Resilience Project</div>
+                </div>
+                <div class="task-due" style="color:var(--success)">May 25</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Due -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📄 Reports Due Soon</div>
+              <button class="btn btn-sm btn-outline" onclick="goTo('calendar')">Calendar</button>
+            </div>
+            <div class="card-body">
+              <div class="task-item">
+                <div class="task-dot red"></div>
+                <div class="task-info">
+                  <div class="task-name">Narrative Report — Agriculture Training</div>
+                  <div class="task-meta">Donor: USAID · Q2 Narrative</div>
+                </div>
+                <div class="task-due red">OVERDUE</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot yellow"></div>
+                <div class="task-info">
+                  <div class="task-name">Financial Report — Water Infrastructure</div>
+                  <div class="task-meta">Donor: World Bank · Mid-year</div>
+                </div>
+                <div class="task-due yellow">May 20</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot yellow"></div>
+                <div class="task-info">
+                  <div class="task-name">Quarterly Progress — Rural Health</div>
+                  <div class="task-meta">Donor: EU Commission · Q2</div>
+                </div>
+                <div class="task-due yellow">May 28</div>
+              </div>
+              <div class="task-item">
+                <div class="task-dot green"></div>
+                <div class="task-info">
+                  <div class="task-name">Annual Report — Education Fund</div>
+                  <div class="task-meta">Donor: ADB · Annual</div>
+                </div>
+                <div class="task-due" style="color:var(--success)">Jun 15</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2 section-gap">
+          <!-- My Grants -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📁 My Grants</div>
+              <button class="btn btn-sm btn-outline" onclick="goTo('grants')">All Grants</button>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;" onclick="goTo('workspace')">
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:700;">Agriculture Training Program</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">USAID · Ends Dec 2025</div>
+                  </div>
+                  <span class="badge badge-red">At Risk</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;" onclick="goTo('workspace')">
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:700;">Water Infrastructure Grant</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">World Bank · Ends Mar 2026</div>
+                  </div>
+                  <span class="badge badge-yellow">Active</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;" onclick="goTo('workspace')">
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:700;">Rural Health Initiative</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">EU Commission · Ends Jun 2026</div>
+                  </div>
+                  <span class="badge badge-green">On Track</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions + Evidence Missing -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="card">
+              <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
+              <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button class="btn btn-outline" onclick="goTo('workspace')" style="justify-content:center;padding:12px;">📁 Open a Grant</button>
+                <button class="btn btn-outline" style="justify-content:center;padding:12px;">📤 Upload Document</button>
+                <button class="btn btn-outline" style="justify-content:center;padding:12px;">📸 Upload Evidence</button>
+                <button class="btn btn-outline" style="justify-content:center;padding:12px;">✏️ Create Report Draft</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">⚠️ Evidence Missing</div>
+                <span class="badge badge-red">5 Tasks</span>
+              </div>
+              <div class="card-body">
+                <div class="task-item" onclick="goTo('task-detail')">
+                  <span style="font-size:16px;">📸</span>
+                  <div class="task-info">
+                    <div class="task-name">Workshop Completion Report</div>
+                    <div class="task-meta">Photos + Attendance missing</div>
+                  </div>
+                  <button class="btn btn-sm btn-danger">Fix</button>
+                </div>
+                <div class="task-item" onclick="goTo('task-detail')">
+                  <span style="font-size:16px;">🧾</span>
+                  <div class="task-info">
+                    <div class="task-name">Procurement — Water Pumps</div>
+                    <div class="task-meta">Delivery note missing</div>
+                  </div>
+                  <button class="btn btn-sm btn-danger">Fix</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 3: TASK DETAIL PAGE
+════════════════════════════════════════════ -->
+<div id="screen-tasks" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item active"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search tasks…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div>
+          <div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <button class="btn btn-outline btn-sm" onclick="goTo('home')">← Back</button>
+          <div>
+            <div class="page-title">My Tasks</div>
+            <div class="page-subtitle">All tasks assigned to you across your grants</div>
+          </div>
+        </div>
+        <!-- Task list, clicking opens task-detail -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Tasks (5 Active)</div>
+            <div class="filters" style="margin-bottom:0;">
+              <select class="filter-select"><option>All Status</option><option>Overdue</option><option>Due Soon</option><option>In Progress</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Task</th><th>Grant</th><th>Deadline</th><th>Status</th><th>Evidence</th><th></th></tr></thead>
+              <tbody>
+                <tr onclick="goTo('task-detail')" style="cursor:pointer;">
+                  <td><strong>Submit Workshop Completion Report</strong></td>
+                  <td>Agriculture Training Program</td>
+                  <td style="color:var(--danger);font-weight:700;">May 12 — OVERDUE</td>
+                  <td><span class="badge badge-red">Overdue</span></td>
+                  <td><span class="badge badge-red">⚠ Missing</span></td>
+                  <td><button class="btn btn-sm btn-blue" onclick="event.stopPropagation();goTo('task-detail')">Open</button></td>
+                </tr>
+                <tr onclick="goTo('task-detail')" style="cursor:pointer;">
+                  <td><strong>Upload Field Visit Photos</strong></td>
+                  <td>Water Infrastructure Grant</td>
+                  <td style="color:var(--danger);font-weight:700;">May 14 — OVERDUE</td>
+                  <td><span class="badge badge-red">Overdue</span></td>
+                  <td><span class="badge badge-red">⚠ Missing</span></td>
+                  <td><button class="btn btn-sm btn-blue" onclick="event.stopPropagation();goTo('task-detail')">Open</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Narrative Report — Q2</strong></td>
+                  <td>Rural Health Initiative</td>
+                  <td style="color:var(--warning);font-weight:700;">May 16 — Today</td>
+                  <td><span class="badge badge-yellow">In Progress</span></td>
+                  <td><span class="badge badge-gray">N/A</span></td>
+                  <td><button class="btn btn-sm btn-outline">Open</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Procurement Documents Review</strong></td>
+                  <td>Education Development Fund</td>
+                  <td>May 17</td>
+                  <td><span class="badge badge-yellow">In Progress</span></td>
+                  <td><span class="badge badge-orange">⚠ Partial</span></td>
+                  <td><button class="btn btn-sm btn-outline">Open</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Milestone Sign-off — Phase 1</strong></td>
+                  <td>Climate Resilience Project</td>
+                  <td>May 25</td>
+                  <td><span class="badge badge-blue">Not Started</span></td>
+                  <td><span class="badge badge-gray">Not yet</span></td>
+                  <td><button class="btn btn-sm btn-outline">Open</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 4: TASK DETAIL
+════════════════════════════════════════════ -->
+<div id="screen-task-detail" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item active" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div>
+          <div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <button class="btn btn-outline btn-sm" onclick="goTo('tasks')">← Back to Tasks</button>
+          <div><div class="page-title">Task Detail</div></div>
+          <span class="badge badge-red" style="margin-left:8px;">⚠ OVERDUE</span>
+        </div>
+
+        <!-- SECTION 1: Task Information -->
+        <div class="task-section">
+          <div class="task-section-header">
+            <div class="task-section-num">1</div>
+            <div class="task-section-title">Task Information</div>
+          </div>
+          <div class="task-section-body">
+            <div class="info-row"><div class="info-label">Task Name</div><div class="info-value"><strong>Submit Workshop Completion Report</strong></div></div>
+            <div class="info-row"><div class="info-label">Description</div><div class="info-value">Please provide all documentation and evidence for the completed agriculture training workshops. Ensure all participant data is accurately recorded.</div></div>
+            <div class="info-row"><div class="info-label">Grant</div><div class="info-value"><a style="color:var(--primary);font-weight:600;cursor:pointer;" onclick="goTo('workspace')">Agriculture Training Program</a></div></div>
+            <div class="info-row"><div class="info-label">Assigned To</div><div class="info-value">Dr. Jenkins (PI)</div></div>
+            <div class="info-row"><div class="info-label">Deadline</div><div class="info-value deadline-red">⚠ May 20, 2025 — OVERDUE (4 days late)</div></div>
+            <div class="info-row" style="margin-bottom:0;"><div class="info-label">Status</div><div class="info-value"><span class="badge badge-red">Overdue</span></div></div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Requirements -->
+        <div class="task-section">
+          <div class="task-section-header">
+            <div class="task-section-num">2</div>
+            <div class="task-section-title">Task Requirements — What Must Be Submitted</div>
+          </div>
+          <div class="task-section-body">
+            <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">All items below must be uploaded before you can submit this task.</p>
+            <div class="checklist-item">
+              <div class="check-circle done">✓</div>
+              <div class="check-label">Narrative Report (PDF)</div>
+              <span class="badge badge-green" style="margin-left:auto;">Uploaded</span>
+            </div>
+            <div class="checklist-item">
+              <div class="check-circle"></div>
+              <div class="check-label">Attendance Sheet</div>
+              <span class="badge badge-red" style="margin-left:auto;">Missing</span>
+            </div>
+            <div class="checklist-item">
+              <div class="check-circle"></div>
+              <div class="check-label">Workshop Agenda</div>
+              <span class="badge badge-red" style="margin-left:auto;">Missing</span>
+            </div>
+            <div class="checklist-item">
+              <div class="check-circle done">✓</div>
+              <div class="check-label">Participant List (Excel or PDF)</div>
+              <span class="badge badge-green" style="margin-left:auto;">Uploaded</span>
+            </div>
+            <div class="checklist-item">
+              <div class="check-circle"></div>
+              <div class="check-label">Workshop Photos (min. 5 photos)</div>
+              <span class="badge badge-red" style="margin-left:auto;">Missing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Evidence Upload -->
+        <div class="task-section">
+          <div class="task-section-header">
+            <div class="task-section-num">3</div>
+            <div class="task-section-title">Evidence Upload</div>
+          </div>
+          <div class="task-section-body">
+            <div class="warning-banner">
+              <span style="font-size:20px;">⚠️</span>
+              <div>
+                <p>Evidence Missing — 3 required items not yet uploaded.</p>
+                <p style="font-size:12px;font-weight:400;color:#9b1c1c;margin-top:2px;">You cannot submit this task until all required evidence is uploaded.</p>
+              </div>
+            </div>
+            <div class="upload-grid">
+              <div class="upload-zone">
+                <div class="upload-icon">📸</div>
+                <p>Upload Photos</p>
+                <small>JPG, PNG · Max 10MB each</small>
+              </div>
+              <div class="upload-zone">
+                <div class="upload-icon">📋</div>
+                <p>Upload Attendance Sheet</p>
+                <small>PDF, Excel · Max 5MB</small>
+              </div>
+              <div class="upload-zone">
+                <div class="upload-icon">🧾</div>
+                <p>Upload Receipts / Invoices</p>
+                <small>PDF, JPG · Max 5MB</small>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding:10px 14px;background:var(--success-light);border-radius:8px;display:flex;align-items:center;gap:10px;">
+              <span>✅</span>
+              <div style="font-size:12px;"><strong>Narrative Report.pdf</strong> — uploaded by Dr. Jenkins · May 14, 2025 10:32 AM · v1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Submit -->
+        <div class="task-section">
+          <div class="task-section-header">
+            <div class="task-section-num">4</div>
+            <div class="task-section-title">Submit Task</div>
+          </div>
+          <div class="task-section-body">
+            <div style="margin-bottom:16px;">
+              <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Submit To — Select Recipients</div>
+              <div class="submit-to-list">
+                <div class="submit-recipient">
+                  <input type="checkbox" id="r1" checked>
+                  <label for="r1">Dean / Supervisor</label>
+                  <span class="role-tag">Required</span>
+                </div>
+                <div class="submit-recipient">
+                  <input type="checkbox" id="r2" checked>
+                  <label for="r2">ORD — Office of Research & Development</label>
+                  <span class="role-tag">Required</span>
+                </div>
+                <div class="submit-recipient">
+                  <input type="checkbox" id="r3">
+                  <label for="r3">Director (if required by grant)</label>
+                  <span class="role-tag">Optional</span>
+                </div>
+                <div class="submit-recipient">
+                  <input type="checkbox" id="r4">
+                  <label for="r4">Finance Director</label>
+                  <span class="role-tag">Optional</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+              <div class="upload-zone"><div class="upload-icon">📄</div><p>Upload Report</p><small>PDF preferred</small></div>
+              <div class="upload-zone"><div class="upload-icon">📁</div><p>Upload Documents</p><small>Any format</small></div>
+              <div class="upload-zone"><div class="upload-icon">📸</div><p>Upload Evidence</p><small>Photos, sheets</small></div>
+            </div>
+            <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;">
+              🔒 Submit button is <strong>locked</strong> until all 3 missing evidence items are uploaded (Attendance Sheet, Workshop Agenda, Photos).
+            </div>
+            <button class="btn btn-blue" style="opacity:0.5;cursor:not-allowed;padding:12px 28px;font-size:14px;" disabled>🔒 Submit Task — Evidence Required First</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 5: GRANTS LIST
+════════════════════════════════════════════ -->
+<div id="screen-grants" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item active"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search grants, donors, PI…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div>
+          <div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-header flex-between">
+          <div><div class="page-title">Grants</div><div class="page-subtitle">12 grants · Tajikistan</div></div>
+        </div>
+        <div class="filters">
+          <div class="search-box"><span>🔍</span><input placeholder="Search by grant name, donor, PI…"></div>
+          <select class="filter-select"><option>All Status</option><option>Awarded</option><option>Active</option><option>Reporting</option><option>Closing</option><option>Closed</option></select>
+          <select class="filter-select"><option>All Donors</option><option>USAID</option><option>World Bank</option><option>EU Commission</option><option>ADB</option></select>
+          <select class="filter-select"><option>All PIs</option><option>Dr. Jenkins</option><option>Prof. Alimov</option><option>Dr. Nazarova</option></select>
+          <select class="filter-select"><option>All Risk Levels</option><option>Normal</option><option>At Risk</option><option>Overdue</option></select>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Grant Name</th><th>Donor</th><th>PI</th><th>Dates</th><th>Next Report Due</th><th>Overdue</th><th>Evidence</th><th>Status</th><th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Agriculture Training Program</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2023-001</small></td>
+                  <td>USAID</td><td>Dr. Jenkins</td>
+                  <td><small>Jan 2023 – Dec 2025</small></td>
+                  <td style="color:var(--danger);font-weight:700;">May 12 — OVERDUE</td>
+                  <td><span class="badge badge-red">3 tasks</span></td>
+                  <td><span class="badge badge-red">⚠ 2 missing</span></td>
+                  <td><span class="badge badge-red">At Risk</span></td>
+                  <td><button class="btn btn-sm btn-blue" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Water Infrastructure Grant</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2023-004</small></td>
+                  <td>World Bank</td><td>Dr. Jenkins</td>
+                  <td><small>Mar 2023 – Mar 2026</small></td>
+                  <td style="color:var(--warning);font-weight:700;">May 20</td>
+                  <td><span class="badge badge-yellow">1 task</span></td>
+                  <td><span class="badge badge-orange">⚠ 1 missing</span></td>
+                  <td><span class="badge badge-yellow">Active</span></td>
+                  <td><button class="btn btn-sm btn-blue" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Rural Health Initiative</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2022-017</small></td>
+                  <td>EU Commission</td><td>Prof. Alimov</td>
+                  <td><small>Jun 2022 – Jun 2026</small></td>
+                  <td>May 28</td>
+                  <td><span class="badge badge-gray">None</span></td>
+                  <td><span class="badge badge-green">✓ OK</span></td>
+                  <td><span class="badge badge-green">Active</span></td>
+                  <td><button class="btn btn-sm btn-outline" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Education Development Fund</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2024-002</small></td>
+                  <td>ADB</td><td>Dr. Nazarova</td>
+                  <td><small>Feb 2024 – Feb 2027</small></td>
+                  <td>Jun 15</td>
+                  <td><span class="badge badge-gray">None</span></td>
+                  <td><span class="badge badge-orange">⚠ 1 missing</span></td>
+                  <td><span class="badge badge-blue">Reporting</span></td>
+                  <td><button class="btn btn-sm btn-outline" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Climate Resilience Project</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2024-009</small></td>
+                  <td>UNDP</td><td>Dr. Jenkins</td>
+                  <td><small>Sep 2024 – Sep 2027</small></td>
+                  <td>Jul 01</td>
+                  <td><span class="badge badge-gray">None</span></td>
+                  <td><span class="badge badge-green">✓ OK</span></td>
+                  <td><span class="badge badge-green">Active</span></td>
+                  <td><button class="btn btn-sm btn-outline" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Digital Literacy Program</strong><br><small style="color:var(--text-secondary);font-family:'DM Mono',monospace;">GMS-2021-031</small></td>
+                  <td>GIZ</td><td>Prof. Alimov</td>
+                  <td><small>Jan 2021 – Dec 2024</small></td>
+                  <td>—</td>
+                  <td><span class="badge badge-gray">None</span></td>
+                  <td><span class="badge badge-green">✓ OK</span></td>
+                  <td><span class="badge badge-gray">Closing</span></td>
+                  <td><button class="btn btn-sm btn-outline" onclick="goTo('workspace')">Open Grant</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 6: GRANT WORKSPACE
+════════════════════════════════════════════ -->
+<div id="screen-workspace" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item active" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications</div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search within grant…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div>
+          <div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <button class="btn btn-outline btn-sm" onclick="goTo('grants')" style="margin-bottom:16px;">← Back to Grants</button>
+        <!-- Grant Header -->
+        <div class="grant-header" style="margin-bottom:16px;">
+          <div class="grant-header-top">
+            <div>
+              <div class="grant-title">Agriculture Training Program</div>
+              <div class="grant-code">GMS-2023-001 · USAID</div>
+            </div>
+            <div class="grant-actions">
+              <button class="btn btn-outline btn-sm">📤 Upload Document</button>
+              <button class="btn btn-outline btn-sm">📸 Upload Evidence</button>
+              <button class="btn btn-blue btn-sm">✏️ Submit Update</button>
+            </div>
+          </div>
+          <div class="grant-meta">
+            <div class="grant-meta-item"><span>Donor</span>USAID</div>
+            <div class="grant-meta-item"><span>PI</span>Dr. Jenkins</div>
+            <div class="grant-meta-item"><span>Period</span>Jan 2023 – Dec 2025</div>
+            <div class="grant-meta-item"><span>Budget</span>$485,000</div>
+            <div class="grant-meta-item"><span>Status</span><span class="badge badge-red">At Risk</span></div>
+            <div class="grant-meta-item"><span>Risk</span><span class="badge badge-red">Overdue Tasks</span></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="workspace-tabs">
+          <div class="tab active" onclick="switchTab('overview')">Overview</div>
+          <div class="tab" onclick="switchTab('tasks-tab')">Tasks & Deadlines</div>
+          <div class="tab" onclick="switchTab('documents')">Documents</div>
+          <div class="tab" onclick="switchTab('evidence')">Evidence</div>
+          <div class="tab" onclick="switchTab('reports')">Reports</div>
+          <div class="tab" onclick="switchTab('financial-tab')">Financial</div>
+          <div class="tab" onclick="switchTab('audit')">Audit Log</div>
+        </div>
+
+        <!-- TAB: Overview -->
+        <div id="tab-overview" class="tab-content">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><div class="card-title">📊 Progress Summary</div></div>
+              <div class="card-body">
+                <div style="margin-bottom:14px;">
+                  <div class="flex-between" style="margin-bottom:6px;"><span style="font-size:13px;font-weight:600;">Overall Completion</span><span style="font-size:13px;font-weight:700;color:var(--warning);">62%</span></div>
+                  <div class="progress-bar"><div class="progress-fill yellow" style="width:62%"></div></div>
+                </div>
+                <div style="margin-bottom:14px;">
+                  <div class="flex-between" style="margin-bottom:6px;"><span style="font-size:13px;">Tasks Completed</span><span style="font-size:13px;font-weight:700;">14/22</span></div>
+                  <div class="progress-bar"><div class="progress-fill blue" style="width:63%"></div></div>
+                </div>
+                <div>
+                  <div class="flex-between" style="margin-bottom:6px;"><span style="font-size:13px;">Budget Spent</span><span style="font-size:13px;font-weight:700;">$298,400 / $485,000</span></div>
+                  <div class="progress-bar"><div class="progress-fill green" style="width:61%"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">🚨 Next Deadlines</div></div>
+              <div class="card-body">
+                <div class="task-item"><div class="task-dot red"></div><div class="task-info"><div class="task-name">Workshop Completion Report</div><div class="task-meta">Evidence missing</div></div><div class="task-due red">OVERDUE</div></div>
+                <div class="task-item"><div class="task-dot yellow"></div><div class="task-info"><div class="task-name">Q2 Narrative Report</div><div class="task-meta">Draft in progress</div></div><div class="task-due yellow">May 20</div></div>
+                <div class="task-item"><div class="task-dot yellow"></div><div class="task-info"><div class="task-name">Phase 2 Milestone Review</div><div class="task-meta">Pending sign-off</div></div><div class="task-due yellow">Jun 01</div></div>
+                <div class="task-item"><div class="task-dot green"></div><div class="task-info"><div class="task-name">Financial Report — H1</div><div class="task-meta">Finance team</div></div><div class="task-due" style="color:var(--success)">Jun 30</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="card-header"><div class="card-title">🗓 Milestone Timeline</div></div>
+            <div class="card-body">
+              <div class="milestone-timeline">
+                <div class="milestone-item"><div class="milestone-dot done"></div><div class="milestone-name">Project Kickoff & Team Assembly</div><div class="milestone-date">Jan 15, 2023 · ✅ Completed</div></div>
+                <div class="milestone-item"><div class="milestone-dot done"></div><div class="milestone-name">Phase 1 — Needs Assessment</div><div class="milestone-date">Mar 30, 2023 · ✅ Completed</div></div>
+                <div class="milestone-item"><div class="milestone-dot done"></div><div class="milestone-name">Phase 2 — Training Design & Pilot</div><div class="milestone-date">Sep 15, 2023 · ✅ Completed</div></div>
+                <div class="milestone-item"><div class="milestone-dot over"></div><div class="milestone-name">Workshop Series — 5 Regions</div><div class="milestone-date" style="color:var(--danger);">May 12, 2025 · ⚠ Overdue — Report pending</div></div>
+                <div class="milestone-item"><div class="milestone-dot active"></div><div class="milestone-name">Mid-term Evaluation</div><div class="milestone-date">Jun 01, 2025 · 🔵 In Progress</div></div>
+                <div class="milestone-item"><div class="milestone-dot"></div><div class="milestone-name">Final Report & Closeout</div><div class="milestone-date">Dec 01, 2025 · Upcoming</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Tasks -->
+        <div id="tab-tasks-tab" class="tab-content" style="display:none;">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Tasks & Deadlines</div><div class="flex-gap"><span class="badge badge-red">3 Overdue</span><span class="badge badge-yellow">2 Due Soon</span></div></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Task</th><th>Owner</th><th>Due Date</th><th>Status</th><th>Evidence</th><th>Risk</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Submit Workshop Completion Report</strong><br><small style="color:var(--text-secondary);">🗨 2 comments</small></td><td>Dr. Jenkins</td><td style="color:var(--danger);font-weight:700;">May 12 — OVERDUE</td><td><span class="badge badge-red">Overdue</span></td><td><span class="badge badge-red">⚠ Missing</span></td><td>🔴 High</td><td><button class="btn btn-sm btn-blue" onclick="goTo('task-detail')">Open</button></td></tr>
+                  <tr><td><strong>Q2 Narrative Report</strong></td><td>Dr. Jenkins</td><td style="color:var(--warning);">May 20</td><td><span class="badge badge-yellow">In Progress</span></td><td><span class="badge badge-gray">N/A</span></td><td>🟡 Medium</td><td><button class="btn btn-sm btn-outline">Open</button></td></tr>
+                  <tr><td><strong>Phase 2 Milestone Review</strong></td><td>Prof. Alimov</td><td>Jun 01</td><td><span class="badge badge-blue">Not Started</span></td><td><span class="badge badge-gray">N/A</span></td><td>🟢 Low</td><td><button class="btn btn-sm btn-outline">Open</button></td></tr>
+                  <tr><td><strong>Beneficiary Survey — Round 2</strong></td><td>Dr. Jenkins</td><td>Jun 15</td><td><span class="badge badge-green">Submitted</span></td><td><span class="badge badge-green">✓ Done</span></td><td>🟢 Low</td><td><button class="btn btn-sm btn-outline">View</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Documents -->
+        <div id="tab-documents" class="tab-content" style="display:none;">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📁 Document Repository</div><button class="btn btn-sm btn-blue">+ Upload Document</button></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="background:var(--bg);border-radius:8px;padding:12px 16px;">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:8px;">📂 Reports</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;padding-left:16px;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid var(--border);">
+                      <span>📄</span>
+                      <div style="flex:1;font-size:12px;"><strong>Q1_Narrative_Report.pdf</strong><br><span style="color:var(--text-secondary);">Uploaded by Dr. Jenkins · Mar 15, 2025 · v2</span></div>
+                      <span class="badge badge-green">Latest Approved</span>
+                      <button class="btn btn-sm btn-outline">Download</button>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid var(--border);">
+                      <span>📄</span>
+                      <div style="flex:1;font-size:12px;"><strong>Q1_Narrative_Report.pdf</strong><br><span style="color:var(--text-secondary);">Uploaded by Dr. Jenkins · Feb 28, 2025 · v1</span></div>
+                      <span class="badge badge-gray">Older Version</span>
+                      <button class="btn btn-sm btn-outline">Download</button>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px 16px;">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:8px;">📂 Financial Documents</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;padding-left:16px;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid var(--border);">
+                      <span>📊</span>
+                      <div style="flex:1;font-size:12px;"><strong>Budget_Report_H1_2024.xlsx</strong><br><span style="color:var(--text-secondary);">Uploaded by Finance Team · Jan 10, 2025 · v3</span></div>
+                      <span class="badge badge-green">Latest Approved</span>
+                      <button class="btn btn-sm btn-outline">Download</button>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px 16px;">
+                  <div style="font-weight:700;font-size:13px;margin-bottom:8px;">📂 Procurement</div>
+                  <div style="font-size:12px;color:var(--text-secondary);padding-left:16px;">No documents yet. Upload documents to this folder.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Evidence -->
+        <div id="tab-evidence" class="tab-content" style="display:none;">
+          <div class="warning-banner"><span style="font-size:20px;">⚠️</span><div><p>2 tasks have missing evidence — submission is blocked.</p></div></div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><div class="card-title">📸 Upload New Evidence</div></div>
+              <div class="card-body">
+                <div style="margin-bottom:10px;font-size:12px;color:var(--text-secondary);">Link evidence to a specific task:</div>
+                <select class="filter-select" style="width:100%;margin-bottom:12px;"><option>Select task to link evidence to…</option><option>Workshop Completion Report</option><option>Q2 Narrative Report</option></select>
+                <div class="upload-grid">
+                  <div class="upload-zone"><div class="upload-icon">📸</div><p>Photos</p></div>
+                  <div class="upload-zone"><div class="upload-icon">📋</div><p>Attendance Sheet</p></div>
+                  <div class="upload-zone"><div class="upload-icon">🧾</div><p>Invoices</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">📂 Uploaded Evidence</div></div>
+              <div class="card-body">
+                <div class="task-item"><span style="font-size:20px;">📄</span><div class="task-info"><div class="task-name">Narrative_Report_v2.pdf</div><div class="task-meta">Linked: Workshop Completion · Dr. Jenkins · May 14</div></div><span class="badge badge-green">Approved</span></div>
+                <div class="task-item"><span style="font-size:20px;">📊</span><div class="task-info"><div class="task-name">Participant_List.xlsx</div><div class="task-meta">Linked: Workshop Completion · Dr. Jenkins · May 14</div></div><span class="badge badge-yellow">Pending</span></div>
+                <div style="padding:12px;background:var(--danger-light);border-radius:8px;margin-top:10px;font-size:12px;color:var(--danger);font-weight:600;">⚠ Missing: Photos, Attendance Sheet, Workshop Agenda</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Reports -->
+        <div id="tab-reports" class="tab-content" style="display:none;">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><div class="card-title">📝 Narrative Reports</div></div>
+              <div class="card-body">
+                <div class="task-item"><div class="task-dot red"></div><div class="task-info"><div class="task-name">Q2 Narrative Report 2025</div><div class="task-meta">Due: May 20 · Status: Draft</div></div><span class="badge badge-yellow">Draft</span></div>
+                <div class="task-item"><div class="task-dot green"></div><div class="task-info"><div class="task-name">Q1 Narrative Report 2025</div><div class="task-meta">Submitted: Mar 15 · Approved</div></div><span class="badge badge-green">Approved</span></div>
+                <div class="task-item"><div class="task-dot green"></div><div class="task-info"><div class="task-name">Annual Report 2023</div><div class="task-meta">Submitted: Jan 10 · Approved</div></div><span class="badge badge-green">Submitted</span></div>
+                <div style="margin-top:12px;display:flex;gap:8px;">
+                  <button class="btn btn-blue btn-sm">+ Create New Draft</button>
+                  <button class="btn btn-outline btn-sm">View All Reports</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">🔄 Report Workflow</div></div>
+              <div class="card-body">
+                <div style="display:flex;gap:0;align-items:center;margin-bottom:16px;">
+                  <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--warning);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;">1</div><div style="font-size:11px;font-weight:700;color:var(--warning);">Draft</div></div>
+                  <div style="flex:1;height:2px;background:var(--border)"></div>
+                  <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text-secondary);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;">2</div><div style="font-size:11px;color:var(--text-secondary);">Review</div></div>
+                  <div style="flex:1;height:2px;background:var(--border)"></div>
+                  <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text-secondary);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;">3</div><div style="font-size:11px;color:var(--text-secondary);">Submitted</div></div>
+                  <div style="flex:1;height:2px;background:var(--border)"></div>
+                  <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text-secondary);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;">4</div><div style="font-size:11px;color:var(--text-secondary);">Approved</div></div>
+                </div>
+                <div style="padding:12px;background:var(--warning-light);border-radius:8px;font-size:12px;"><strong>Q2 Narrative Report</strong> is in <strong>Draft</strong> stage. Complete evidence upload and submit for review.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Financial -->
+        <div id="tab-financial-tab" class="tab-content" style="display:none;">
+          <div style="padding:20px;background:#fff;border-radius:var(--radius);border:1px solid var(--border);text-align:center;">
+            <div style="font-size:32px;margin-bottom:12px;">🔒</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:8px;">Limited Financial View</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Full financial details are restricted to Finance role users. You can see a summary below.</div>
+            <div class="grid-3" style="text-align:left;max-width:600px;margin:0 auto;">
+              <div class="stat-card primary"><div class="stat-label">Total Budget</div><div class="stat-value" style="font-size:18px;">$485K</div></div>
+              <div class="stat-card success"><div class="stat-label">Spent to Date</div><div class="stat-value" style="font-size:18px;">$298K</div></div>
+              <div class="stat-card warning"><div class="stat-label">Remaining</div><div class="stat-value" style="font-size:18px;">$187K</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Audit -->
+        <div id="tab-audit" class="tab-content" style="display:none;">
+          <div class="card">
+            <div class="card-header"><div class="card-title">🔍 Audit Log — Read Only</div><button class="btn btn-outline btn-sm">Export Log</button></div>
+            <div class="card-body">
+              <div class="audit-row"><div class="audit-time">May 16, 2025 09:14</div><div class="audit-user">Dr. Jenkins</div><div class="audit-action">Uploaded <strong>Narrative_Report_v2.pdf</strong> to Workshop Completion Report task</div><div class="audit-type">UPLOAD</div></div>
+              <div class="audit-row"><div class="audit-time">May 15, 2025 16:42</div><div class="audit-user">Dr. Jenkins</div><div class="audit-action">Added comment to task: <em>"Working on attendance sheet, will upload by EOD"</em></div><div class="audit-type">COMMENT</div></div>
+              <div class="audit-row"><div class="audit-time">May 14, 2025 11:23</div><div class="audit-user">Prof. Alimov</div><div class="audit-action">Approved Q1 Narrative Report — moved status to <strong>Approved</strong></div><div class="audit-type">APPROVAL</div></div>
+              <div class="audit-row"><div class="audit-time">May 12, 2025 08:05</div><div class="audit-user">System</div><div class="audit-action">Task <strong>Workshop Completion Report</strong> marked as OVERDUE — deadline passed</div><div class="audit-type">SYSTEM</div></div>
+              <div class="audit-row"><div class="audit-time">Mar 15, 2025 14:10</div><div class="audit-user">Dr. Jenkins</div><div class="audit-action">Submitted Q1 Narrative Report to Dean, ORD</div><div class="audit-type">SUBMIT</div></div>
+              <div class="audit-row"><div class="audit-time">Mar 01, 2025 10:00</div><div class="audit-user">System</div><div class="audit-action">Reminder sent to Dr. Jenkins — Q1 Report due in 14 days</div><div class="audit-type">NOTIF</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 7: FINANCE HOME
+════════════════════════════════════════════ -->
+<div id="screen-finance-home" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Finance</small></div></div>
+      <nav>
+        <div class="nav-item active"><span class="nav-icon">🏠</span> Finance Home</div>
+        <div class="nav-item" onclick="goTo('finance-select')"><span class="nav-icon">📋</span> Select Grant</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">3</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">ZN</div><div class="user-info"><div class="user-name">Z. Nazarova</div><div class="user-role">Finance Officer</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search grants…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">3</span></div>
+          <div class="profile-chip"><div class="av">ZN</div><span>Z. Nazarova</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-header">
+          <div class="page-title">Finance Overview</div>
+          <div class="page-subtitle">Financial dashboard — Tajikistan Grants</div>
+        </div>
+        <div class="grid-4 section-gap">
+          <div class="stat-card danger"><div class="stat-label">Reports Overdue</div><div class="stat-value">2</div><div class="stat-sub">Immediate action needed</div></div>
+          <div class="stat-card warning"><div class="stat-label">Due This Month</div><div class="stat-value">4</div><div class="stat-sub">Financial reports</div></div>
+          <div class="stat-card danger"><div class="stat-label">Overspending Alerts</div><div class="stat-value">1</div><div class="stat-sub">Budget line exceeded</div></div>
+          <div class="stat-card warning"><div class="stat-label">Low Spending Alerts</div><div class="stat-value">3</div><div class="stat-sub">Under-utilization risk</div></div>
+        </div>
+        <div class="grid-2 section-gap">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📄 Financial Reports Due Soon</div></div>
+            <div class="card-body">
+              <div class="task-item"><div class="task-dot red"></div><div class="task-info"><div class="task-name">Agriculture Training — Mid-Year Financial</div><div class="task-meta">USAID · Due: May 12 — OVERDUE</div></div><span class="badge badge-red">OVERDUE</span></div>
+              <div class="task-item"><div class="task-dot red"></div><div class="task-info"><div class="task-name">Water Infrastructure — Q2 Financial</div><div class="task-meta">World Bank · Due: May 20</div></div><span class="badge badge-yellow">5 days</span></div>
+              <div class="task-item"><div class="task-dot yellow"></div><div class="task-info"><div class="task-name">Rural Health — Quarterly Financial</div><div class="task-meta">EU Commission · Due: May 28</div></div><span class="badge badge-yellow">13 days</span></div>
+              <div class="task-item"><div class="task-dot green"></div><div class="task-info"><div class="task-name">Education Fund — H1 Financial</div><div class="task-meta">ADB · Due: Jun 15</div></div><span class="badge badge-green">30 days</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">⚠️ Spending Alerts</div></div>
+            <div class="card-body">
+              <div class="task-item"><span style="font-size:18px;">🔴</span><div class="task-info"><div class="task-name">Agriculture Training — Equipment</div><div class="task-meta">Overspent by $4,200 · Budget: $20K · Spent: $24.2K</div></div><button class="btn btn-sm btn-danger" onclick="goTo('finance-workspace')">Review</button></div>
+              <div class="task-item"><span style="font-size:18px;">🟡</span><div class="task-info"><div class="task-name">Water Infrastructure — Training</div><div class="task-meta">Low spending — only 12% used of $45K</div></div><button class="btn btn-sm btn-outline" onclick="goTo('finance-workspace')">Review</button></div>
+              <div class="task-item"><span style="font-size:18px;">🟡</span><div class="task-info"><div class="task-name">Rural Health — Personnel</div><div class="task-meta">High variance — planned vs actual: 28% gap</div></div><button class="btn btn-sm btn-outline" onclick="goTo('finance-workspace')">Review</button></div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:24px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
+          <div style="font-size:28px;margin-bottom:10px;">💼</div>
+          <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Ready to work on a grant?</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Select a grant to access its full financial workspace — reports, budgets, and submissions.</div>
+          <button class="btn btn-blue" style="padding:12px 28px;font-size:15px;" onclick="goTo('finance-select')">📋 Select a Grant to Work On</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 8: FINANCE GRANT SELECTION
+════════════════════════════════════════════ -->
+<div id="screen-finance-select" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Finance</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('finance-home')"><span class="nav-icon">🏠</span> Finance Home</div>
+        <div class="nav-item active"><span class="nav-icon">📋</span> Select Grant</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">3</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">ZN</div><div class="user-info"><div class="user-name">Z. Nazarova</div><div class="user-role">Finance Officer</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search grants…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn">🔔<span class="badge">3</span></div>
+          <div class="profile-chip"><div class="av">ZN</div><span>Z. Nazarova</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-header">
+          <div class="page-title">Select a Grant — Finance Workspace</div>
+          <div class="page-subtitle">Choose a grant to view and manage its financial data</div>
+        </div>
+        <div class="filters section-gap">
+          <div class="search-box" style="max-width:400px;"><span>🔍</span><input placeholder="Search by grant name, donor, PI…"></div>
+          <select class="filter-select"><option>All Donors</option><option>USAID</option><option>World Bank</option><option>EU Commission</option></select>
+          <select class="filter-select"><option>All PI</option><option>Dr. Jenkins</option><option>Prof. Alimov</option></select>
+          <select class="filter-select"><option>All Finance Status</option><option>Reports Due Soon</option><option>Overdue Finance Items</option><option>Draft</option><option>Submitted</option></select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <!-- Grant Card 1 -->
+          <div style="background:#fff;border:2px solid var(--danger);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:20px;cursor:pointer;" onclick="goTo('finance-workspace')">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <div style="font-size:15px;font-weight:700;">Agriculture Training Program</div>
+                <span class="badge badge-red">OVERDUE</span>
+                <span class="badge badge-red">⚠ Overspending</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">USAID · PI: Dr. Jenkins · GMS-2023-001</div>
+              <div style="display:flex;gap:24px;">
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Next Financial Report</div><div style="font-size:13px;font-weight:700;color:var(--danger);">May 12 — OVERDUE</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Budget</div><div style="font-size:13px;font-weight:700;">$485,000</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Spent</div><div style="font-size:13px;font-weight:700;">$298,400 (62%)</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Report Status</div><div style="font-size:13px;"><span class="badge badge-yellow">Draft</span></div></div>
+              </div>
+              <div style="margin-top:10px;"><div class="progress-bar"><div class="progress-fill yellow" style="width:62%"></div></div></div>
+            </div>
+            <button class="btn btn-blue" style="flex-shrink:0;" onclick="goTo('finance-workspace')">Open Financial Workspace →</button>
+          </div>
+          <!-- Grant Card 2 -->
+          <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:20px;cursor:pointer;" onclick="goTo('finance-workspace')">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <div style="font-size:15px;font-weight:700;">Water Infrastructure Grant</div>
+                <span class="badge badge-yellow">Due Soon</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">World Bank · PI: Dr. Jenkins · GMS-2023-004</div>
+              <div style="display:flex;gap:24px;">
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Next Financial Report</div><div style="font-size:13px;font-weight:700;color:var(--warning);">May 20</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Budget</div><div style="font-size:13px;font-weight:700;">$320,000</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Spent</div><div style="font-size:13px;font-weight:700;">$145,600 (45%)</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Report Status</div><span class="badge badge-blue">Prepared</span></div>
+              </div>
+              <div style="margin-top:10px;"><div class="progress-bar"><div class="progress-fill blue" style="width:45%"></div></div></div>
+            </div>
+            <button class="btn btn-outline" style="flex-shrink:0;">Open Financial Workspace →</button>
+          </div>
+          <!-- Grant Card 3 -->
+          <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:20px;cursor:pointer;" onclick="goTo('finance-workspace')">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <div style="font-size:15px;font-weight:700;">Rural Health Initiative</div>
+                <span class="badge badge-green">On Track</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">EU Commission · PI: Prof. Alimov · GMS-2022-017</div>
+              <div style="display:flex;gap:24px;">
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Next Financial Report</div><div style="font-size:13px;font-weight:700;">May 28</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Budget</div><div style="font-size:13px;font-weight:700;">$210,000</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Spent</div><div style="font-size:13px;font-weight:700;">$98,000 (47%)</div></div>
+                <div><div style="font-size:11px;color:var(--text-secondary);font-weight:700;text-transform:uppercase;">Report Status</div><span class="badge badge-green">Submitted</span></div>
+              </div>
+              <div style="margin-top:10px;"><div class="progress-bar"><div class="progress-fill green" style="width:47%"></div></div></div>
+            </div>
+            <button class="btn btn-outline" style="flex-shrink:0;">Open Financial Workspace →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 9: FINANCE WORKSPACE
+════════════════════════════════════════════ -->
+<div id="screen-finance-workspace" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Finance</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('finance-home')"><span class="nav-icon">🏠</span> Finance Home</div>
+        <div class="nav-item active" onclick="goTo('finance-select')"><span class="nav-icon">📋</span> Select Grant</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">3</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">ZN</div><div class="user-info"><div class="user-name">Z. Nazarova</div><div class="user-role">Finance Officer</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search within financial workspace…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn">🔔<span class="badge">3</span></div>
+          <div class="profile-chip"><div class="av">ZN</div><span>Z. Nazarova</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <button class="btn btn-outline btn-sm" onclick="goTo('finance-select')">← Back to Grant Selection</button>
+        </div>
+        <div class="grant-header" style="margin-bottom:16px;">
+          <div class="grant-header-top">
+            <div><div class="grant-title">Agriculture Training Program — Financial Workspace</div><div class="grant-code">GMS-2023-001 · USAID · Finance Officer: Z. Nazarova</div></div>
+            <div class="grant-actions">
+              <button class="btn btn-outline btn-sm">📊 Export Budget Lines (Excel)</button>
+              <button class="btn btn-outline btn-sm">📈 Export Monthly Spending (Excel)</button>
+            </div>
+          </div>
+          <div class="grant-meta">
+            <div class="grant-meta-item"><span>Total Budget</span><strong>$485,000</strong></div>
+            <div class="grant-meta-item"><span>Spent to Date</span><strong style="color:var(--warning);">$298,400</strong></div>
+            <div class="grant-meta-item"><span>Remaining</span><strong style="color:var(--success);">$186,600</strong></div>
+            <div class="grant-meta-item"><span>Utilization</span><strong>62%</strong></div>
+            <div class="grant-meta-item"><span>Report Status</span><span class="badge badge-yellow">Draft</span></div>
+            <div class="grant-meta-item"><span>Alert</span><span class="badge badge-red">⚠ Overspending: Equipment</span></div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid-2 section-gap">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📈 Budget vs Actual — Monthly</div></div>
+            <div class="card-body">
+              <div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;">
+                <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:3px;background:var(--primary);display:inline-block;border-radius:2px;"></span> Planned</span>
+                <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:3px;background:var(--success);display:inline-block;border-radius:2px;"></span> Actual</span>
+              </div>
+              <div class="chart-placeholder">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;"><div class="chart-bar" style="height:60px;background:var(--primary-light);"></div><div class="chart-bar" style="height:55px;background:var(--success-light);"></div><div style="font-size:9px;color:var(--text-secondary);">Jan</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;"><div class="chart-bar" style="height:70px;background:var(--primary-light);"></div><div class="chart-bar" style="height:68px;background:var(--success-light);"></div><div style="font-size:9px;color:var(--text-secondary);">Feb</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;"><div class="chart-bar" style="height:65px;background:var(--primary-light);"></div><div class="chart-bar" style="height:72px;background:var(--success-light);"></div><div style="font-size:9px;color:var(--text-secondary);">Mar</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;"><div class="chart-bar" style="height:80px;background:var(--primary-light);"></div><div class="chart-bar" style="height:75px;background:var(--success-light);"></div><div style="font-size:9px;color:var(--text-secondary);">Apr</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;"><div class="chart-bar" style="height:75px;background:var(--primary);"></div><div class="chart-bar" style="height:90px;background:var(--danger);"></div><div style="font-size:9px;color:var(--danger);font-weight:700;">May ⚠</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">🥧 Spending by Budget Line</div></div>
+            <div class="card-body">
+              <div style="display:flex;gap:16px;align-items:center;">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="20"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="20" stroke-dasharray="126 188" stroke-dashoffset="0"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--success)" stroke-width="20" stroke-dasharray="75 239" stroke-dashoffset="-126"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--warning)" stroke-width="20" stroke-dasharray="50 264" stroke-dashoffset="-201"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--danger)" stroke-width="20" stroke-dasharray="63 251" stroke-dashoffset="-251"/>
+                </svg>
+                <div style="flex:1;font-size:12px;display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;"></span> Personnel — 40%</div>
+                  <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--success);flex-shrink:0;"></span> Training — 24%</div>
+                  <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--warning);flex-shrink:0;"></span> Travel — 16%</div>
+                  <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--danger);flex-shrink:0;"></span> Equipment — 20% ⚠</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget Lines Table -->
+        <div class="card section-gap">
+          <div class="card-header"><div class="card-title">📊 Budget Lines — Detailed View</div><button class="btn btn-outline btn-sm">📥 Export to Excel</button></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Budget Line</th><th>Planned ($)</th><th>Spent ($)</th><th>Variance ($)</th><th>Utilization</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Personnel / Salaries</strong></td><td>$194,000</td><td><span style="font-family:'DM Mono',monospace;">$119,360</span></td><td style="color:var(--success);">+$74,640</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px;"><div class="progress-fill green" style="width:61%;"></div></div><span>61%</span></div></td><td><span class="badge badge-green">Normal</span></td></tr>
+                <tr><td><strong>Training & Workshops</strong></td><td>$97,000</td><td><span style="font-family:'DM Mono',monospace;">$71,680</span></td><td style="color:var(--success);">+$25,320</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px;"><div class="progress-fill blue" style="width:74%;"></div></div><span>74%</span></div></td><td><span class="badge badge-green">Normal</span></td></tr>
+                <tr><td><strong>Travel & Per Diem</strong></td><td>$48,500</td><td><span style="font-family:'DM Mono',monospace;">$47,628</span></td><td style="color:var(--warning);">+$872</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px;"><div class="progress-fill yellow" style="width:98%;"></div></div><span>98%</span></div></td><td><span class="badge badge-yellow">High Use</span></td></tr>
+                <tr style="background:var(--danger-light);"><td><strong>Equipment & Materials</strong></td><td>$97,000</td><td><span style="font-family:'DM Mono',monospace;color:var(--danger);font-weight:700;">$101,200</span></td><td style="color:var(--danger);font-weight:700;">-$4,200 ⚠</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px;"><div class="progress-fill red" style="width:100%;"></div></div><span style="color:var(--danger);font-weight:700;">104%</span></div></td><td><span class="badge badge-red">Overspent</span></td></tr>
+                <tr><td><strong>Overhead / Indirect</strong></td><td>$48,500</td><td><span style="font-family:'DM Mono',monospace;">$29,120</span></td><td style="color:var(--success);">+$19,380</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px;"><div class="progress-fill green" style="width:60%;"></div></div><span>60%</span></div></td><td><span class="badge badge-green">Normal</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Financial Report Workflow + Submit -->
+        <div class="grid-2 section-gap">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📋 Financial Report Workflow</div></div>
+            <div class="card-body">
+              <div style="display:flex;gap:0;align-items:center;margin-bottom:20px;">
+                <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--warning);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;">1</div><div style="font-size:10px;font-weight:700;color:var(--warning);">Draft</div></div>
+                <div style="flex:1;height:2px;background:var(--border)"></div>
+                <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);font-size:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;color:var(--text-secondary);">2</div><div style="font-size:10px;color:var(--text-secondary);">Prepared</div></div>
+                <div style="flex:1;height:2px;background:var(--border)"></div>
+                <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);font-size:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;color:var(--text-secondary);">3</div><div style="font-size:10px;color:var(--text-secondary);">Approved</div></div>
+                <div style="flex:1;height:2px;background:var(--border)"></div>
+                <div style="text-align:center;flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--border);font-size:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;color:var(--text-secondary);">4</div><div style="font-size:10px;color:var(--text-secondary);">Submitted</div></div>
+              </div>
+              <table style="width:100%;">
+                <thead><tr><th>Report</th><th>Due</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Mid-Year Financial 2025</td><td style="color:var(--danger);font-weight:700;">May 12 ⚠</td><td><span class="badge badge-yellow">Draft</span></td></tr>
+                  <tr><td>Q1 Financial 2025</td><td>Mar 31</td><td><span class="badge badge-green">Submitted</span></td></tr>
+                  <tr><td>Annual Financial 2024</td><td>Jan 15</td><td><span class="badge badge-green">Approved</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">📤 Submit Financial Report</div></div>
+            <div class="card-body">
+              <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Submit To — Auto-filled</div>
+              <div class="submit-to-list" style="margin-bottom:14px;">
+                <div class="submit-recipient"><input type="checkbox" checked><label>Finance Director / CFO</label><span class="role-tag">Approval</span></div>
+                <div class="submit-recipient"><input type="checkbox" checked><label>ORD — Office of Research & Development</label><span class="role-tag">Awareness</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                <div class="upload-zone"><div class="upload-icon">📊</div><p style="font-size:12px;">Upload Financial Report</p></div>
+                <div class="upload-zone"><div class="upload-icon">📎</div><p style="font-size:12px;">Supporting Files</p></div>
+              </div>
+              <textarea style="width:100%;border:1.5px solid var(--border);border-radius:7px;padding:10px;font-family:inherit;font-size:13px;height:60px;resize:none;outline:none;" placeholder="Notes for reviewers…"></textarea>
+              <button class="btn btn-green" style="width:100%;margin-top:12px;padding:12px;font-size:14px;">📤 Submit Financial Report</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN 10: NOTIFICATIONS CENTER
+════════════════════════════════════════════ -->
+<div id="screen-notifications" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item active"><span class="nav-icon">🔔</span> Notifications <span class="nav-badge">8</span></div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-search"><span>🔍</span><input placeholder="Search notifications…"></div>
+        <div class="topbar-actions">
+          <div class="icon-btn">🔔<span class="badge">8</span></div>
+          <div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-header flex-between">
+          <div><div class="page-title">Notifications</div><div class="page-subtitle">8 unread notifications</div></div>
+          <button class="btn btn-outline btn-sm">Mark All Read</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="tabs" style="border-bottom:none;margin-bottom:0;">
+              <div class="tab active">All (8)</div>
+              <div class="tab">Overdue (3)</div>
+              <div class="tab">Evidence (2)</div>
+              <div class="tab">Reports (2)</div>
+              <div class="tab">Approvals (1)</div>
+            </div>
+          </div>
+          <div class="notif-item unread" onclick="goTo('task-detail')">
+            <div class="notif-icon red">🔴</div>
+            <div class="notif-body">
+              <div class="notif-title">Task Overdue — Immediate Action Required</div>
+              <div class="notif-desc">Submit Workshop Completion Report is 4 days overdue. Evidence is still missing.</div>
+              <div class="notif-time">Today, 09:00 AM</div>
+              <a class="notif-link">→ Open Task</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread" onclick="goTo('task-detail')">
+            <div class="notif-icon red">⚠️</div>
+            <div class="notif-body">
+              <div class="notif-title">Evidence Missing — Submission Blocked</div>
+              <div class="notif-desc">Workshop Completion Report cannot be submitted until Photos, Attendance Sheet, and Agenda are uploaded.</div>
+              <div class="notif-time">Today, 09:00 AM</div>
+              <a class="notif-link">→ Upload Evidence Now</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon red">🔴</div>
+            <div class="notif-body">
+              <div class="notif-title">Task Overdue — Upload Field Visit Photos</div>
+              <div class="notif-desc">Water Infrastructure Grant — Field Visit Photos task is 2 days overdue.</div>
+              <div class="notif-time">Yesterday, 08:00 AM</div>
+              <a class="notif-link">→ Open Task</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread" onclick="goTo('workspace')">
+            <div class="notif-icon yellow">📄</div>
+            <div class="notif-body">
+              <div class="notif-title">Report Due in 4 Days — Q2 Narrative</div>
+              <div class="notif-desc">Agriculture Training Program — Q2 Narrative Report is due May 20. Current status: Draft.</div>
+              <div class="notif-time">May 15, 2025 · 08:00 AM</div>
+              <a class="notif-link">→ Open Report</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread" onclick="goTo('workspace')">
+            <div class="notif-icon orange">⚠️</div>
+            <div class="notif-body">
+              <div class="notif-title">Grant At Risk — Agriculture Training Program</div>
+              <div class="notif-desc">This grant has been flagged as At Risk due to 3 overdue tasks and missing evidence.</div>
+              <div class="notif-time">May 14, 2025 · 09:00 AM</div>
+              <a class="notif-link">→ View Grant</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon yellow">📋</div>
+            <div class="notif-body">
+              <div class="notif-title">Financial Report Due in 13 Days</div>
+              <div class="notif-desc">Water Infrastructure Grant — Financial Report due May 28. Assigned to Finance Team.</div>
+              <div class="notif-time">May 14, 2025 · 08:00 AM</div>
+              <a class="notif-link">→ View Grant</a>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon green">✅</div>
+            <div class="notif-body">
+              <div class="notif-title">Report Approved — Q1 Narrative Report</div>
+              <div class="notif-desc">Your Q1 Narrative Report for Agriculture Training Program was approved by Prof. Alimov (Dean).</div>
+              <div class="notif-time">May 14, 2025 · 11:23 AM</div>
+              <a class="notif-link">→ View Approved Report</a>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon blue">🔔</div>
+            <div class="notif-body">
+              <div class="notif-title">Reminder — Narrative Report Due in 14 Days</div>
+              <div class="notif-desc">Rural Health Initiative — Quarterly Progress Report due May 28. Time to start your draft.</div>
+              <div class="notif-time">May 13, 2025 · 08:00 AM</div>
+              <a class="notif-link">→ Create Draft</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN: CALENDAR (placeholder)
+════════════════════════════════════════════ -->
+<div id="screen-calendar" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks</div>
+        <div class="nav-item active"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications</div>
+        <div class="nav-item" onclick="goTo('help')"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar"><div class="topbar-search"><span>🔍</span><input placeholder="Search…"></div><div class="topbar-actions"><div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div><div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div></div></div>
+      <div class="page">
+        <div class="page-header"><div class="page-title">📅 Reports Calendar</div><div class="page-subtitle">All report deadlines — May 2025</div></div>
+        <div class="card">
+          <div class="card-body" style="text-align:center;padding:40px;">
+            <div style="font-size:40px;margin-bottom:12px;">📅</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:8px;">Reports Calendar</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Interactive calendar showing all report deadlines, task due dates, and milestone reviews across your grants. Click any date to see details.</div>
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;">
+              <span class="badge badge-red">● May 12 — Agriculture Overdue</span>
+              <span class="badge badge-yellow">● May 20 — Water Infrastructure</span>
+              <span class="badge badge-yellow">● May 28 — Rural Health</span>
+              <span class="badge badge-green">● Jun 15 — Education Fund</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SCREEN: HELP
+════════════════════════════════════════════ -->
+<div id="screen-help" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🎓</div><div><span>GMS Portal</span><small>Staff System</small></div></div>
+      <nav>
+        <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span> Home</div>
+        <div class="nav-item" onclick="goTo('grants')"><span class="nav-icon">📋</span> Grants</div>
+        <div class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✅</span> My Tasks</div>
+        <div class="nav-item" onclick="goTo('calendar')"><span class="nav-icon">📅</span> Reports Calendar</div>
+        <div class="nav-item" onclick="goTo('notifications')"><span class="nav-icon">🔔</span> Notifications</div>
+        <div class="nav-item active"><span class="nav-icon">❓</span> Help</div>
+      </nav>
+      <div class="sidebar-user"><div class="user-avatar">DJ</div><div class="user-info"><div class="user-name">Dr. Jenkins</div><div class="user-role">PI / Project Team</div></div></div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar"><div class="topbar-search"><span>🔍</span><input placeholder="Search help…"></div><div class="topbar-actions"><div class="icon-btn" onclick="goTo('notifications')">🔔<span class="badge">8</span></div><div class="profile-chip"><div class="av">DJ</div><span>Dr. Jenkins</span><span>▾</span></div></div></div>
+      <div class="page">
+        <div class="page-header"><div class="page-title">❓ Help & Support</div></div>
+        <div class="grid-2">
+          <div class="card"><div class="card-header"><div class="card-title">📖 Quick Guides</div></div><div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">How to submit a task with evidence →</div>
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">How to create a narrative report draft →</div>
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">How to upload documents to repository →</div>
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">Finance: How to use financial workspace →</div>
+          </div></div>
+          <div class="card"><div class="card-header"><div class="card-title">📧 Contact Support</div></div><div class="card-body">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">For technical issues or questions, contact the GMS support team.</p>
+            <div style="font-size:13px;margin-bottom:8px;">📧 gms-support@university.tj</div>
+            <div style="font-size:13px;margin-bottom:16px;">📞 +992 37 000 0000</div>
+            <button class="btn btn-blue">Send Support Request</button>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Navigation ───
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-' + screen);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+}
+
+// ─── Workspace Tab Switching ───
+function switchTab(tabName) {
+  // Update tab buttons
+  document.querySelectorAll('#workspace-tabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+  // Show selected
+  const el = document.getElementById('tab-' + tabName);
+  if (el) el.style.display = 'block';
+}
+
+// Login on Enter
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('screen-login').classList.contains('active')) {
+    goTo('home');
+  }
+});
+</script>
+</body>
+</html>
