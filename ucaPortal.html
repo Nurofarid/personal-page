@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS PI Portal — Principal Investigator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f4f6fb;
+  --sb:#0f1923;
+  --sbt:#64748b;
+  --sbta:#e2e8f0;
+  --sbab:#1a3355;
+  --pr:#0f766e;
+  --pr-l:#ccfbf1;
+  --pr-g:rgba(15,118,110,.12);
+  --pr2:#0d9488;
+  --ok:#059669;
+  --ok-l:#d1fae5;
+  --wa:#d97706;
+  --wa-l:#fef3c7;
+  --er:#dc2626;
+  --er-l:#fee2e2;
+  --or:#ea580c;
+  --or-l:#ffedd5;
+  --vi:#7c3aed;
+  --vi-l:#ede9fe;
+  --bl:#1d4ed8;
+  --bl-l:#dbeafe;
+  --tx:#0f172a;
+  --tx2:#475569;
+  --tx3:#94a3b8;
+  --bd:#e2e8f0;
+  --cd:#ffffff;
+  --r:13px;
+  --sh:0 1px 3px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.06);
+  --sh2:0 8px 32px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:13.5px}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* LOGIN */
+#sc-login{background:linear-gradient(160deg,#071019 0%,#0c1e2e 50%,#0f3330 100%);align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden}
+.l-rings{position:absolute;inset:0;overflow:hidden}
+.l-rings::before,.l-rings::after{content:'';position:absolute;border-radius:50%;border:1px solid rgba(15,118,110,.2)}
+.l-rings::before{width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.l-rings::after{width:450px;height:450px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.login-box{background:#fff;border-radius:20px;padding:48px 44px;width:440px;box-shadow:0 32px 80px rgba(0,0,0,.5);position:relative;z-index:1;animation:lp .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes lp{from{opacity:0;transform:translateY(22px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.l-badge{display:inline-flex;align-items:center;gap:7px;background:var(--pr-l);color:var(--pr);padding:5px 13px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:22px}
+.l-icon{width:58px;height:58px;background:linear-gradient(135deg,var(--pr),var(--pr2));border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;box-shadow:0 8px 28px rgba(15,118,110,.4)}
+.login-box h1{font-size:21px;font-weight:800;letter-spacing:-.4px;margin-bottom:4px}
+.login-box .sub{font-size:13px;color:var(--tx2);margin-bottom:28px}
+.lbl{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:6px}
+.inp{width:100%;padding:12px 16px;border:1.5px solid var(--bd);border-radius:10px;font-family:inherit;font-size:14px;outline:none;transition:all .2s;background:#fafafa;margin-bottom:16px;color:var(--tx)}
+.inp:focus{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(15,118,110,.45)}
+.l-hint{text-align:center;margin-top:14px;font-size:12px;color:var(--tx3)}
+.l-hint strong{color:var(--pr)}
+
+/* APP SHELL */
+.app{display:flex;width:100%;min-height:100vh}
+.sidebar{width:228px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.sb-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--pr),var(--pr2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 12px rgba(15,118,110,.45)}
+.sb-nm{font-size:13.5px;font-weight:800;color:#fff}
+.sb-rl{font-size:10.5px;color:var(--sbt)}
+.sb-sec{padding:14px 10px 6px}
+.sb-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sbt);padding:0 8px;margin-bottom:5px}
+.ni{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:9px;color:var(--sbt);font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:1px}
+.ni:hover{background:rgba(255,255,255,.06);color:#cbd5e1}
+.ni.active{background:var(--sbab);color:var(--sbta);font-weight:600}
+.ni-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.ni-bd{margin-left:auto;background:var(--er);color:#fff;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.ni-bd.tl{background:var(--pr)}
+.ni-bd.or{background:var(--or)}
+.sb-foot{padding:14px;margin-top:auto;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+.ua{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--bl));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:12px;flex-shrink:0}
+.un{font-size:12.5px;font-weight:700;color:#fff}
+.ur{font-size:10.5px;color:var(--sbt)}
+.lb{margin-left:auto;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:none;color:var(--sbt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.lb:hover{background:rgba(220,38,38,.25);color:#fca5a5}
+
+.main{margin-left:228px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--bd);padding:0 26px;height:62px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--bd),0 2px 10px rgba(0,0,0,.04)}
+.tb-search{flex:1;max-width:340px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--bd);border-radius:9px;padding:0 13px;height:38px;transition:all .2s}
+.tb-search:focus-within{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.tb-search input{border:none;background:transparent;font-family:inherit;font-size:13px;flex:1;outline:none;color:var(--tx)}
+.tb-r{display:flex;align-items:center;gap:9px;margin-left:auto}
+.tbi{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;position:relative;transition:all .15s}
+.tbi:hover{background:var(--bg)}
+.tbd{position:absolute;top:-5px;right:-5px;background:var(--er);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.pp{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:9px;border:1.5px solid var(--bd);background:#fff;cursor:pointer}
+.pav{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--bl));color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+.content{padding:26px;flex:1}
+.pg-t{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.pg-s{font-size:12.5px;color:var(--tx2);margin-top:4px}
+.sg{margin-bottom:22px}
+
+/* CARDS */
+.card{background:var(--cd);border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh)}
+.ch{padding:15px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:13.5px;font-weight:700}
+.cb{padding:20px}
+.cb-sm{padding:14px 18px}
+
+/* STAT */
+.stat{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:18px 20px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.stat.pr::after{background:var(--pr)}.stat.ok::after{background:var(--ok)}.stat.wa::after{background:var(--wa)}.stat.er::after{background:var(--er)}.stat.vi::after{background:var(--vi)}.stat.bl::after{background:var(--bl)}
+.sl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:9px}
+.sv{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1}
+.sv.pr{color:var(--pr)}.sv.ok{color:var(--ok)}.sv.wa{color:var(--wa)}.sv.er{color:var(--er)}.sv.vi{color:var(--vi)}.sv.bl{color:var(--bl)}
+.ss{font-size:11.5px;color:var(--tx3);margin-top:6px}
+.si{position:absolute;top:16px;right:16px;font-size:22px;opacity:.12}
+
+/* BADGES */
+.bx{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-r{background:var(--er-l);color:#991b1b}.b-y{background:var(--wa-l);color:#92400e}.b-g{background:var(--ok-l);color:#065f46}.b-b{background:var(--bl-l);color:#1e3a8a}.b-gr{background:#f1f5f9;color:#475569}.b-t{background:var(--pr-l);color:#134e4a}.b-v{background:var(--vi-l);color:#5b21b6}.b-or{background:var(--or-l);color:#9a3412}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn-sm{padding:5px 11px;font-size:12px;border-radius:7px}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:6px}
+.btn-pr{background:var(--pr);color:#fff}.btn-pr:hover{background:#0d6b64;box-shadow:0 4px 14px rgba(15,118,110,.35)}
+.btn-ok{background:var(--ok);color:#fff}.btn-ok:hover{background:#047857}
+.btn-ol{background:#fff;color:var(--tx);border:1.5px solid var(--bd)}.btn-ol:hover{background:var(--bg);border-color:#c8d0e0}
+.btn-er{background:var(--er);color:#fff}.btn-er:hover{background:#b91c1c}
+.btn-or{background:var(--or);color:#fff}.btn-or:hover{background:#c2410c}
+.btn-vi{background:var(--vi);color:#fff}.btn-vi:hover{background:#6d28d9}
+.btn-bl{background:var(--bl);color:#fff}.btn-bl:hover{background:#1e40af}
+.btn-gh{background:transparent;color:var(--tx2)}.btn-gh:hover{background:var(--bg)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);background:#f8fafc;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody td{padding:12px 14px;border-bottom:1px solid #f1f5f9;font-size:13px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .1s}
+tbody tr:hover{background:#f8fffd}
+.mono{font-family:'DM Mono',monospace;font-size:12px}
+
+/* PROGRESS */
+.pb{background:#e2e8f0;border-radius:99px;height:7px;overflow:hidden}
+.pf{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.pf-pr{background:var(--pr)}.pf-ok{background:var(--ok)}.pf-wa{background:var(--wa)}.pf-er{background:var(--er)}.pf-bl{background:var(--bl)}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--bd);margin-bottom:20px}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--pr);border-bottom-color:var(--pr)}
+.tp{display:none}.tp.active{display:block}
+
+/* UPLOAD */
+.uz{border:2px dashed var(--bd);border-radius:11px;padding:22px;text-align:center;cursor:pointer;transition:all .2s}
+.uz:hover{border-color:var(--pr);background:#f0fdf9}
+.uz-ic{font-size:30px;margin-bottom:8px}
+.uz-lb{font-size:13.5px;font-weight:700;color:var(--tx2)}
+.uz-h{font-size:11.5px;color:var(--tx3);margin-top:3px}
+.fi{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#f8fafc;border:1px solid var(--bd);border-radius:9px;margin-bottom:8px}
+.fi-n{flex:1;font-size:13px;font-weight:600}
+.fi-m{font-size:11.5px;color:var(--tx3)}
+
+/* WIZARD */
+.wiz-wrap{max-width:840px;margin:0 auto}
+.wiz-prog{display:flex;align-items:center;gap:0;margin-bottom:30px}
+.ws{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.ws:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.ws.done:not(:last-child)::after{background:var(--pr)}
+.ws.curr:not(:last-child)::after{background:linear-gradient(90deg,var(--pr) 0%,var(--bd) 100%)}
+.wd{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;z-index:1;position:relative;flex-shrink:0;color:var(--tx3)}
+.wd.done{background:var(--pr);border-color:var(--pr);color:#fff}
+.wd.curr{background:var(--pr);border-color:var(--pr);color:#fff;box-shadow:0 0 0 4px rgba(15,118,110,.2)}
+.wsl{font-size:10.5px;font-weight:700;text-align:center;margin-top:6px;color:var(--tx3);line-height:1.2}
+.wsl.done,.wsl.curr{color:var(--pr)}
+.wiz-card{background:#fff;border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh);padding:30px}
+.wiz-title{font-size:19px;font-weight:800;letter-spacing:-.4px;margin-bottom:5px}
+.wiz-desc{font-size:13px;color:var(--tx2);margin-bottom:24px;line-height:1.5}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.field-g{margin-bottom:18px}
+.fl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);display:block;margin-bottom:6px}
+.fi2{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;font-size:13.5px;outline:none;transition:all .2s;background:#fafafa;color:var(--tx)}
+.fi2:focus{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.fs{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;font-size:13.5px;outline:none;background:#fff;cursor:pointer;color:var(--tx)}
+
+/* TOGGLE */
+.tog{position:relative;display:inline-block;width:38px;height:21px}
+.tog input{opacity:0;width:0;height:0}
+.sl2{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:21px;transition:.3s}
+.sl2:before{position:absolute;content:"";height:15px;width:15px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked+.sl2{background:var(--pr)}
+input:checked+.sl2:before{transform:translateX(17px)}
+
+/* ROLE ROW */
+.role-r{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--bd);border-radius:9px;margin-bottom:8px;transition:border .15s;background:#fff}
+.role-r:hover{border-color:var(--pr)}
+.role-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+
+/* TASK ROW */
+.tg-r{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;background:#fafafa;transition:background .15s}
+.tg-r:hover{background:#f0fdf9}
+.tg-num{width:24px;height:24px;border-radius:50%;background:var(--pr-l);color:var(--pr);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* STAFF MONITOR */
+.staff-card{background:#fff;border:1.5px solid var(--bd);border-radius:var(--r);padding:18px 20px;transition:all .2s;cursor:pointer}
+.staff-card:hover{border-color:var(--pr);box-shadow:0 4px 16px rgba(15,118,110,.1);transform:translateY(-1px)}
+.staff-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px;flex-shrink:0}
+
+/* DEADLINE REQUEST */
+.dl-req-card{background:#fff;border-radius:var(--r);border:1.5px solid var(--bd);padding:20px;margin-bottom:12px;box-shadow:var(--sh)}
+.dl-change{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg);border-radius:8px;font-size:13px;margin-bottom:14px}
+.dl-old{color:var(--er);font-weight:700;text-decoration:line-through}
+.dl-arr{color:var(--tx3);font-size:16px}
+.dl-new{color:var(--ok);font-weight:700}
+
+/* CHAIN */
+.chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chain-n{background:var(--pr-l);border:1.5px solid #99f6e4;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:700;color:var(--pr)}
+.chain-a{font-size:18px;color:var(--tx3)}
+
+/* MILESTONE TIMELINE */
+.ml-wrap{display:flex;align-items:flex-start;overflow-x:auto;padding:8px 0 18px}
+.ml-item{display:flex;flex-direction:column;align-items:center;min-width:110px;flex:1;position:relative}
+.ml-item:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.ml-item.done:not(:last-child)::after{background:var(--pr)}
+.ml-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:1;position:relative;flex-shrink:0}
+.ml-dot.done{background:var(--pr);border-color:var(--pr);color:#fff}
+.ml-dot.act{background:var(--bl);border-color:var(--bl);color:#fff;box-shadow:0 0 0 4px rgba(29,78,216,.18)}
+.ml-dot.ov{background:var(--er);border-color:var(--er);color:#fff}
+.ml-dot.ri{background:var(--wa);border-color:var(--wa);color:#fff}
+.ml-lbl{font-size:11px;font-weight:700;text-align:center;margin-top:7px;line-height:1.3;color:var(--tx)}
+.ml-dt{font-size:10px;color:var(--tx3);margin-top:3px;text-align:center}
+
+/* ALERT */
+.ab{border-radius:11px;padding:13px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.ab.er{background:var(--er-l);border:1px solid #fca5a5}
+.ab.wa{background:var(--wa-l);border:1px solid #fcd34d}
+.ab.ok{background:var(--ok-l);border:1px solid #6ee7b7}
+.ab.bl{background:var(--bl-l);border:1px solid #bfdbfe}
+.ab p{font-size:13px;font-weight:600}
+.ab small{font-size:12px;color:var(--tx2);display:block;margin-top:2px}
+
+/* AUDIT */
+.al-r{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start}
+.al-t{font-size:10.5px;font-family:'DM Mono',monospace;color:var(--tx3);width:140px;flex-shrink:0;padding-top:2px}
+.al-u{font-size:12px;font-weight:700;width:120px;flex-shrink:0}
+.al-a{font-size:12px;color:var(--tx);flex:1}
+.al-tag{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;flex-shrink:0}
+.at-u{background:#dbeafe;color:#1d4ed8}.at-s{background:var(--ok-l);color:#065f46}.at-a{background:var(--pr-l);color:#134e4a}.at-sy{background:#f1f5f9;color:#475569}.at-al{background:var(--er-l);color:#991b1b}.at-ch{background:var(--vi-l);color:#5b21b6}
+
+/* NOTIF */
+.notif{display:flex;gap:14px;padding:15px 20px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background .1s}
+.notif:hover{background:#f8fffd}
+.notif.unread{background:#f0fdf9}
+.ni-ic-n{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.nt{font-size:13.5px;font-weight:700}
+.nd{font-size:12.5px;color:var(--tx2);margin-top:3px;line-height:1.4}
+.nm{font-size:11.5px;color:var(--tx3);margin-top:4px}
+.ud{width:8px;height:8px;border-radius:50%;background:var(--pr);flex-shrink:0;margin-top:8px}
+
+/* MISC */
+.fb{display:flex;align-items:center;justify-content:space-between}
+.fg{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.div{height:1px;background:var(--bd);margin:16px 0}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.fsel{padding:8px 12px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:12.5px;background:#fff;color:var(--tx);outline:none;cursor:pointer}
+.fsel:focus{border-color:var(--pr)}
+.sec-h{font-size:14px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+.pub-ck{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;margin-bottom:8px}
+.pub-ck.ok{background:var(--ok-l);border:1px solid #6ee7b7}
+.pub-ck.todo{background:var(--er-l);border:1px solid #fca5a5}
+.pc-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.pc-ic.ok{background:var(--ok);color:#fff}
+.pc-ic.todo{background:var(--er);color:#fff}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .32s ease both}
+.fu:nth-child(1){animation-delay:.04s}.fu:nth-child(2){animation-delay:.08s}.fu:nth-child(3){animation-delay:.12s}
+.fu:nth-child(4){animation-delay:.16s}.fu:nth-child(5){animation-delay:.2s}.fu:nth-child(6){animation-delay:.24s}
+</style>
+</head>
+<body>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="sc-login" class="screen active">
+  <div class="l-rings"></div>
+  <div class="login-box">
+    <div class="l-badge">🔬 PI Portal</div>
+    <div class="l-icon">🎓</div>
+    <h1>Grant Management System</h1>
+    <p class="sub">Principal Investigator Portal — University of Central Asia</p>
+    <label class="lbl">Email Address</label>
+    <input class="inp" type="email" value="d.jenkins@university.tj">
+    <label class="lbl">Password</label>
+    <input class="inp" type="password" value="password">
+    <button class="btn-login" onclick="goTo('home')">Sign In as PI →</button>
+    <div class="l-hint">Logged in as <strong>Dr. Jenkins</strong> · Principal Investigator · Tajikistan</div>
+  </div>
+</div>
+
+<!-- ════════ HOME / DASHBOARD ════════ -->
+<div id="sc-home" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni active" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search grants, tasks, staff…"></div>
+        <div class="tb-r">
+          <div class="tbi" onclick="nav(document.querySelector('.ni[onclick*=notifications]'),'notifications')">🔔<span class="tbd">6</span></div>
+          <button class="btn btn-sm btn-pr" onclick="nav(document.querySelector('.ni[onclick*=setup-wizard]'),'setup-wizard')">⚙️ Setup New Grant</button>
+          <div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span><span style="color:var(--tx3);margin-left:2px">▾</span></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="fb sg fu">
+          <div><div class="pg-t">PI Dashboard — Dr. Jenkins</div><div class="pg-s">Grant implementation overview · Tajikistan · All your grants</div></div>
+          <div class="fg">
+            <button class="btn btn-sm btn-ol">📥 Export Summary</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="g5 sg">
+          <div class="stat pr fu" onclick="nav(document.querySelector('.ni[onclick*=my-grants]'),'my-grants')"><div class="si">📋</div><div class="sl">My Grants</div><div class="sv pr">3</div><div class="ss">Active implementation</div></div>
+          <div class="stat er fu" onclick="nav(document.querySelector('.ni[onclick*=staff-monitor]'),'staff-monitor')"><div class="si">⚠️</div><div class="sl">Overdue Tasks</div><div class="sv er">5</div><div class="ss">Across all grants</div></div>
+          <div class="stat wa fu"><div class="si">📅</div><div class="sl">Due This Week</div><div class="sv wa">8</div><div class="ss">Staff tasks</div></div>
+          <div class="stat ok fu"><div class="si">✅</div><div class="sl">Completed</div><div class="sv ok">47</div><div class="ss">This month</div></div>
+          <div class="stat vi fu" onclick="nav(document.querySelector('.ni[onclick*=deadline-requests]'),'deadline-requests')"><div class="si">📅</div><div class="sl">Deadline Requests</div><div class="sv vi">2</div><div class="ss">Sent to Director</div></div>
+        </div>
+
+        <!-- Charts + Staff -->
+        <div class="g2 sg">
+          <div class="card fu">
+            <div class="ch"><div class="ct">📊 Task Progress — All Grants</div><select class="fsel" style="font-size:11.5px;padding:4px 8px"><option>All Grants</option><option>Agriculture Training</option><option>Water Infrastructure</option></select></div>
+            <div class="cb"><canvas id="taskChart" height="190"></canvas></div>
+          </div>
+          <div class="card fu">
+            <div class="ch"><div class="ct">👥 Staff Performance This Month</div><button class="btn btn-sm btn-ol" onclick="nav(document.querySelector('.ni[onclick*=staff-monitor]'),'staff-monitor')">View All</button></div>
+            <div class="cb" style="display:flex;flex-direction:column;gap:12px">
+              <div><div class="fb" style="margin-bottom:5px"><span style="font-size:13px;font-weight:600">A. Karimov</span><span class="bx b-r">2 overdue</span></div><div style="display:flex;align-items:center;gap:10px"><div class="pb" style="flex:1"><div class="pf pf-wa" style="width:60%"></div></div><span style="font-size:12px;font-weight:700;color:var(--wa)">6/10 tasks done</span></div></div>
+              <div><div class="fb" style="margin-bottom:5px"><span style="font-size:13px;font-weight:600">M. Tashkentov</span><span class="bx b-g">On track</span></div><div style="display:flex;align-items:center;gap:10px"><div class="pb" style="flex:1"><div class="pf pf-ok" style="width:85%"></div></div><span style="font-size:12px;font-weight:700;color:var(--ok)">8/9 tasks done</span></div></div>
+              <div><div class="fb" style="margin-bottom:5px"><span style="font-size:13px;font-weight:600">S. Rakhimova</span><span class="bx b-y">1 at risk</span></div><div style="display:flex;align-items:center;gap:10px"><div class="pb" style="flex:1"><div class="pf pf-pr" style="width:70%"></div></div><span style="font-size:12px;font-weight:700;color:var(--pr)">7/10 tasks done</span></div></div>
+              <div><div class="fb" style="margin-bottom:5px"><span style="font-size:13px;font-weight:600">B. Nazarov</span><span class="bx b-g">On track</span></div><div style="display:flex;align-items:center;gap:10px"><div class="pb" style="flex:1"><div class="pf pf-ok" style="width:90%"></div></div><span style="font-size:12px;font-weight:700;color:var(--ok)">9/10 tasks done</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overdue + Upcoming -->
+        <div class="g2 sg">
+          <div class="card fu">
+            <div class="ch"><div class="ct">🔴 Overdue Tasks — All Staff</div><span class="bx b-r">5 overdue</span></div>
+            <div class="tw">
+              <table><thead><tr><th>Task</th><th>Staff</th><th>Grant</th><th>Days</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><strong>Workshop Completion Report</strong></td><td>A. Karimov</td><td style="font-size:12px">Agriculture</td><td><span class="bx b-r">4d</span></td><td><button class="btn btn-xs btn-pr" onclick="goTo('workspace')">View</button></td></tr>
+                <tr><td><strong>Beneficiary Data Collection</strong></td><td>A. Karimov</td><td style="font-size:12px">Agriculture</td><td><span class="bx b-r">1d</span></td><td><button class="btn btn-xs btn-pr" onclick="goTo('workspace')">View</button></td></tr>
+                <tr><td><strong>Site Survey Report</strong></td><td>M. Tashkentov</td><td style="font-size:12px">Water</td><td><span class="bx b-r">2d</span></td><td><button class="btn btn-xs btn-pr">View</button></td></tr>
+                <tr><td><strong>HR Onboarding Forms</strong></td><td>S. Rakhimova</td><td style="font-size:12px">Agriculture</td><td><span class="bx b-r">3d</span></td><td><button class="btn btn-xs btn-pr">View</button></td></tr>
+                <tr><td><strong>Procurement Request</strong></td><td>B. Nazarov</td><td style="font-size:12px">Water</td><td><span class="bx b-r">1d</span></td><td><button class="btn btn-xs btn-pr">View</button></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="card fu">
+            <div class="ch"><div class="ct">📅 Upcoming Deadlines — Next 7 Days</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding:14px 18px">
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 13px;background:var(--wa-l);border-radius:9px"><span style="font-size:18px">🟡</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Upload Field Visit Photos</div><div style="font-size:11.5px;color:var(--wa)">A. Karimov · May 18 · Water Infrastructure</div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 13px;background:var(--wa-l);border-radius:9px"><span style="font-size:18px">🟡</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Training Attendance Sheet</div><div style="font-size:11.5px;color:var(--wa)">A. Karimov · May 19 · Agriculture</div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 13px;background:#f8fafc;border-radius:9px"><span style="font-size:18px">🔵</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Procurement Request Form</div><div style="font-size:11.5px;color:var(--tx2)">B. Nazarov · May 21 · Water Infrastructure</div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 13px;background:#f8fafc;border-radius:9px"><span style="font-size:18px">🔵</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Q2 Narrative Report (PI submits)</div><div style="font-size:11.5px;color:var(--tx2)">Dr. Jenkins (you) · May 20 → ORD + Dean</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ MY GRANTS ════════ -->
+<div id="sc-my-grants" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni active" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search grants…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><button class="btn btn-sm btn-pr" onclick="nav(document.querySelector('.ni[onclick*=setup-wizard]'),'setup-wizard')">⚙️ Setup New Grant</button><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">My Grants</div><div class="pg-s">3 active grants you are leading as PI</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card fu" style="cursor:pointer" onclick="goTo('workspace')">
+            <div style="padding:20px 24px">
+              <div class="fb" style="margin-bottom:14px">
+                <div><div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Agriculture Training Program</div><div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--tx2);margin-top:3px">GMS-2023-001 · USAID · Jan 2023 – Dec 2025</div></div>
+                <div class="fg"><span class="bx b-r">At Risk</span><span class="bx b-r">3 overdue</span><button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('workspace')">Open Workspace →</button></div>
+              </div>
+              <div style="display:flex;gap:24px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:14px">
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Total Budget</div><strong class="mono">$485,000</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Spent</div><strong class="mono" style="color:var(--wa)">$298,400</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Staff Assigned</div><strong>4 staff</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Total Tasks</div><strong>24 tasks</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Overdue</div><strong style="color:var(--er)">3 tasks</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Next Report</div><strong style="color:var(--er)">OVERDUE</strong></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--tx2);font-weight:600">Budget spent:</span><div class="pb" style="flex:1"><div class="pf pf-wa" style="width:62%"></div></div><strong style="font-size:12.5px;color:var(--wa)">62%</strong></div>
+            </div>
+          </div>
+          <div class="card fu" style="cursor:pointer" onclick="goTo('workspace')">
+            <div style="padding:20px 24px">
+              <div class="fb" style="margin-bottom:14px">
+                <div><div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Water Infrastructure Grant</div><div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--tx2);margin-top:3px">GMS-2023-004 · World Bank · Mar 2023 – Mar 2026</div></div>
+                <div class="fg"><span class="bx b-y">Active</span><span class="bx b-y">2 at risk</span><button class="btn btn-sm btn-ok" onclick="event.stopPropagation();goTo('workspace')">Open Workspace →</button></div>
+              </div>
+              <div style="display:flex;gap:24px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:14px">
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Total Budget</div><strong class="mono">$320,000</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Spent</div><strong class="mono">$145,600</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Staff Assigned</div><strong>3 staff</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Total Tasks</div><strong>18 tasks</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Overdue</div><strong style="color:var(--wa)">2 tasks</strong></div>
+                <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Next Report</div><strong style="color:var(--wa)">May 20</strong></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--tx2);font-weight:600">Budget spent:</span><div class="pb" style="flex:1"><div class="pf pf-ok" style="width:45%"></div></div><strong style="font-size:12.5px;color:var(--ok)">45%</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ GRANT WORKSPACE ════════ -->
+<div id="sc-workspace" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni active" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search within grant…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div>
+      </div>
+      <div class="content">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <button class="btn btn-sm btn-ol" onclick="goTo('my-grants')">← My Grants</button>
+          <span class="bx b-r">At Risk</span><span class="bx b-r">3 Overdue</span>
+        </div>
+        <div style="background:linear-gradient(135deg,#0c2a20,#0f766e);border-radius:var(--r);padding:22px 26px;margin-bottom:20px">
+          <div class="fb" style="margin-bottom:14px">
+            <div><div style="font-size:19px;font-weight:800;color:#fff;letter-spacing:-.3px">Agriculture Training Program</div><div style="font-size:11.5px;color:#99f6e4;font-family:'DM Mono',monospace;margin-top:3px">GMS-2023-001 · USAID · Tajikistan</div></div>
+            <div class="fg">
+              <button class="btn btn-sm btn-ol">📥 Export</button>
+              <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.2)" onclick="goTo('deadline-requests')">📅 Request Deadline Change</button>
+              <button class="btn btn-sm btn-er">🚩 Flag Issue</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:26px;flex-wrap:wrap">
+            <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#99f6e4;margin-bottom:3px">Budget</div><strong style="color:#fff">$485,000</strong></div>
+            <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#99f6e4;margin-bottom:3px">Spent</div><strong style="color:#fbbf24">$298,400 (62%)</strong></div>
+            <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#99f6e4;margin-bottom:3px">Period</div><strong style="color:#fff">Jan 2023 – Dec 2025</strong></div>
+            <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#99f6e4;margin-bottom:3px">Donor</div><strong style="color:#fff">USAID</strong></div>
+            <div><div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#99f6e4;margin-bottom:3px">Staff</div><strong style="color:#fff">4 assigned</strong></div>
+          </div>
+        </div>
+
+        <!-- Milestone timeline -->
+        <div class="card sg">
+          <div class="ch"><div class="ct">🗓 Milestone Timeline</div><div style="font-size:12px;color:var(--tx3)">🔒 Deadlines set by you — change requests go to Director</div></div>
+          <div class="cb">
+            <div class="ml-wrap">
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Contract Signed</div><div class="ml-dt">Jan 5, 2023</div></div>
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Budget Released</div><div class="ml-dt">Feb 15, 2023</div></div>
+              <div class="ml-item done"><div class="ml-dot done">✓</div><div class="ml-lbl">Staff Onboarded</div><div class="ml-dt">Mar 1, 2023</div></div>
+              <div class="ml-item"><div class="ml-dot ov">!</div><div class="ml-lbl">Workshop Series</div><div class="ml-dt" style="color:var(--er)">May 12 — OVERDUE</div></div>
+              <div class="ml-item"><div class="ml-dot act">▶</div><div class="ml-lbl">Mid-term Review</div><div class="ml-dt">Jun 1, 2025</div></div>
+              <div class="ml-item"><div class="ml-dot">6</div><div class="ml-lbl">Final Report</div><div class="ml-dt">Dec 1, 2025</div></div>
+              <div class="ml-item"><div class="ml-dot">7</div><div class="ml-lbl">Close-out</div><div class="ml-dt">Dec 31, 2025</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="ws-tabs">
+          <div class="tab active" onclick="switchTab('ws','tasks',this)">Tasks & Staff</div>
+          <div class="tab" onclick="switchTab('ws','reports',this)">Reports</div>
+          <div class="tab" onclick="switchTab('ws','financial',this)">Financial</div>
+          <div class="tab" onclick="switchTab('ws','documents',this)">Documents</div>
+          <div class="tab" onclick="switchTab('ws','evidence',this)">Evidence</div>
+          <div class="tab" onclick="switchTab('ws','ws-audit',this)">Audit Log</div>
+        </div>
+
+        <!-- Tasks & Staff -->
+        <div id="ws-tab-tasks" class="tp active">
+          <div class="ab er"><span style="font-size:22px">🔴</span><div><p style="color:#991b1b">3 tasks overdue — evidence missing on 2 tasks — review below</p></div></div>
+          <div class="fb" style="margin-bottom:14px"><div class="fg"><span class="bx b-r">3 Overdue</span><span class="bx b-y">2 At Risk</span></div><div class="fg"><button class="btn btn-sm btn-or" onclick="goTo('deadline-requests')">📅 Request Deadline Change</button><button class="btn btn-sm btn-pr">+ Assign New Task</button></div></div>
+          <div class="card">
+            <div class="tw"><table>
+              <thead><tr><th>Task</th><th>Assigned To</th><th>Deadline</th><th>Status</th><th>Evidence</th><th>Submit To</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr style="background:#fff5f5"><td><strong>Workshop Completion Report</strong></td><td><span class="bx b-gr">A. Karimov</span></td><td style="color:var(--er);font-weight:700;font-size:12px">🔒 May 12 — OVERDUE</td><td><span class="bx b-r">Overdue</span></td><td><span class="bx b-r">⚠ 2 Missing</span></td><td style="font-size:12px">ORD + Dean</td><td><div class="fg"><button class="btn btn-xs btn-pr">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-requests')">📅 Request</button></div></td></tr>
+                <tr style="background:#fff5f5"><td><strong>Beneficiary Data Collection</strong></td><td><span class="bx b-gr">A. Karimov</span></td><td style="color:var(--er);font-weight:700;font-size:12px">🔒 May 15 — OVERDUE</td><td><span class="bx b-r">Overdue</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td style="font-size:12px">PI (Dr. Jenkins)</td><td><div class="fg"><button class="btn btn-xs btn-pr">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-requests')">📅 Request</button></div></td></tr>
+                <tr><td><strong>Upload Field Visit Photos</strong></td><td><span class="bx b-gr">A. Karimov</span></td><td style="color:var(--wa);font-weight:700;font-size:12px">🔒 May 18</td><td><span class="bx b-y">In Progress</span></td><td><span class="bx b-r">⚠ Missing</span></td><td style="font-size:12px">ORD</td><td><div class="fg"><button class="btn btn-xs btn-pr">View</button></div></td></tr>
+                <tr><td><strong>Quarterly Activity Report</strong></td><td><span class="bx b-gr">A. Karimov</span></td><td style="font-size:12px">🔒 May 28</td><td><span class="bx b-b">In Progress</span></td><td><span class="bx b-or">Required</span></td><td style="font-size:12px">Dean + ORD</td><td><div class="fg"><button class="btn btn-xs btn-pr">View</button></div></td></tr>
+                <tr><td><strong>HR Onboarding Forms</strong></td><td><span class="bx b-gr">S. Rakhimova</span></td><td style="color:var(--er);font-weight:700;font-size:12px">🔒 May 13 — OVERDUE</td><td><span class="bx b-r">Overdue</span></td><td><span class="bx b-gr">N/A</span></td><td style="font-size:12px">HR + PI</td><td><div class="fg"><button class="btn btn-xs btn-pr">View</button><button class="btn btn-xs btn-or" onclick="goTo('deadline-requests')">📅 Request</button></div></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- Reports tab -->
+        <div id="ws-tab-reports" class="tp">
+          <div class="g2">
+            <div class="card"><div class="ch"><div class="ct">📝 Narrative Reports</div><button class="btn btn-sm btn-pr">+ Submit Report</button></div><div class="tw"><table><thead><tr><th>Report</th><th>Due</th><th>Status</th><th>Submit To</th></tr></thead><tbody>
+              <tr><td>Q2 Narrative 2025</td><td style="color:var(--er);font-weight:700">OVERDUE</td><td><span class="bx b-y">Draft</span></td><td>ORD + Dean</td></tr>
+              <tr><td>Q1 Narrative 2025</td><td>Mar 31</td><td><span class="bx b-g">Approved</span></td><td>ORD + Dean</td></tr>
+              <tr><td>Annual Report 2024</td><td>Jan 10</td><td><span class="bx b-g">Submitted</span></td><td>ORD + Dean</td></tr>
+            </tbody></table></div></div>
+            <div class="card"><div class="ch"><div class="ct">💰 Financial Reports</div></div><div class="tw"><table><thead><tr><th>Report</th><th>Due</th><th>Status</th><th>Finance Officer</th></tr></thead><tbody>
+              <tr><td>Mid-Year 2025</td><td style="color:var(--er);font-weight:700">OVERDUE</td><td><span class="bx b-y">Draft</span></td><td>Z. Nazarova</td></tr>
+              <tr><td>Q1 2025</td><td>Mar 31</td><td><span class="bx b-g">Approved</span></td><td>Z. Nazarova</td></tr>
+            </tbody></table></div></div>
+          </div>
+        </div>
+
+        <!-- Financial tab -->
+        <div id="ws-tab-financial" class="tp">
+          <div class="card sg"><div class="ch"><div class="ct">📈 Budget vs Actual</div><button class="btn btn-sm btn-ol">📥 Export</button></div><div class="cb"><canvas id="wsChart" height="200"></canvas></div></div>
+          <div class="card"><div class="ch"><div class="ct">Budget Lines — Read View</div></div><div class="tw"><table><thead><tr><th>Line</th><th>Planned</th><th>Spent</th><th>Remaining</th><th>Utilization</th><th>Status</th></tr></thead><tbody>
+            <tr><td><strong>Personnel</strong></td><td class="mono">$194,000</td><td class="mono">$119,360</td><td class="mono" style="color:var(--ok)">$74,640</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:80px"><div class="pf pf-ok" style="width:61%"></div></div><span>61%</span></div></td><td><span class="bx b-g">Normal</span></td></tr>
+            <tr style="background:#fff5f5"><td><strong>Equipment ⚠</strong></td><td class="mono">$97,000</td><td class="mono" style="color:var(--er);font-weight:700">$101,200</td><td class="mono" style="color:var(--er)">-$4,200</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pb" style="width:80px"><div class="pf pf-er" style="width:100%"></div></div><span style="color:var(--er);font-weight:700">104%</span></div></td><td><span class="bx b-r">Overspent</span></td></tr>
+          </tbody></table></div></div>
+        </div>
+
+        <!-- Documents tab -->
+        <div id="ws-tab-documents" class="tp">
+          <div class="card"><div class="ch"><div class="ct">📁 Document Repository</div><button class="btn btn-sm btn-pr">📤 Upload</button></div><div class="cb" style="display:flex;flex-direction:column;gap:8px">
+            <div class="fi"><span style="font-size:20px">📄</span><div style="flex:1"><div class="fi-n">Q1_Narrative_Report_FINAL.pdf</div><div class="fi-m">Dr. Jenkins · Mar 30, 2025 · v2 · Latest Approved</div></div><span class="bx b-g">Approved</span><button class="btn btn-xs btn-ol">📥</button></div>
+            <div class="fi"><span style="font-size:20px">📊</span><div style="flex:1"><div class="fi-n">Budget_Q1_2025.xlsx</div><div class="fi-m">Z. Nazarova · Mar 25, 2025 · v1</div></div><span class="bx b-t">Finance</span><button class="btn btn-xs btn-ol">📥</button></div>
+          </div></div>
+        </div>
+
+        <!-- Evidence tab -->
+        <div id="ws-tab-evidence" class="tp">
+          <div class="ab er"><span style="font-size:22px">⚠️</span><div><p style="color:#991b1b">2 tasks have missing evidence — staff cannot submit until uploaded</p></div></div>
+          <div class="g3">
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center"><div style="font-size:30px;margin-bottom:6px">📸</div><div style="font-size:12.5px;font-weight:700">Workshop Photos</div><div style="font-size:11.5px;color:var(--tx3);margin-top:2px">A. Karimov · Workshop Report</div><span class="bx b-r" style="margin-top:6px;display:inline-flex">Missing</span></div>
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center"><div style="font-size:30px;margin-bottom:6px">📋</div><div style="font-size:12.5px;font-weight:700">Attendance Sheet</div><div style="font-size:11.5px;color:var(--tx3);margin-top:2px">A. Karimov · Workshop Report</div><span class="bx b-r" style="margin-top:6px;display:inline-flex">Missing</span></div>
+            <div style="background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center"><div style="font-size:30px;margin-bottom:6px">📄</div><div style="font-size:12.5px;font-weight:700">Field Photos Mar 2025</div><div style="font-size:11.5px;color:var(--tx3);margin-top:2px">A. Karimov · Mar 28</div><span class="bx b-g" style="margin-top:6px;display:inline-flex">Uploaded</span></div>
+          </div>
+        </div>
+
+        <!-- Audit log tab -->
+        <div id="ws-tab-ws-audit" class="tp">
+          <div class="card"><div class="ch"><div class="ct">🔍 Grant Audit Log</div><button class="btn btn-sm btn-ol">Export</button></div><div class="cb">
+            <div class="al-r"><div class="al-t">May 16 · 09:14</div><div class="al-u">A. Karimov</div><div class="al-a">Uploaded <strong>Workshop_Report_v1.pdf</strong></div><div class="al-tag at-u">UPLOAD</div></div>
+            <div class="al-r"><div class="al-t">May 12 · 08:00</div><div class="al-u">System</div><div class="al-a">Task <strong>Workshop Completion Report</strong> — OVERDUE. Level 2 escalation triggered.</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-r"><div class="al-t">Mar 31 · 14:10</div><div class="al-u">Dr. Jenkins</div><div class="al-a">Submitted Q1 Narrative Report to ORD + Dean</div><div class="al-tag at-s">SUBMIT</div></div>
+            <div class="al-r"><div class="al-t">Mar 28 · 09:30</div><div class="al-u">Prof. Alimov</div><div class="al-a">Approved Q1 Narrative Report</div><div class="al-tag at-a">APPROVE</div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SETUP WIZARD ════════ -->
+<div id="sc-setup-wizard" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni active" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">Grant Setup Wizard</div><div class="pg-s">PI-led implementation planning · Deadlines you set are locked for staff — only Directors can change them</div></div><button class="btn btn-sm btn-ol" onclick="goTo('my-grants')">← Cancel</button></div>
+
+        <div class="wiz-wrap">
+          <!-- Progress bar -->
+          <div class="wiz-prog sg">
+            <div class="ws done"><div class="wd done">✓</div><div class="wsl done">Basic Info</div></div>
+            <div class="ws done"><div class="wd done">✓</div><div class="wsl done">Roles</div></div>
+            <div class="ws curr"><div class="wd curr">3</div><div class="wsl curr">Plan</div></div>
+            <div class="ws"><div class="wd">4</div><div class="wsl">Tasks</div></div>
+            <div class="ws"><div class="wd">5</div><div class="wsl">Reminders</div></div>
+            <div class="ws"><div class="wd">6</div><div class="wsl">Routing</div></div>
+            <div class="ws"><div class="wd">7</div><div class="wsl">Publish</div></div>
+          </div>
+
+          <!-- Step cards -->
+          <!-- Step 1 -->
+          <div id="wz-s1" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 1 — Grant Basic Information</div>
+            <div class="wiz-desc">Enter the core details of this awarded grant. Country is fixed to your assigned country and cannot be changed.</div>
+            <div class="fg2">
+              <div class="field-g"><label class="fl">Grant Title *</label><input class="fi2" placeholder="e.g. Education Development Program"></div>
+              <div class="field-g"><label class="fl">Grant Code / ID *</label><input class="fi2" placeholder="e.g. GMS-2025-003"></div>
+            </div>
+            <div class="fg3">
+              <div class="field-g"><label class="fl">Country (Auto-assigned)</label><input class="fi2" value="Tajikistan" disabled style="opacity:.6;cursor:not-allowed"></div>
+              <div class="field-g"><label class="fl">Donor *</label><input class="fi2" placeholder="e.g. USAID"></div>
+              <div class="field-g"><label class="fl">Grant Value (USD) *</label><input class="fi2" type="number" placeholder="485000"></div>
+            </div>
+            <div class="fg3">
+              <div class="field-g"><label class="fl">Start Date *</label><input class="fi2" type="date" value="2025-07-01"></div>
+              <div class="field-g"><label class="fl">End Date *</label><input class="fi2" type="date" value="2027-06-30"></div>
+              <div class="field-g"><label class="fl">Reporting Frequency *</label><select class="fs"><option>Quarterly</option><option>Monthly</option><option>Annual</option></select></div>
+            </div>
+            <div class="field-g"><label class="fl">School / Department *</label><input class="fi2" placeholder="e.g. Faculty of Agriculture"></div>
+            <div class="sec-h" style="margin-top:8px">📎 Required Documents</div>
+            <div class="fg3">
+              <div class="uz"><div class="uz-ic">📄</div><div class="uz-lb">Signed Grant Agreement</div><div class="uz-h">PDF · Required</div></div>
+              <div class="uz"><div class="uz-ic">📊</div><div class="uz-lb">Approved Budget</div><div class="uz-h">Excel / PDF · Required</div></div>
+              <div class="uz"><div class="uz-ic">📋</div><div class="uz-lb">Workplan / Logframe</div><div class="uz-h">Optional</div></div>
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:14px">
+              <button class="btn btn-ol">💾 Save Draft</button>
+              <button class="btn btn-pr" onclick="showWizStep(2)">Next: Roles & Access →</button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="wz-s2" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 2 — Assign Roles & Staff</div>
+            <div class="wiz-desc">Assign team members to this grant. Each person only sees their assigned tasks. As PI, you control who works on this grant.</div>
+            <div class="ab bl"><span style="font-size:20px">ℹ️</span><div><p style="color:#1e3a8a">Staff will only see their own tasks — they cannot see other staff's tasks or the full grant budget</p></div></div>
+            <div class="role-r"><div class="role-ic" style="background:var(--pr-l)">👨‍🔬</div><div style="flex:1"><div style="font-size:13px;font-weight:700">PI — You (Dr. Jenkins)</div><div style="font-size:11.5px;color:var(--tx2)">Full grant access · assigns tasks · submits reports to ORD/Dean</div></div><span class="bx b-g">Auto-assigned</span></div>
+            <div class="role-r"><div class="role-ic" style="background:var(--bl-l)">👤</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Project Staff *</div><div style="font-size:11.5px;color:var(--tx2)">Can view + submit only their assigned tasks</div></div><input class="fi2" style="width:200px" placeholder="Search and add staff…"><button class="btn btn-sm btn-pr" style="margin-left:8px">+ Add</button></div>
+            <div style="padding:10px 14px;background:#f8fafc;border-radius:8px;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px">Currently Assigned Staff:</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--bl),var(--vi));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">AK</div><span style="flex:1;font-size:13px;font-weight:600">A. Karimov</span><span class="bx b-b">Project Staff</span><button class="btn btn-xs btn-er">Remove</button></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ok),var(--pr));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">MT</div><span style="flex:1;font-size:13px;font-weight:600">M. Tashkentov</span><span class="bx b-b">Project Staff</span><button class="btn btn-xs btn-er">Remove</button></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--wa));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">SR</div><span style="flex:1;font-size:13px;font-weight:600">S. Rakhimova</span><span class="bx b-b">Project Staff</span><button class="btn btn-xs btn-er">Remove</button></div>
+              </div>
+            </div>
+            <div class="role-r"><div class="role-ic" style="background:var(--wa-l)">📊</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Finance Officer</div><div style="font-size:11.5px;color:var(--tx2)">Manages financial reports · separate finance portal</div></div><input class="fi2" style="width:200px" placeholder="Select Finance Officer…"></div>
+            <div class="fg" style="justify-content:flex-end;margin-top:14px">
+              <button class="btn btn-ol" onclick="showWizStep(1)">← Back</button>
+              <button class="btn btn-pr" onclick="showWizStep(3)">Next: Implementation Plan →</button>
+            </div>
+          </div>
+
+          <!-- Step 3 — ACTIVE -->
+          <div id="wz-s3" class="wiz-card">
+            <div class="wiz-title">Step 3 — Implementation Plan & Milestones</div>
+            <div class="wiz-desc">Set the milestones and deadlines for this grant. <strong>Important:</strong> Once published, only Directors can approve deadline changes — plan carefully.</div>
+            <div class="ab wa" style="margin-bottom:16px"><span style="font-size:20px">🔒</span><div><p style="color:#92400e">Deadlines you set here will be LOCKED after publishing. Staff cannot change them. Only Directors can approve changes.</p><small>Request deadline changes later via the "Deadline Requests" section — Director approval required.</small></div></div>
+            <div class="fg" style="margin-bottom:14px">
+              <button class="btn btn-pr btn-sm">🏗 Build Plan Here</button>
+              <button class="btn btn-ol btn-sm">📤 Upload Workplan</button>
+              <button class="btn btn-ol btn-sm">📋 Use Template</button>
+            </div>
+            <div class="tw" style="margin-bottom:10px">
+              <table>
+                <thead><tr><th style="min-width:190px">Milestone / Deliverable</th><th>Category</th><th>Assign To</th><th>Deadline 🔒</th><th>Evidence</th><th>Approval</th><th>Submit To</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><input class="fi2" style="margin-bottom:0;min-width:170px" value="Team Kickoff & Onboarding"></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>Activity</option></select></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>PI</option><option>All Staff</option></select></td><td><input class="fi2" type="date" style="margin-bottom:0;width:130px" value="2025-07-15"></td><td><label class="tog"><input type="checkbox"><span class="sl2"></span></label></td><td><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></td><td><select class="fs" style="font-size:12px;padding:6px 8px;min-width:120px"><option>ORD + Dean</option></select></td><td><button class="btn btn-xs btn-er">✕</button></td></tr>
+                  <tr><td><input class="fi2" style="margin-bottom:0;min-width:170px" value="Q1 Narrative Report"></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>Narrative Report</option></select></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>PI</option></select></td><td><input class="fi2" type="date" style="margin-bottom:0;width:130px" value="2025-10-01"></td><td><label class="tog"><input type="checkbox"><span class="sl2"></span></label></td><td><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></td><td><select class="fs" style="font-size:12px;padding:6px 8px;min-width:120px"><option>ORD + Dean</option></select></td><td><button class="btn btn-xs btn-er">✕</button></td></tr>
+                  <tr><td><input class="fi2" style="margin-bottom:0;min-width:170px" value="Financial Report Q1"></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>Financial Report</option></select></td><td><select class="fs" style="font-size:12px;padding:6px 8px"><option>Finance Officer</option></select></td><td><input class="fi2" type="date" style="margin-bottom:0;width:130px" value="2025-10-15"></td><td><label class="tog"><input type="checkbox"><span class="sl2"></span></label></td><td><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></td><td><select class="fs" style="font-size:12px;padding:6px 8px;min-width:120px"><option>Finance Director</option></select></td><td><button class="btn btn-xs btn-er">✕</button></td></tr>
+                  <tr style="background:#f0fdf9"><td colspan="8" style="padding:10px"><button class="btn btn-sm btn-pr" style="margin-right:8px">+ Add Milestone</button><button class="btn btn-sm btn-ol">+ Bulk Add</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="fg" style="justify-content:flex-end;margin-top:14px">
+              <button class="btn btn-ol" onclick="showWizStep(2)">← Back</button>
+              <button class="btn btn-ol">💾 Save Draft</button>
+              <button class="btn btn-pr" onclick="showWizStep(4)">Next: Generate Tasks →</button>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div id="wz-s4" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 4 — Auto-Generate Tasks</div>
+            <div class="wiz-desc">The system creates tasks for each staff member from your milestones. Each staff sees only their own tasks.</div>
+            <div class="g2" style="margin-bottom:18px">
+              <div style="padding:14px;background:var(--bg);border-radius:9px">
+                <div style="font-size:13px;font-weight:700;margin-bottom:10px">Options</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:13px">Create tasks per milestone</span><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:13px">Recurring quarterly reports</span><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0"><span style="font-size:13px">Evidence required rules</span><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+              </div>
+              <div style="padding:14px;background:var(--ok-l);border-radius:9px;border:1px solid #6ee7b7"><div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">✅ 14 Tasks Generated</div><div style="font-size:12.5px;color:#065f46">• 6 activity tasks<br>• 4 narrative report tasks<br>• 3 financial tasks<br>• 1 audit task<br><br>All deadlines locked on publish.</div></div>
+            </div>
+            <div class="tg-r fu"><div class="tg-num">1</div><div style="flex:1"><strong>Kickoff Meeting Report</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: A. Karimov · Due: Jul 20 · Evidence: Yes · Submit to: ORD</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="tg-r fu"><div class="tg-num">2</div><div style="flex:1"><strong>Staff Onboarding Forms</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: S. Rakhimova · Due: Jul 25 · Evidence: No · Submit to: PI</span></div><span class="bx b-b">Standard</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="tg-r fu"><div class="tg-num">3</div><div style="flex:1"><strong>Q1 Narrative Report</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: PI (Dr. Jenkins) · Due: Oct 1 · Evidence: No · Submit to: ORD + Dean</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div class="tg-r fu"><div class="tg-num">4</div><div style="flex:1"><strong>Financial Report Q1</strong><br><span style="font-size:11.5px;color:var(--tx2)">Owner: Finance Officer · Due: Oct 15 · Evidence: No · Submit to: Finance Director</span></div><span class="bx b-r">Mandatory</span><button class="btn btn-xs btn-ol">Edit</button></div>
+            <div style="padding:10px 14px;background:#f0fdf9;border-radius:8px;margin-top:8px;font-size:12px;color:var(--pr);font-weight:600">+ 10 more tasks generated…</div>
+            <div class="fg" style="justify-content:flex-end;margin-top:14px">
+              <button class="btn btn-ol" onclick="showWizStep(3)">← Back</button>
+              <button class="btn btn-ol">🔄 Regenerate</button>
+              <button class="btn btn-pr" onclick="showWizStep(5)">Next: Reminders →</button>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div id="wz-s5" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 5 — Reminders & Escalation Rules</div>
+            <div class="wiz-desc">Set automatic reminders for staff and escalation paths for when tasks are overdue.</div>
+            <div class="sec-h">🔔 Reminder Schedule</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+              <div class="role-r"><span style="font-size:18px">📅</span><div style="flex:1"><strong>30 days before</strong><br><span style="font-size:12px;color:var(--tx2)">Email to task owner + PI</span></div><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+              <div class="role-r"><span style="font-size:18px">📅</span><div style="flex:1"><strong>14 days before</strong><br><span style="font-size:12px;color:var(--tx2)">Email to task owner + PI + Dean</span></div><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+              <div class="role-r"><span style="font-size:18px">📅</span><div style="flex:1"><strong>7 days before</strong><br><span style="font-size:12px;color:var(--tx2)">Urgent — all + ORD notification</span></div><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+              <div class="role-r"><span style="font-size:18px">🚨</span><div style="flex:1"><strong>1 day before</strong><br><span style="font-size:12px;color:var(--tx2)">Final alert — PI dashboard highlighted</span></div><label class="tog"><input type="checkbox" checked><span class="sl2"></span></label></div>
+            </div>
+            <div class="sec-h">📈 Escalation Path</div>
+            <div class="g3" style="margin-bottom:14px">
+              <div style="padding:14px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--wa);margin-bottom:7px">Level 1</div><div style="font-size:12px;color:var(--tx2);margin-bottom:7px">Due ≤7 days + not started</div><strong style="font-size:12px">Owner + PI notified</strong></div>
+              <div style="padding:14px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--or);margin-bottom:7px">Level 2</div><div style="font-size:12px;color:var(--tx2);margin-bottom:7px">Overdue — no submission</div><strong style="font-size:12px">Dean + ORD notified</strong></div>
+              <div style="padding:14px;background:var(--er-l);border:1px solid #fca5a5;border-radius:9px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--er);margin-bottom:7px">Level 3</div><div style="font-size:12px;color:var(--tx2);margin-bottom:7px">Overdue + financial/audit risk</div><strong style="font-size:12px">Director + ORD + Finance Dir</strong></div>
+            </div>
+            <div class="fg" style="justify-content:flex-end">
+              <button class="btn btn-ol" onclick="showWizStep(4)">← Back</button>
+              <button class="btn btn-pr" onclick="showWizStep(6)">Next: Routing →</button>
+            </div>
+          </div>
+
+          <!-- Step 6 -->
+          <div id="wz-s6" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 6 — Submit-To Routing</div>
+            <div class="wiz-desc">Define where each submission type goes. Staff will follow these routes automatically.</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+              <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">📝 Narrative Report</div><div class="chain"><div class="chain-n">PI (Dr. Jenkins)</div><div class="chain-a">→</div><div class="chain-n">Submits</div><div class="chain-a">→</div><div class="chain-n">ORD Review</div><div class="chain-a">→</div><div class="chain-n">Dean / Supervisor</div><div class="chain-a">→</div><div class="chain-n" style="background:var(--ok-l);border-color:#6ee7b7;color:var(--ok)">✅ Approved</div></div></div>
+              <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">💰 Financial Report</div><div class="chain"><div class="chain-n">Finance Officer</div><div class="chain-a">→</div><div class="chain-n">Submits</div><div class="chain-a">→</div><div class="chain-n">Finance Director</div><div class="chain-a">→</div><div class="chain-n">ORD (awareness)</div><div class="chain-a">→</div><div class="chain-n" style="background:var(--ok-l);border-color:#6ee7b7;color:var(--ok)">✅ Approved</div></div></div>
+              <div style="padding:14px 18px;background:#fff;border:1px solid var(--bd);border-radius:9px"><div style="font-size:12px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">📅 Deadline Change Request</div><div class="chain"><div class="chain-n">PI (you)</div><div class="chain-a">→</div><div class="chain-n">Sends Request</div><div class="chain-a">→</div><div class="chain-n" style="background:var(--wa-l);border-color:#fcd34d;color:#92400e">Director Approves/Denies</div><div class="chain-a">→</div><div class="chain-n">Audit Log Updated</div></div></div>
+            </div>
+            <div class="fg" style="justify-content:flex-end">
+              <button class="btn btn-ol" onclick="showWizStep(5)">← Back</button>
+              <button class="btn btn-pr" onclick="showWizStep(7)">Next: Review & Publish →</button>
+            </div>
+          </div>
+
+          <!-- Step 7 -->
+          <div id="wz-s7" class="wiz-card" style="display:none">
+            <div class="wiz-title">Step 7 — Review & Publish</div>
+            <div class="wiz-desc">Final check before going live. Once published, all deadlines are locked — only Directors can approve changes.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px">
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Grant Workspace Created</div><div style="font-size:12px;color:var(--ok)">New Grant · GMS-2025-003 · Tajikistan</div></div></div>
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Roles & Staff Assigned</div><div style="font-size:12px;color:var(--ok)">PI + 3 staff + Finance Officer assigned</div></div></div>
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Milestones & Deadlines Set</div><div style="font-size:12px;color:var(--ok)">3 milestones · All deadlines confirmed by PI</div></div></div>
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Tasks Generated</div><div style="font-size:12px;color:var(--ok)">14 tasks · owners and due dates set</div></div></div>
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Reminders & Escalation Set</div><div style="font-size:12px;color:var(--ok)">30/14/7/1 day reminders · 3-level escalation</div></div></div>
+              <div class="pub-ck ok"><div class="pc-ic ok">✓</div><div><div style="font-size:13px;font-weight:700">Submit Routing Configured</div><div style="font-size:12px;color:var(--ok)">Narrative → ORD + Dean · Financial → Finance Dir</div></div></div>
+            </div>
+            <div class="ab wa" style="margin-bottom:20px"><span style="font-size:20px">🔒</span><div><p style="color:#92400e">After publishing, deadlines are LOCKED for all staff</p><small>Only Directors can approve deadline change requests. All changes are audit-logged.</small></div></div>
+            <div class="fg">
+              <button class="btn btn-ol" onclick="showWizStep(6)">← Back</button>
+              <button class="btn btn-ol">💾 Save as Template</button>
+              <button class="btn btn-ol">📄 Download PDF</button>
+              <button class="btn btn-pr" style="padding:12px 28px;font-size:14px" onclick="goTo('my-grants')">🚀 Publish Grant — Lock & Go Live</button>
+            </div>
+          </div>
+
+          <!-- Step nav -->
+          <div style="display:flex;justify-content:center;gap:6px;margin-top:18px">
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(1)">1</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(2)">2</button>
+            <button class="btn btn-xs btn-pr" onclick="showWizStep(3)">3</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(4)">4</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(5)">5</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(6)">6</button>
+            <button class="btn btn-xs btn-ol" onclick="showWizStep(7)">7</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ STAFF MONITOR ════════ -->
+<div id="sc-staff-monitor" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni active" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search staff, tasks…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">Staff Monitor</div><div class="pg-s">Track what each staff member is working on and what they completed</div></div><span class="bx b-r">3 staff with issues</span></div>
+
+        <!-- Staff cards grid -->
+        <div class="g2 sg">
+          <!-- Staff 1 -->
+          <div class="staff-card fu">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+              <div class="staff-av" style="background:linear-gradient(135deg,#1d4ed8,#7c3aed)">AK</div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:800">A. Karimov</div><div style="font-size:12px;color:var(--tx2)">Project Staff · Agriculture Training</div></div>
+              <span class="bx b-r">2 Overdue</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:12px">
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Total Tasks</div><strong style="font-size:16px">10</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Done</div><strong style="font-size:16px;color:var(--ok)">6</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Overdue</div><strong style="font-size:16px;color:var(--er)">2</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Evidence</div><strong style="font-size:16px;color:var(--er)">2 missing</strong></div>
+            </div>
+            <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px"><div class="pb" style="flex:1"><div class="pf pf-wa" style="width:60%"></div></div><span style="font-size:12px;font-weight:700;color:var(--wa)">60%</span></div></div>
+            <div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px">Current Tasks:</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--er-l);border-radius:7px"><span style="color:var(--er)">🔴</span><span style="flex:1;font-size:12px;font-weight:600">Workshop Completion Report</span><span style="font-size:11px;color:var(--er);font-weight:700">OVERDUE</span></div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--er-l);border-radius:7px"><span style="color:var(--er)">🔴</span><span style="flex:1;font-size:12px;font-weight:600">Beneficiary Data Collection</span><span style="font-size:11px;color:var(--er);font-weight:700">OVERDUE</span></div>
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--wa-l);border-radius:7px"><span style="color:var(--wa)">🟡</span><span style="flex:1;font-size:12px;font-weight:600">Upload Field Visit Photos</span><span style="font-size:11px;color:var(--wa);font-weight:700">May 18</span></div>
+            </div>
+          </div>
+
+          <!-- Staff 2 -->
+          <div class="staff-card fu">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+              <div class="staff-av" style="background:linear-gradient(135deg,#059669,#0f766e)">MT</div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:800">M. Tashkentov</div><div style="font-size:12px;color:var(--tx2)">Project Staff · Water Infrastructure</div></div>
+              <span class="bx b-g">On Track</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:12px">
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Total Tasks</div><strong style="font-size:16px">9</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Done</div><strong style="font-size:16px;color:var(--ok)">8</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Overdue</div><strong style="font-size:16px;color:var(--ok)">0</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Evidence</div><strong style="font-size:16px;color:var(--ok)">All OK</strong></div>
+            </div>
+            <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px"><div class="pb" style="flex:1"><div class="pf pf-ok" style="width:88%"></div></div><span style="font-size:12px;font-weight:700;color:var(--ok)">88%</span></div></div>
+            <div style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px">Current Tasks:</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f8fafc;border-radius:7px"><span>🔵</span><span style="flex:1;font-size:12px;font-weight:600">Site Survey Report</span><span style="font-size:11px;color:var(--tx2)">Jun 10</span></div>
+            </div>
+          </div>
+
+          <!-- Staff 3 -->
+          <div class="staff-card fu">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+              <div class="staff-av" style="background:linear-gradient(135deg,#ea580c,#d97706)">SR</div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:800">S. Rakhimova</div><div style="font-size:12px;color:var(--tx2)">Project Staff · Agriculture Training</div></div>
+              <span class="bx b-y">1 At Risk</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:12px">
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Total Tasks</div><strong style="font-size:16px">10</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Done</div><strong style="font-size:16px;color:var(--ok)">7</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Overdue</div><strong style="font-size:16px;color:var(--wa)">1</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Evidence</div><strong style="font-size:16px;color:var(--ok)">All OK</strong></div>
+            </div>
+            <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px"><div class="pb" style="flex:1"><div class="pf pf-pr" style="width:70%"></div></div><span style="font-size:12px;font-weight:700;color:var(--pr)">70%</span></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--er-l);border-radius:7px"><span style="color:var(--er)">🔴</span><span style="flex:1;font-size:12px;font-weight:600">HR Onboarding Forms</span><span style="font-size:11px;color:var(--er);font-weight:700">OVERDUE</span></div>
+            </div>
+          </div>
+
+          <!-- Staff 4 -->
+          <div class="staff-card fu">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+              <div class="staff-av" style="background:linear-gradient(135deg,#0891b2,#1d4ed8)">BN</div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:800">B. Nazarov</div><div style="font-size:12px;color:var(--tx2)">Project Staff · Water Infrastructure</div></div>
+              <span class="bx b-g">On Track</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:12px">
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Total Tasks</div><strong style="font-size:16px">10</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Done</div><strong style="font-size:16px;color:var(--ok)">9</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Overdue</div><strong style="font-size:16px;color:var(--ok)">0</strong></div>
+              <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Evidence</div><strong style="font-size:16px;color:var(--ok)">All OK</strong></div>
+            </div>
+            <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px"><div class="pb" style="flex:1"><div class="pf pf-ok" style="width:90%"></div></div><span style="font-size:12px;font-weight:700;color:var(--ok)">90%</span></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--wa-l);border-radius:7px"><span style="color:var(--wa)">🟡</span><span style="flex:1;font-size:12px;font-weight:600">Procurement Request Form</span><span style="font-size:11px;color:var(--wa)">May 21</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed work summary -->
+        <div class="card fu">
+          <div class="ch"><div class="ct">✅ What Staff Completed This Month — Summary</div><button class="btn btn-sm btn-ol">📥 Export</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>Staff</th><th>Task Completed</th><th>Grant</th><th>Completed On</th><th>On Time?</th><th>Evidence</th><th>Approved By</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A. Karimov</strong></td><td>Q1 Narrative Report</td><td style="font-size:12px">Agriculture</td><td>Mar 30</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>Prof. Alimov</td></tr>
+              <tr><td><strong>A. Karimov</strong></td><td>Budget Justification Q1</td><td style="font-size:12px">Agriculture</td><td>Mar 25</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-gr">N/A</span></td><td>Dr. Jenkins</td></tr>
+              <tr><td><strong>M. Tashkentov</strong></td><td>Water Survey Phase 1</td><td style="font-size:12px">Water Infra</td><td>Apr 28</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>ORD Office</td></tr>
+              <tr><td><strong>M. Tashkentov</strong></td><td>Equipment Inventory Report</td><td style="font-size:12px">Water Infra</td><td>May 5</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-gr">N/A</span></td><td>Dr. Jenkins</td></tr>
+              <tr><td><strong>S. Rakhimova</strong></td><td>Team Meeting Minutes Apr</td><td style="font-size:12px">Agriculture</td><td>Apr 30</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>Dr. Jenkins</td></tr>
+              <tr><td><strong>B. Nazarov</strong></td><td>Site Assessment Report</td><td style="font-size:12px">Water Infra</td><td>May 10</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>ORD Office</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ DEADLINE REQUESTS ════════ -->
+<div id="sc-deadline-requests" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni active" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search requests…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">Deadline Change Requests</div><div class="pg-s">Sent to Director for approval — you cannot change deadlines yourself</div></div><button class="btn btn-pr" onclick="showNewRequest()">+ New Request</button></div>
+        <div class="ab wa sg"><span style="font-size:22px">🔒</span><div><p style="color:#92400e">All grant deadlines are locked. As PI, you can REQUEST a change — the Director will approve or deny it.</p><small>Once approved, the audit log is updated automatically.</small></div></div>
+
+        <!-- Pending -->
+        <div style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:12px">⏳ Pending Director Approval (2)</div>
+        <div class="dl-req-card fu">
+          <div class="fb" style="margin-bottom:10px"><div><div style="font-size:14px;font-weight:800">Workshop Completion Report — Agriculture Training</div><div style="font-size:12px;color:var(--tx2);margin-top:2px">Submitted May 14 by Dr. Jenkins · Awaiting Director</div></div><span class="bx b-or">Pending</span></div>
+          <div class="dl-change"><div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Current Deadline</div><div class="dl-old">May 12, 2025</div></div><div class="dl-arr">→</div><div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Requested New Date</div><div class="dl-new">May 25, 2025</div></div><div style="flex:1;padding-left:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Justification</div><div style="font-size:12.5px">Attendance sheets from 3 regional workshops still being collected. Evidence will be complete by May 22.</div></div></div>
+          <div style="font-size:12px;color:var(--tx3)">Impact: Linked tasks will shift if approved · Director will be notified automatically</div>
+        </div>
+
+        <div class="dl-req-card fu">
+          <div class="fb" style="margin-bottom:10px"><div><div style="font-size:14px;font-weight:800">HR Onboarding Forms — Agriculture Training</div><div style="font-size:12px;color:var(--tx2);margin-top:2px">Submitted May 14 by Dr. Jenkins · Awaiting Director</div></div><span class="bx b-or">Pending</span></div>
+          <div class="dl-change"><div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Current Deadline</div><div class="dl-old">May 13, 2025</div></div><div class="dl-arr">→</div><div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Requested New Date</div><div class="dl-new">May 22, 2025</div></div><div style="flex:1;padding-left:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:2px">Justification</div><div style="font-size:12.5px">S. Rakhimova was on sick leave May 11–14. Requesting 9-day extension.</div></div></div>
+          <div style="font-size:12px;color:var(--tx3)">Supporting: Medical certificate uploaded as evidence</div>
+        </div>
+
+        <!-- NEW REQUEST FORM (hidden) -->
+        <div id="new-req-form" style="display:none" class="card fu">
+          <div class="ch"><div class="ct">📅 New Deadline Change Request</div><button class="btn btn-sm btn-gh" onclick="document.getElementById('new-req-form').style.display='none'">✕ Cancel</button></div>
+          <div class="cb">
+            <div class="ab bl"><span style="font-size:18px">ℹ️</span><div><p style="color:#1e3a8a">This request will be sent to the Director for approval. You cannot change it after submitting.</p></div></div>
+            <div class="fg2">
+              <div class="field-g"><label class="fl">Grant</label><select class="fs"><option>Agriculture Training Program</option><option>Water Infrastructure Grant</option></select></div>
+              <div class="field-g"><label class="fl">Task / Milestone</label><select class="fs"><option>Select task…</option><option>Workshop Completion Report</option><option>Q2 Narrative Report</option><option>Phase 2 Milestone</option></select></div>
+            </div>
+            <div class="fg2">
+              <div class="field-g"><label class="fl">Current Deadline (Locked)</label><input class="fi2" value="May 20, 2025" disabled style="opacity:.6"></div>
+              <div class="field-g"><label class="fl">Requested New Deadline</label><input class="fi2" type="date"></div>
+            </div>
+            <div class="field-g"><label class="fl">Justification (Required)</label><textarea class="fi2" style="height:90px;resize:none" placeholder="Explain why the deadline needs to change — Director will review this…"></textarea></div>
+            <div class="uz" style="margin-bottom:16px"><div class="uz-ic">📎</div><div class="uz-lb">Upload Supporting Evidence (optional)</div><div class="uz-h">Medical certificate, donor email, etc.</div></div>
+            <div class="fg" style="justify-content:flex-end"><button class="btn btn-ol" onclick="document.getElementById('new-req-form').style.display='none'">Cancel</button><button class="btn btn-pr">📤 Send to Director for Approval</button></div>
+          </div>
+        </div>
+
+        <!-- Resolved -->
+        <div style="font-size:13px;font-weight:800;color:var(--tx2);margin:20px 0 12px">Recently Resolved</div>
+        <div class="card"><div class="tw"><table><thead><tr><th>Grant</th><th>Task</th><th>Old Date</th><th>New Date</th><th>Decision</th><th>Director</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td>Rural Health</td><td>Beneficiary Survey</td><td style="color:var(--er);text-decoration:line-through">Apr 30</td><td style="color:var(--ok)">May 10</td><td><span class="bx b-g">Approved</span></td><td>Dr. Rashidov</td><td style="font-size:12px">May 2</td></tr>
+            <tr><td>Agriculture</td><td>Procurement Review</td><td style="color:var(--er);text-decoration:line-through">May 5</td><td>—</td><td><span class="bx b-r">Denied</span></td><td>Dr. Rashidov</td><td style="font-size:12px">May 1</td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ NOTIFICATIONS ════════ -->
+<div id="sc-notifications" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni active" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar"><div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search…"></div><div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><button class="btn btn-sm btn-ol">Mark All Read</button><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div></div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">Notifications</div><div class="pg-s">6 unread — staff alerts, Director decisions, escalations</div></div></div>
+        <div class="card">
+          <div class="notif unread" onclick="goTo('staff-monitor')"><div class="ni-ic-n" style="background:var(--er-l)">🔴</div><div style="flex:1"><div class="nt">5 Staff Tasks Overdue — Immediate Action Needed</div><div class="nd">A. Karimov (2 tasks), S. Rakhimova (1 task), M. Tashkentov (1 task), B. Nazarov (1 task). Evidence is missing on 2 tasks.</div><div class="nm">All Grants · May 16, 2025</div></div><div class="ud"></div></div>
+          <div class="notif unread" onclick="goTo('deadline-requests')"><div class="ni-ic-n" style="background:var(--ok-l)">✅</div><div style="flex:1"><div class="nt">Director Approved: Beneficiary Survey Deadline Extended</div><div class="nd">Dr. Rashidov approved your deadline change request for "Beneficiary Survey" — new date: May 10, 2025.</div><div class="nm">Agriculture Training · May 2, 2025</div></div><div class="ud"></div></div>
+          <div class="notif unread" onclick="goTo('deadline-requests')"><div class="ni-ic-n" style="background:var(--er-l)">❌</div><div style="flex:1"><div class="nt">Director Denied: Procurement Review Extension</div><div class="nd">Dr. Rashidov denied the deadline extension for "Procurement Review". Comment: "No justification accepted — proceed with original date."</div><div class="nm">Agriculture Training · May 1, 2025</div></div><div class="ud"></div></div>
+          <div class="notif unread"><div class="ni-ic-n" style="background:var(--wa-l)">📅</div><div style="flex:1"><div class="nt">Q2 Narrative Report due in 4 days — you must submit</div><div class="nd">Your Q2 Narrative Report for Agriculture Training Program is due May 20. Status: Draft. Submit to ORD + Dean.</div><div class="nm">Agriculture Training · May 16, 2025</div></div><div class="ud"></div></div>
+          <div class="notif unread"><div class="ni-ic-n" style="background:var(--or-l)">⚠️</div><div style="flex:1"><div class="nt">Escalation: A. Karimov's task escalated to ORD (Level 2)</div><div class="nd">Workshop Completion Report has been escalated to ORD because it is 4 days overdue. Director has been notified.</div><div class="nm">Agriculture Training · May 14, 2025</div></div><div class="ud"></div></div>
+          <div class="notif unread"><div class="ni-ic-n" style="background:var(--er-l)">💰</div><div style="flex:1"><div class="nt">Budget Alert: Equipment line overspent by $4,200</div><div class="nd">Finance Officer Z. Nazarova flagged that Equipment & Materials has exceeded budget by $4,200. A variance explanation is required in the financial report.</div><div class="nm">Agriculture Training · May 8, 2025</div></div><div class="ud"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ AUDIT LOG ════════ -->
+<div id="sc-audit-log" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-ico">🎓</div><div><div class="sb-nm">GMS — PI</div><div class="sb-rl">Tajikistan</div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Grants</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> PI Dashboard</div>
+        <div class="ni" onclick="nav(this,'my-grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'setup-wizard')"><span class="ni-ic">⚙️</span> Setup New Grant</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Monitor</div>
+        <div class="ni" onclick="nav(this,'staff-monitor')"><span class="ni-ic">👥</span> Staff Monitor <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'deadline-requests')"><span class="ni-ic">📅</span> Deadline Requests <span class="ni-bd or">2</span></div>
+        <div class="ni" onclick="nav(this,'reports')"><span class="ni-ic">📄</span> Reports</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">System</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd tl">6</span></div>
+        <div class="ni active" onclick="nav(this,'audit-log')"><span class="ni-ic">🔍</span> Audit Log</div>
+      </div>
+      <div class="sb-foot"><div class="ua">DJ</div><div><div class="un">Dr. Jenkins</div><div class="ur">Principal Investigator</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar"><div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search audit log…"></div><div class="tb-r"><div class="tbi">🔔<span class="tbd">6</span></div><button class="btn btn-sm btn-ol">📥 Export PDF</button><div class="pp"><div class="pav">DJ</div><span style="font-size:13px;font-weight:600">Dr. Jenkins</span></div></div></div>
+      <div class="content">
+        <div class="fb sg"><div><div class="pg-t">Audit Log</div><div class="pg-s">Full tamper-proof record of all actions across your grants</div></div></div>
+        <div class="fbar">
+          <select class="fsel"><option>All Grants</option><option>Agriculture Training</option><option>Water Infrastructure</option></select>
+          <select class="fsel"><option>All Actions</option><option>Uploads</option><option>Submissions</option><option>Approvals</option><option>DL Changes</option><option>Alerts</option></select>
+          <select class="fsel"><option>All Users</option><option>Dr. Jenkins</option><option>A. Karimov</option><option>System</option></select>
+        </div>
+        <div class="card">
+          <div class="ch fb"><div class="ct">All Activity</div><button class="btn btn-sm btn-ol">📥 Export</button></div>
+          <div class="cb">
+            <div class="al-r"><div class="al-t">May 16 · 09:14</div><div class="al-u">A. Karimov</div><div class="al-a">Uploaded <strong>Workshop_Report_v1.pdf</strong> — Agriculture Training</div><div class="al-tag at-u">UPLOAD</div></div>
+            <div class="al-r"><div class="al-t">May 14 · 11:30</div><div class="al-u">Dr. Jenkins</div><div class="al-a">Submitted deadline change request: Workshop Report May 12 → May 25 — awaiting Director approval</div><div class="al-tag at-ch">DL REQUEST</div></div>
+            <div class="al-r"><div class="al-t">May 12 · 08:00</div><div class="al-u">System</div><div class="al-a">Workshop Completion Report — OVERDUE. Level 2 escalation: ORD notified.</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-r"><div class="al-t">May 08 · 11:20</div><div class="al-u">System</div><div class="al-a">Equipment budget line exceeded by $4,200 — Agriculture Training. Level 3 escalation triggered.</div><div class="al-tag at-al">ALERT</div></div>
+            <div class="al-r"><div class="al-t">May 02 · 10:00</div><div class="al-u">Dr. Rashidov</div><div class="al-a">Director APPROVED deadline change: Beneficiary Survey Apr 30 → May 10</div><div class="al-tag at-a">APPROVED</div></div>
+            <div class="al-r"><div class="al-t">May 01 · 14:30</div><div class="al-u">Dr. Rashidov</div><div class="al-a">Director DENIED deadline change: Procurement Review May 5 — "No justification accepted"</div><div class="al-tag at-al">DENIED</div></div>
+            <div class="al-r"><div class="al-t">Mar 31 · 14:10</div><div class="al-u">Dr. Jenkins</div><div class="al-a">Submitted Q1 Narrative Report to ORD + Dean — Agriculture Training</div><div class="al-tag at-s">SUBMIT</div></div>
+            <div class="al-r"><div class="al-t">Mar 28 · 09:30</div><div class="al-u">Prof. Alimov</div><div class="al-a">Approved Q1 Narrative Report — Agriculture Training</div><div class="al-tag at-a">APPROVE</div></div>
+            <div class="al-r"><div class="al-t">Jan 15 · 10:00</div><div class="al-u">Dr. Jenkins</div><div class="al-a">Grant workspace published — Agriculture Training GMS-2023-001 · 14 tasks generated · Deadlines locked</div><div class="al-tag" style="background:var(--ok-l);color:var(--ok)">PUBLISH</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function goTo(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sc-' + name);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+  if (name === 'home') setTimeout(initCharts, 80);
+  if (name === 'workspace') setTimeout(initWsChart, 80);
+}
+
+function nav(el, name) {
+  if (el) {
+    const sb = el.closest('.sidebar');
+    if (sb) sb.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+  goTo(name);
+}
+
+function switchTab(prefix, name, el) {
+  document.getElementById(prefix + '-tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="' + prefix + '-tab-"]').forEach(p => p.classList.remove('active'));
+  const pane = document.getElementById(prefix + '-tab-' + name);
+  if (pane) pane.classList.add('active');
+  if (name === 'financial') setTimeout(initWsChart, 50);
+}
+
+function showWizStep(n) {
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById('wz-s' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+  }
+  document.querySelectorAll('.ws').forEach((s, i) => {
+    s.classList.remove('done','curr');
+    const d = s.querySelector('.wd'), l = s.querySelector('.wsl');
+    d.classList.remove('done','curr'); l.classList.remove('done','curr');
+    if (i + 1 < n) { s.classList.add('done'); d.classList.add('done'); l.classList.add('done'); d.textContent = '✓'; }
+    else if (i + 1 === n) { s.classList.add('curr'); d.classList.add('curr'); l.classList.add('curr'); d.textContent = i + 1; }
+    else { d.textContent = i + 1; }
+  });
+  // update step nav buttons
+  const navBtns = document.querySelectorAll('.wiz-wrap > div:last-child .btn');
+  navBtns.forEach((b,i) => {
+    b.className = b.className.replace('btn-pr','btn-ol');
+    if (i + 1 === n) b.className = b.className.replace('btn-ol','btn-pr');
+  });
+  window.scrollTo(0,0);
+}
+
+function showNewRequest() {
+  const f = document.getElementById('new-req-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  if (f.style.display === 'block') f.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Charts
+const C = { pr:'#0f766e', ok:'#059669', wa:'#d97706', er:'#dc2626', bl:'#1d4ed8', grid:'#f1f5f9', tx2:'#475569' };
+const base = () => ({ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:'#0f172a', titleFont:{family:'DM Sans',size:12}, bodyFont:{family:'DM Sans',size:11}, padding:10, cornerRadius:8 }}, scales:{ x:{ grid:{color:C.grid,drawBorder:false}, ticks:{font:{family:'DM Sans',size:11},color:C.tx2}}, y:{ grid:{color:C.grid,drawBorder:false}, ticks:{font:{family:'DM Sans',size:11},color:C.tx2}}}});
+
+let taskChart, wsChart;
+
+function initCharts() {
+  if (taskChart) taskChart.destroy();
+  const c = document.getElementById('taskChart'); if (!c) return;
+  taskChart = new Chart(c, { type:'bar', data:{ labels:['Dec','Jan','Feb','Mar','Apr','May'], datasets:[
+    { label:'Completed', data:[22,28,24,30,25,18], backgroundColor:C.pr, borderRadius:4 },
+    { label:'Overdue',   data:[1,2,1,2,3,5], backgroundColor:C.er, borderRadius:4 }
+  ]}, options:{ ...base(), plugins:{ ...base().plugins, legend:{ display:true, position:'top', labels:{ font:{family:'DM Sans',size:11}, usePointStyle:true, boxWidth:6, color:C.tx2 }}}}});
+}
+
+function initWsChart() {
+  if (wsChart) wsChart.destroy();
+  const c = document.getElementById('wsChart'); if (!c) return;
+  wsChart = new Chart(c, { type:'line', data:{ labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets:[
+    { label:'Planned', data:[38000,36000,42000,40000,39000,44000,38000,41000,40000,42000,43000,42000], borderColor:C.bl, backgroundColor:'rgba(29,78,216,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 },
+    { label:'Actual',  data:[35200,33800,40100,39600,51600,null,null,null,null,null,null,null], borderColor:C.pr, backgroundColor:'rgba(15,118,110,.07)', fill:true, tension:.4, pointRadius:3.5, borderWidth:2.5 }
+  ]}, options:{ ...base(), plugins:{ ...base().plugins, legend:{ display:true, position:'top', labels:{ font:{family:'DM Sans',size:11}, usePointStyle:true, boxWidth:6, color:C.tx2 }}}}});
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('sc-login').classList.contains('active')) goTo('home');
+});
+
+const obs = new MutationObserver(() => {
+  if (document.getElementById('sc-home')?.classList.contains('active')) initCharts();
+});
+obs.observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+</script>
+</body>
+</html>
