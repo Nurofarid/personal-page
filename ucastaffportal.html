@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Staff Portal — Grant Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4f8;
+  --sb: #111827;
+  --sb2: #1f2937;
+  --sbt: #6b7280;
+  --sbta: #f3f4f6;
+  --sbab: #1e3a5f;
+  --pr: #2563eb;
+  --pr-l: #dbeafe;
+  --pr-g: rgba(37,99,235,0.12);
+  --ok: #059669;
+  --ok-l: #d1fae5;
+  --wa: #d97706;
+  --wa-l: #fef3c7;
+  --er: #dc2626;
+  --er-l: #fee2e2;
+  --or: #ea580c;
+  --or-l: #ffedd5;
+  --sl: #0284c7;
+  --sl-l: #e0f2fe;
+  --tx: #111827;
+  --tx2: #4b5563;
+  --tx3: #9ca3af;
+  --bd: #e5e7eb;
+  --cd: #ffffff;
+  --r: 14px;
+  --sh: 0 1px 3px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.06);
+  --sh2: 0 8px 32px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* ── LOGIN ── */
+#sc-login{
+  background: #0d1117;
+  align-items:center;justify-content:center;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.login-bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.08) 1px, transparent 1px);
+  background-size:50px 50px;
+}
+.login-bg-glow{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+  top:-100px;left:50%;transform:translateX(-50%);
+}
+.login-card{
+  background:#fff;border-radius:20px;padding:48px 44px;width:440px;
+  box-shadow:0 32px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+  position:relative;z-index:1;
+  animation:loginPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes loginPop{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.login-badge{display:inline-flex;align-items:center;gap:7px;background:var(--pr-l);color:var(--pr);padding:5px 13px;border-radius:99px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:22px}
+.login-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--pr),#60a5fa);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;box-shadow:0 8px 28px rgba(37,99,235,.35)}
+.login-card h1{font-size:21px;font-weight:800;letter-spacing:-.4px;margin-bottom:4px}
+.login-card .sub{font-size:13px;color:var(--tx2);margin-bottom:28px}
+.lbl{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:6px}
+.inp{width:100%;padding:12px 16px;border:1.5px solid var(--bd);border-radius:10px;font-family:inherit;font-size:14px;outline:none;transition:all .2s;background:#fafafa;margin-bottom:16px;color:var(--tx)}
+.inp:focus{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--pr),#3b82f6);color:#fff;border:none;border-radius:10px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,.4)}
+.login-hint{text-align:center;margin-top:14px;font-size:12px;color:var(--tx3)}
+.login-hint strong{color:var(--pr)}
+
+/* ── APP SHELL ── */
+.app{display:flex;width:100%;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:232px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-brand{display:flex;align-items:center;gap:10px}
+.sb-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--pr),#60a5fa);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,.4)}
+.sb-name{font-size:13.5px;font-weight:800;color:#fff;line-height:1.2}
+.sb-role{font-size:10.5px;color:var(--sbt);font-weight:400}
+.sb-sec{padding:14px 10px 6px}
+.sb-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sbt);padding:0 8px;margin-bottom:5px}
+.ni{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:9px;color:var(--sbt);font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:1px;position:relative}
+.ni:hover{background:rgba(255,255,255,.06);color:#d1d5db}
+.ni.active{background:var(--sbab);color:#bfdbfe;font-weight:600}
+.ni-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.ni-bd{margin-left:auto;background:var(--er);color:#fff;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.ni-bd.or{background:var(--or)}
+.sb-foot{padding:14px 14px;margin-top:auto;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
+.ua{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pr),#0891b2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:12px;flex-shrink:0}
+.un{font-size:12.5px;font-weight:700;color:#fff}
+.ur{font-size:10.5px;color:var(--sbt)}
+.lb{margin-left:auto;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.07);border:none;color:var(--sbt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.lb:hover{background:rgba(220,38,38,.25);color:#fca5a5}
+
+/* MAIN */
+.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:1px solid var(--bd);padding:0 28px;height:64px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--bd), 0 2px 12px rgba(0,0,0,.04)}
+.tb-search{flex:1;max-width:360px;display:flex;align-items:center;gap:9px;background:var(--bg);border:1.5px solid var(--bd);border-radius:10px;padding:0 14px;height:40px;transition:all .2s}
+.tb-search:focus-within{border-color:var(--pr);background:#fff;box-shadow:0 0 0 3px var(--pr-g)}
+.tb-search input{border:none;background:transparent;font-family:inherit;font-size:13.5px;flex:1;outline:none;color:var(--tx)}
+.tb-r{display:flex;align-items:center;gap:10px;margin-left:auto}
+.tbi{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;position:relative;transition:all .15s}
+.tbi:hover{background:var(--bg)}
+.tbd{position:absolute;top:-5px;right:-5px;background:var(--er);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.pp{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;cursor:pointer;transition:all .15s}
+.pp:hover{background:var(--bg)}
+.pav{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pr),#0891b2);color:#fff;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+.pg-h{margin-bottom:24px}
+.pg-t{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.pg-s{font-size:13px;color:var(--tx2);margin-top:4px}
+
+/* CARDS */
+.card{background:var(--cd);border-radius:var(--r);border:1px solid var(--bd);box-shadow:var(--sh)}
+.card-h{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.card-t{font-size:14px;font-weight:700}
+.card-b{padding:20px}
+.card-b-sm{padding:14px 18px}
+
+/* STAT CARDS */
+.stat{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:20px 22px;box-shadow:var(--sh);position:relative;overflow:hidden;transition:all .2s;cursor:pointer}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.stat.pr::after{background:var(--pr)}.stat.ok::after{background:var(--ok)}.stat.wa::after{background:var(--wa)}.stat.er::after{background:var(--er)}.stat.sl::after{background:var(--sl)}
+.stat-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:10px}
+.stat-val{font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat-val.pr{color:var(--pr)}.stat-val.ok{color:var(--ok)}.stat-val.wa{color:var(--wa)}.stat-val.er{color:var(--er)}.stat-val.sl{color:var(--sl)}
+.stat-sub{font-size:12px;color:var(--tx3);margin-top:6px}
+.stat-ic{position:absolute;top:18px;right:18px;font-size:24px;opacity:.12}
+
+/* TASK CARDS */
+.task-card{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:18px 20px;transition:all .2s;cursor:pointer;box-shadow:var(--sh)}
+.task-card:hover{border-color:var(--pr);box-shadow:0 4px 20px rgba(37,99,235,.1);transform:translateY(-1px)}
+.task-card.overdue{border-left:4px solid var(--er)}
+.task-card.due-soon{border-left:4px solid var(--wa)}
+.task-card.on-track{border-left:4px solid var(--ok)}
+.task-card.done{border-left:4px solid #d1d5db;opacity:.7}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.tc-title{font-size:14px;font-weight:700;line-height:1.3}
+.tc-grant{font-size:11.5px;color:var(--pr);font-weight:600;margin-top:3px}
+.tc-meta{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.tc-mi{font-size:12px;color:var(--tx2)}
+.tc-mi strong{color:var(--tx);font-weight:600}
+.tc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--bd)}
+.ev-req{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px}
+.ev-req.missing{background:var(--er-l);color:#991b1b}
+.ev-req.uploaded{background:var(--ok-l);color:#065f46}
+.ev-req.none{background:#f3f4f6;color:var(--tx3)}
+
+/* BADGES */
+.bx{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.b-r{background:var(--er-l);color:#991b1b}
+.b-y{background:var(--wa-l);color:#92400e}
+.b-g{background:var(--ok-l);color:#065f46}
+.b-b{background:var(--pr-l);color:#1e3a8a}
+.b-gr{background:#f3f4f6;color:#4b5563}
+.b-sl{background:var(--sl-l);color:#075985}
+.b-or{background:var(--or-l);color:#9a3412}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 17px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-xs{padding:4px 9px;font-size:11.5px;border-radius:7px}
+.btn-pr{background:var(--pr);color:#fff}.btn-pr:hover{background:#1d4ed8;box-shadow:0 4px 14px rgba(37,99,235,.35)}
+.btn-ok{background:var(--ok);color:#fff}.btn-ok:hover{background:#047857}
+.btn-ol{background:#fff;color:var(--tx);border:1.5px solid var(--bd)}.btn-ol:hover{background:var(--bg);border-color:#c8d0e0}
+.btn-er{background:var(--er);color:#fff}.btn-er:hover{background:#b91c1c}
+.btn-or{background:var(--or);color:#fff}.btn-or:hover{background:#c2410c}
+.btn-sl{background:var(--sl);color:#fff}.btn-sl:hover{background:#0369a1}
+.btn-gh{background:transparent;color:var(--tx2);border:none}.btn-gh:hover{background:var(--bg)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.g-tasks{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 16px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);background:#f9fafb;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody td{padding:13px 16px;border-bottom:1px solid #f3f4f6;font-size:13.5px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .1s}
+tbody tr:hover{background:#fafbff}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+
+/* PROGRESS */
+.pb{background:#e5e7eb;border-radius:99px;height:7px;overflow:hidden}
+.pf{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.pf-pr{background:var(--pr)}.pf-ok{background:var(--ok)}.pf-wa{background:var(--wa)}.pf-er{background:var(--er)}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--bd);margin-bottom:22px}
+.tab{padding:10px 20px;font-size:13.5px;font-weight:600;color:var(--tx2);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--pr);border-bottom-color:var(--pr)}
+.tp{display:none}.tp.active{display:block}
+
+/* UPLOAD ZONE */
+.uz{border:2px dashed var(--bd);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s}
+.uz:hover{border-color:var(--pr);background:#f0f5ff}
+.uz-ic{font-size:32px;margin-bottom:10px}
+.uz-lbl{font-size:13.5px;font-weight:700;color:var(--tx2)}
+.uz-hint{font-size:12px;color:var(--tx3);margin-top:4px}
+.file-item{display:flex;align-items:center;gap:12px;padding:11px 16px;background:#f9fafb;border:1px solid var(--bd);border-radius:10px;margin-bottom:8px}
+.file-item-name{flex:1;font-size:13px;font-weight:600}
+.file-item-meta{font-size:11.5px;color:var(--tx3)}
+
+/* TASK DETAIL */
+.td-section{background:#fff;border-radius:var(--r);border:1px solid var(--bd);margin-bottom:16px;overflow:hidden;box-shadow:var(--sh)}
+.td-sec-head{padding:14px 20px;background:#f9fafb;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.td-sec-num{width:26px;height:26px;border-radius:50%;background:var(--pr);color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.td-sec-title{font-size:13.5px;font-weight:700}
+.td-sec-body{padding:20px}
+.req-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:9px;border:1.5px solid var(--bd);margin-bottom:8px;transition:all .15s}
+.req-item.done{border-color:var(--ok);background:var(--ok-l)}
+.req-item.missing{border-color:var(--er);background:var(--er-l)}
+.req-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.req-check.done{background:var(--ok);color:#fff}
+.req-check.missing{background:var(--er);color:#fff}
+.req-check.empty{background:#e5e7eb;color:#9ca3af}
+
+/* SUBMIT CHAIN */
+.chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chain-node{background:var(--pr-l);border:1.5px solid #bfdbfe;border-radius:9px;padding:8px 14px;font-size:12.5px;font-weight:700;color:var(--pr)}
+.chain-arr{font-size:18px;color:var(--tx3)}
+
+/* NOTIF */
+.notif{display:flex;gap:14px;padding:16px 20px;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background .1s}
+.notif:hover{background:#fafbff}
+.notif.unread{background:#eff6ff}
+.notif-ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.notif-t{font-size:13.5px;font-weight:700}
+.notif-d{font-size:12.5px;color:var(--tx2);margin-top:3px;line-height:1.4}
+.notif-m{font-size:11.5px;color:var(--tx3);margin-top:5px}
+.ud{width:8px;height:8px;border-radius:50%;background:var(--pr);flex-shrink:0;margin-top:8px}
+
+/* DEADLINE DISPLAY (read-only) */
+.deadline-locked{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f9fafb;border:1.5px solid var(--bd);border-radius:9px;font-size:13px}
+.lock-ic{font-size:16px;color:var(--tx3)}
+
+/* ALERT BANNER */
+.alert-b{border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.alert-b.er{background:var(--er-l);border:1px solid #fca5a5}
+.alert-b.wa{background:var(--wa-l);border:1px solid #fcd34d}
+.alert-b.ok{background:var(--ok-l);border:1px solid #6ee7b7}
+.alert-b p{font-size:13.5px;font-weight:600}
+.alert-b small{font-size:12px;color:var(--tx2);display:block;margin-top:2px}
+
+/* GRANT INFO CARD */
+.grant-info{background:linear-gradient(135deg,#1e3a5f,#1e40af);border-radius:var(--r);padding:22px 26px;color:#fff;margin-bottom:22px}
+.gi-name{font-size:18px;font-weight:800;letter-spacing:-.3px;margin-bottom:6px}
+.gi-code{font-size:11.5px;color:#93c5fd;font-family:'JetBrains Mono',monospace;margin-bottom:16px}
+.gi-meta{display:flex;gap:24px;flex-wrap:wrap}
+.gi-mi span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#93c5fd;display:block;margin-bottom:3px}
+.gi-mi strong{font-size:13.5px;font-weight:700;color:#fff}
+
+/* MISC */
+.fb{display:flex;align-items:center;justify-content:space-between}
+.fg{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.div{height:1px;background:var(--bd);margin:18px 0}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.fsel{padding:8px 12px;border:1.5px solid var(--bd);border-radius:9px;font-family:inherit;font-size:13px;background:#fff;color:var(--tx);outline:none;cursor:pointer}
+.fsel:focus{border-color:var(--pr)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .3s ease both}
+.fu:nth-child(1){animation-delay:.04s}.fu:nth-child(2){animation-delay:.08s}
+.fu:nth-child(3){animation-delay:.12s}.fu:nth-child(4){animation-delay:.16s}
+.fu:nth-child(5){animation-delay:.20s}.fu:nth-child(6){animation-delay:.24s}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="sc-login" class="screen active">
+  <div class="login-bg-grid"></div>
+  <div class="login-bg-glow"></div>
+  <div class="login-card">
+    <div class="login-badge">👤 Staff Portal</div>
+    <div class="login-icon">🎓</div>
+    <h1>Grant Management System</h1>
+    <p class="sub">Staff Portal — University of Central Asia</p>
+    <label class="lbl">Email Address</label>
+    <input class="inp" type="email" value="a.karimov@university.tj" placeholder="your@university.edu">
+    <label class="lbl">Password</label>
+    <input class="inp" type="password" value="password">
+    <button class="btn-login" onclick="goTo('home')">Sign In →</button>
+    <div class="login-hint">Logging in as <strong>A. Karimov</strong> · Project Staff · Tajikistan</div>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="sc-home" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head">
+        <div class="sb-brand">
+          <div class="sb-ico">🎓</div>
+          <div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div>
+        </div>
+      </div>
+      <div class="sb-sec">
+        <div class="sb-lbl">My Work</div>
+        <div class="ni active" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec">
+        <div class="sb-lbl">Alerts</div>
+        <div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div>
+      </div>
+      <div class="sb-foot">
+        <div class="ua">AK</div>
+        <div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div>
+        <button class="lb" onclick="goTo('login')">⏏</button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search tasks, grants…"></div>
+        <div class="tb-r">
+          <div class="tbi" onclick="nav(document.querySelector('.ni[onclick*=notifications]'),'notifications')">🔔<span class="tbd">5</span></div>
+          <div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span><span style="color:var(--tx3);margin-left:2px">▾</span></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="pg-h fu">
+          <div class="pg-t">Good morning, Askar 👋</div>
+          <div class="pg-s">Here's your work overview for today · Tajikistan</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="g5" style="margin-bottom:22px">
+          <div class="stat pr fu" onclick="nav(document.querySelector('.ni[onclick*=tasks]'),'tasks')"><div class="stat-ic">📋</div><div class="stat-lbl">Assigned Tasks</div><div class="stat-val pr">8</div><div class="stat-sub">Across 2 grants</div></div>
+          <div class="stat er fu" onclick="nav(document.querySelector('.ni[onclick*=tasks]'),'tasks')"><div class="stat-ic">⚠️</div><div class="stat-lbl">Overdue</div><div class="stat-val er">2</div><div class="stat-sub">Immediate attention</div></div>
+          <div class="stat wa fu"><div class="stat-ic">📅</div><div class="stat-lbl">Due This Week</div><div class="stat-val wa">3</div><div class="stat-sub">Plan ahead</div></div>
+          <div class="stat ok fu"><div class="stat-ic">✅</div><div class="stat-lbl">Completed</div><div class="stat-val ok">14</div><div class="stat-sub">This month</div></div>
+          <div class="stat sl fu"><div class="stat-ic">📸</div><div class="stat-lbl">Evidence Missing</div><div class="stat-val sl">2</div><div class="stat-sub">Blocking submission</div></div>
+        </div>
+
+        <!-- Today's tasks + Grant info side by side -->
+        <div class="g2" style="margin-bottom:22px">
+          <!-- Today's Tasks -->
+          <div class="fu">
+            <div style="font-size:14px;font-weight:800;margin-bottom:12px">📌 My Tasks Today</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div class="task-card overdue" onclick="goTo('task-detail')">
+                <div class="tc-top">
+                  <div><div class="tc-title">Submit Workshop Completion Report</div><div class="tc-grant">Agriculture Training Program</div></div>
+                  <span class="bx b-r">Overdue</span>
+                </div>
+                <div class="tc-meta">
+                  <div class="tc-mi">📅 Due: <strong style="color:var(--er)">May 12 — 4 days ago</strong></div>
+                  <div class="tc-mi">👤 Submit to: <strong>ORD + Dean</strong></div>
+                </div>
+                <div class="tc-foot">
+                  <span class="ev-req missing">📸 Evidence Missing</span>
+                  <button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('task-detail')">Open Task →</button>
+                </div>
+              </div>
+              <div class="task-card due-soon" onclick="goTo('task-detail')">
+                <div class="tc-top">
+                  <div><div class="tc-title">Upload Field Visit Photos</div><div class="tc-grant">Water Infrastructure Grant</div></div>
+                  <span class="bx b-y">Due Soon</span>
+                </div>
+                <div class="tc-meta">
+                  <div class="tc-mi">📅 Due: <strong style="color:var(--wa)">May 18 — 2 days</strong></div>
+                  <div class="tc-mi">👤 Submit to: <strong>ORD</strong></div>
+                </div>
+                <div class="tc-foot">
+                  <span class="ev-req missing">📸 Evidence Missing</span>
+                  <button class="btn btn-sm btn-or" onclick="event.stopPropagation();goTo('task-detail')">Upload Now →</button>
+                </div>
+              </div>
+              <div class="task-card on-track" onclick="goTo('task-detail')">
+                <div class="tc-top">
+                  <div><div class="tc-title">Quarterly Activity Report</div><div class="tc-grant">Agriculture Training Program</div></div>
+                  <span class="bx b-b">In Progress</span>
+                </div>
+                <div class="tc-meta">
+                  <div class="tc-mi">📅 Due: <strong>May 28</strong></div>
+                  <div class="tc-mi">👤 Submit to: <strong>Dean + ORD</strong></div>
+                </div>
+                <div class="tc-foot">
+                  <span class="ev-req none">📄 No Evidence Required</span>
+                  <button class="btn btn-sm btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Continue →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Grants + Reports Due -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="fu">
+              <div style="font-size:14px;font-weight:800;margin-bottom:12px">📋 My Grants</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div class="grant-info" style="padding:18px 22px;cursor:pointer" onclick="nav(document.querySelector('.ni[onclick*=grants]'),'grants')">
+                  <div class="gi-name">Agriculture Training Program</div>
+                  <div class="gi-code">GMS-2023-001 · USAID</div>
+                  <div class="gi-meta">
+                    <div class="gi-mi"><span>PI</span><strong>Dr. Jenkins</strong></div>
+                    <div class="gi-mi"><span>My Tasks</span><strong>5</strong></div>
+                    <div class="gi-mi"><span>Status</span><strong style="color:#fca5a5">At Risk</strong></div>
+                  </div>
+                </div>
+                <div style="background:linear-gradient(135deg,#064e3b,#059669);border-radius:var(--r);padding:18px 22px;color:#fff;cursor:pointer" onclick="nav(document.querySelector('.ni[onclick*=grants]'),'grants')">
+                  <div class="gi-name">Water Infrastructure Grant</div>
+                  <div class="gi-code">GMS-2023-004 · World Bank</div>
+                  <div class="gi-meta">
+                    <div class="gi-mi"><span>PI</span><strong>Dr. Jenkins</strong></div>
+                    <div class="gi-mi"><span>My Tasks</span><strong>3</strong></div>
+                    <div class="gi-mi"><span>Status</span><strong style="color:#6ee7b7">Active</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="fu">
+              <div style="font-size:14px;font-weight:800;margin-bottom:12px">📄 Reports Due Soon</div>
+              <div class="card">
+                <div style="display:flex;flex-direction:column">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #f3f4f6">
+                    <span style="font-size:20px">🔴</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:700">Workshop Completion Report</div><div style="font-size:11.5px;color:var(--er);font-weight:600">OVERDUE — submit immediately</div></div>
+                    <button class="btn btn-sm btn-er" onclick="goTo('task-detail')">Open</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #f3f4f6">
+                    <span style="font-size:20px">🟡</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:700">Field Visit Documentation</div><div style="font-size:11.5px;color:var(--wa)">Due May 18 — 2 days left</div></div>
+                    <button class="btn btn-sm btn-or" onclick="goTo('task-detail')">Open</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 16px">
+                    <span style="font-size:20px">🟢</span>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:700">Quarterly Activity Report</div><div style="font-size:11.5px;color:var(--tx2)">Due May 28 — 12 days left</div></div>
+                    <button class="btn btn-sm btn-ol" onclick="goTo('task-detail')">Open</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TASKS LIST ══════════ -->
+<div id="sc-tasks" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni active" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search tasks…"></div>
+        <div class="tb-r"><div class="tbi" onclick="nav(document.querySelector('.ni[onclick*=notifications]'),'notifications')">🔔<span class="tbd">5</span></div><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb pg-h fu">
+          <div><div class="pg-t">My Tasks</div><div class="pg-s">All tasks assigned to you across grants</div></div>
+        </div>
+        <div class="fbar">
+          <select class="fsel"><option>All Status</option><option>Overdue</option><option>Due Soon</option><option>In Progress</option><option>Completed</option></select>
+          <select class="fsel"><option>All Grants</option><option>Agriculture Training</option><option>Water Infrastructure</option></select>
+          <select class="fsel"><option>All Types</option><option>Report</option><option>Evidence Upload</option><option>Activity</option></select>
+        </div>
+
+        <!-- Overdue -->
+        <div style="font-size:13px;font-weight:800;color:var(--er);margin-bottom:10px;display:flex;align-items:center;gap:8px">🔴 Overdue <span class="bx b-r">2</span></div>
+        <div class="g-tasks" style="margin-bottom:20px">
+          <div class="task-card overdue fu" onclick="goTo('task-detail')">
+            <div class="tc-top"><div><div class="tc-title">Submit Workshop Completion Report</div><div class="tc-grant">Agriculture Training Program</div></div><span class="bx b-r">4 days overdue</span></div>
+            <div class="tc-meta"><div class="tc-mi">📅 Was due: <strong style="color:var(--er)">May 12</strong></div><div class="tc-mi">👤 Submit to: <strong>ORD + Dean</strong></div></div>
+            <div class="tc-foot"><span class="ev-req missing">📸 2 Evidence Missing</span><button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('task-detail')">Open Task</button></div>
+          </div>
+          <div class="task-card overdue fu" onclick="goTo('task-detail')">
+            <div class="tc-top"><div><div class="tc-title">Beneficiary Data Collection</div><div class="tc-grant">Agriculture Training Program</div></div><span class="bx b-r">1 day overdue</span></div>
+            <div class="tc-meta"><div class="tc-mi">📅 Was due: <strong style="color:var(--er)">May 15</strong></div><div class="tc-mi">👤 Submit to: <strong>PI — Dr. Jenkins</strong></div></div>
+            <div class="tc-foot"><span class="ev-req uploaded">📸 Evidence Uploaded</span><button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('task-detail')">Open Task</button></div>
+          </div>
+        </div>
+
+        <!-- Due Soon -->
+        <div style="font-size:13px;font-weight:800;color:var(--wa);margin-bottom:10px;display:flex;align-items:center;gap:8px">🟡 Due This Week <span class="bx b-y">3</span></div>
+        <div class="g-tasks" style="margin-bottom:20px">
+          <div class="task-card due-soon fu" onclick="goTo('task-detail')">
+            <div class="tc-top"><div><div class="tc-title">Upload Field Visit Photos</div><div class="tc-grant">Water Infrastructure Grant</div></div><span class="bx b-y">2 days</span></div>
+            <div class="tc-meta"><div class="tc-mi">📅 Due: <strong style="color:var(--wa)">May 18</strong></div><div class="tc-mi">👤 Submit to: <strong>ORD</strong></div></div>
+            <div class="tc-foot"><span class="ev-req missing">📸 Photos Required</span><button class="btn btn-sm btn-or" onclick="event.stopPropagation();goTo('task-detail')">Upload</button></div>
+          </div>
+          <div class="task-card due-soon fu" onclick="goTo('task-detail')">
+            <div class="tc-top"><div><div class="tc-title">Training Attendance Sheet</div><div class="tc-grant">Agriculture Training Program</div></div><span class="bx b-y">3 days</span></div>
+            <div class="tc-meta"><div class="tc-mi">📅 Due: <strong style="color:var(--wa)">May 19</strong></div><div class="tc-mi">👤 Submit to: <strong>PI</strong></div></div>
+            <div class="tc-foot"><span class="ev-req none">📄 No Evidence Required</span><button class="btn btn-sm btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></div>
+          </div>
+          <div class="task-card due-soon fu" onclick="goTo('task-detail')">
+            <div class="tc-top"><div><div class="tc-title">Procurement Request Form</div><div class="tc-grant">Water Infrastructure Grant</div></div><span class="bx b-y">5 days</span></div>
+            <div class="tc-meta"><div class="tc-mi">📅 Due: <strong style="color:var(--wa)">May 21</strong></div><div class="tc-mi">👤 Submit to: <strong>Procurement + ORD</strong></div></div>
+            <div class="tc-foot"><span class="ev-req none">📄 No Evidence Required</span><button class="btn btn-sm btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></div>
+          </div>
+        </div>
+
+        <!-- Upcoming -->
+        <div style="font-size:13px;font-weight:800;color:var(--tx2);margin-bottom:10px;display:flex;align-items:center;gap:8px">🟢 Upcoming <span class="bx b-gr">3</span></div>
+        <div class="card fu">
+          <div class="tw">
+            <table>
+              <thead><tr><th>Task</th><th>Grant</th><th>Due Date</th><th>Evidence</th><th>Status</th><th>Submit To</th><th></th></tr></thead>
+              <tbody>
+                <tr onclick="goTo('task-detail')" style="cursor:pointer"><td><strong>Quarterly Activity Report</strong></td><td style="font-size:12.5px">Agriculture Training</td><td>May 28</td><td><span class="bx b-or">Required</span></td><td><span class="bx b-b">In Progress</span></td><td style="font-size:12px">Dean + ORD</td><td><button class="btn btn-xs btn-pr" onclick="event.stopPropagation();goTo('task-detail')">Open</button></td></tr>
+                <tr onclick="goTo('task-detail')" style="cursor:pointer"><td><strong>Phase 2 Kickoff Docs</strong></td><td style="font-size:12.5px">Agriculture Training</td><td>Jun 1</td><td><span class="bx b-gr">None</span></td><td><span class="bx b-gr">Not Started</span></td><td style="font-size:12px">PI</td><td><button class="btn btn-xs btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></td></tr>
+                <tr onclick="goTo('task-detail')" style="cursor:pointer"><td><strong>Site Survey Report</strong></td><td style="font-size:12.5px">Water Infrastructure</td><td>Jun 10</td><td><span class="bx b-or">Required</span></td><td><span class="bx b-gr">Not Started</span></td><td style="font-size:12px">ORD</td><td><button class="btn btn-xs btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Completed -->
+        <div style="font-size:13px;font-weight:800;color:var(--ok);margin:20px 0 10px;display:flex;align-items:center;gap:8px">✅ Completed <span class="bx b-g">14 this month</span></div>
+        <div class="card fu">
+          <div class="tw">
+            <table>
+              <thead><tr><th>Task</th><th>Grant</th><th>Completed</th><th>On Time</th><th>Evidence</th><th>Approved By</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Q1 Narrative Report</strong></td><td style="font-size:12.5px">Agriculture Training</td><td>Mar 30</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>Prof. Alimov</td></tr>
+                <tr><td><strong>Budget Justification Q1</strong></td><td style="font-size:12.5px">Agriculture Training</td><td>Mar 25</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-gr">N/A</span></td><td>Dr. Jenkins</td></tr>
+                <tr><td><strong>Team Meeting Minutes</strong></td><td style="font-size:12.5px">Water Infrastructure</td><td>Mar 15</td><td><span class="bx b-g">On Time</span></td><td><span class="bx b-g">✓ Uploaded</span></td><td>ORD Office</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TASK DETAIL ══════════ -->
+<div id="sc-task-detail" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni active" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">5</span></div><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <button class="btn btn-sm btn-ol" onclick="goTo('tasks')">← Back to Tasks</button>
+          <span class="bx b-r">Overdue — 4 days</span>
+          <span class="bx b-r">Evidence Missing</span>
+        </div>
+
+        <div class="alert-b er" style="margin-bottom:20px">
+          <span style="font-size:24px">🔴</span>
+          <div><p style="color:#991b1b">This task is overdue — you cannot submit until all required evidence is uploaded</p><small>Deadline was May 12. Upload missing evidence below to unlock the Submit button.</small></div>
+        </div>
+
+        <!-- Section 1: Task Information -->
+        <div class="td-section fu">
+          <div class="td-sec-head"><div class="td-sec-num">1</div><div class="td-sec-title">Task Information</div></div>
+          <div class="td-sec-body">
+            <div class="g2">
+              <div>
+                <div style="font-size:18px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px">Submit Workshop Completion Report</div>
+                <div style="font-size:13px;color:var(--tx2);margin-bottom:16px;line-height:1.6">Complete and submit the full workshop completion report including attendance, outcomes, lessons learned, and photographic evidence from the 3-day regional training workshop held May 8–10, 2025.</div>
+                <div class="fg">
+                  <div style="font-size:12.5px;color:var(--tx2)">🔗 Grant: <strong style="color:var(--pr)">Agriculture Training Program</strong></div>
+                  <div style="font-size:12.5px;color:var(--tx2)">📁 Category: <strong>Activity Report</strong></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div class="deadline-locked">
+                  <span class="lock-ic">🔒</span>
+                  <div style="flex:1"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:2px">Deadline — Set by PI, locked by Director</div><div style="font-size:14px;font-weight:700;color:var(--er)">May 12, 2025 — OVERDUE</div></div>
+                </div>
+                <div style="padding:10px 14px;background:#f9fafb;border:1.5px solid var(--bd);border-radius:9px;font-size:12px;color:var(--tx3)">⚠️ Deadlines are locked. Only Directors can modify them. Contact your PI if you need an extension.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Requirements -->
+        <div class="td-section fu">
+          <div class="td-sec-head"><div class="td-sec-num">2</div><div class="td-sec-title">Task Requirements — What Must Be Submitted</div></div>
+          <div class="td-sec-body">
+            <div class="req-item done"><div class="req-check done">✓</div><div style="flex:1"><strong style="font-size:13px">Written completion report</strong><br><span style="font-size:12px;color:var(--ok)">Uploaded: Workshop_Report_Draft_v1.pdf</span></div><span class="bx b-g">✓ Uploaded</span></div>
+            <div class="req-item missing"><div class="req-check missing">!</div><div style="flex:1"><strong style="font-size:13px">Workshop photos (min. 5 photos)</strong><br><span style="font-size:12px;color:var(--er)">Not uploaded — required before submission</span></div><span class="bx b-r">Missing</span></div>
+            <div class="req-item missing"><div class="req-check missing">!</div><div style="flex:1"><strong style="font-size:13px">Signed attendance sheet</strong><br><span style="font-size:12px;color:var(--er)">Not uploaded — required before submission</span></div><span class="bx b-r">Missing</span></div>
+            <div class="req-item done"><div class="req-check done">✓</div><div style="flex:1"><strong style="font-size:13px">Budget summary for workshop</strong><br><span style="font-size:12px;color:var(--ok)">Uploaded: Budget_Summary.xlsx</span></div><span class="bx b-g">✓ Uploaded</span></div>
+          </div>
+        </div>
+
+        <!-- Section 3: Evidence Upload -->
+        <div class="td-section fu">
+          <div class="td-sec-head"><div class="td-sec-num">3</div><div class="td-sec-title">Evidence Upload — Proof of Completion</div><span class="bx b-r" style="margin-left:auto">2 Items Missing</span></div>
+          <div class="td-sec-body">
+            <div class="alert-b er" style="margin-bottom:16px"><span style="font-size:20px">⚠️</span><div><p style="color:#991b1b">Upload the missing evidence below to unlock the Submit button</p></div></div>
+            <div class="g2" style="margin-bottom:16px">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--er);margin-bottom:8px">📸 Missing: Workshop Photos</div>
+                <div class="uz">
+                  <div class="uz-ic">📷</div>
+                  <div class="uz-lbl">Upload Workshop Photos</div>
+                  <div class="uz-hint">JPG, PNG · Min. 5 photos · Max 20MB</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--er);margin-bottom:8px">📋 Missing: Attendance Sheet</div>
+                <div class="uz">
+                  <div class="uz-ic">📋</div>
+                  <div class="uz-lbl">Upload Attendance Sheet</div>
+                  <div class="uz-hint">PDF, Excel, Word</div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:12px;font-weight:700;color:var(--ok);margin-bottom:8px">✅ Already Uploaded</div>
+            <div class="file-item"><span style="font-size:20px">📄</span><div style="flex:1"><div class="file-item-name">Workshop_Report_Draft_v1.pdf</div><div class="file-item-meta">Uploaded May 14, 2025 · 2.4 MB</div></div><span class="bx b-g">✓</span><button class="btn btn-xs btn-ol">View</button></div>
+            <div class="file-item"><span style="font-size:20px">📊</span><div style="flex:1"><div class="file-item-name">Budget_Summary.xlsx</div><div class="file-item-meta">Uploaded May 14, 2025 · 184 KB</div></div><span class="bx b-g">✓</span><button class="btn btn-xs btn-ol">View</button></div>
+          </div>
+        </div>
+
+        <!-- Section 4: Submit -->
+        <div class="td-section fu">
+          <div class="td-sec-head"><div class="td-sec-num">4</div><div class="td-sec-title">Submit Task</div></div>
+          <div class="td-sec-body">
+            <div style="margin-bottom:16px">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);margin-bottom:10px">This task will be submitted to:</div>
+              <div class="chain">
+                <div class="chain-node">A. Karimov (You)</div>
+                <div class="chain-arr">→</div>
+                <div class="chain-node">Submit</div>
+                <div class="chain-arr">→</div>
+                <div class="chain-node">ORD Office</div>
+                <div class="chain-arr">→</div>
+                <div class="chain-node">Dean / Supervisor</div>
+                <div class="chain-arr">→</div>
+                <div class="chain-node" style="background:var(--ok-l);border-color:#6ee7b7;color:var(--ok)">✅ Approved</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;background:#f9fafb;border-radius:9px;margin-bottom:16px">
+              <textarea style="width:100%;border:none;background:transparent;font-family:inherit;font-size:13.5px;height:80px;resize:none;outline:none;color:var(--tx)" placeholder="Add a note for the reviewer (optional)…"></textarea>
+            </div>
+
+            <!-- Checklist before submit -->
+            <div style="margin-bottom:16px;padding:14px 18px;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px">
+              <div style="font-size:12.5px;font-weight:700;color:var(--er);margin-bottom:8px">⛔ Submit Locked — Complete All Items First:</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="color:var(--ok)">✅</span> Written report uploaded</div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="color:var(--er)">❌</span> Workshop photos <strong style="color:var(--er)">— missing</strong></div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="color:var(--er)">❌</span> Signed attendance sheet <strong style="color:var(--er)">— missing</strong></div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:13px"><span style="color:var(--ok)">✅</span> Budget summary uploaded</div>
+              </div>
+            </div>
+            <button class="btn btn-pr" style="width:100%;padding:14px;font-size:14px;opacity:.4;cursor:not-allowed" disabled>🔒 Submit Task — Upload Missing Evidence First</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MY GRANTS ══════════ -->
+<div id="sc-grants" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni active" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search grants…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">5</span></div><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="pg-h fu"><div class="pg-t">My Grants</div><div class="pg-s">Grants you are assigned to · Read-only overview</div></div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Grant 1 -->
+          <div class="card fu" style="cursor:pointer" onclick="goTo('grant-view')">
+            <div style="padding:22px 26px">
+              <div class="fb" style="margin-bottom:16px">
+                <div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.3px">Agriculture Training Program</div>
+                  <div style="font-size:12px;color:var(--tx2);font-family:'JetBrains Mono',monospace;margin-top:3px">GMS-2023-001 · USAID</div>
+                </div>
+                <div class="fg"><span class="bx b-r">At Risk</span><button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('grant-view')">View Grant →</button></div>
+              </div>
+              <div style="display:flex;gap:28px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:16px">
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">PI</div><strong>Dr. Jenkins</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Donor</div><strong>USAID</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Period</div><strong>Jan 2023 – Dec 2025</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">My Tasks</div><strong style="color:var(--pr)">5 tasks</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">My Overdue</div><strong style="color:var(--er)">2 overdue</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Next Deadline</div><strong style="color:var(--er)">May 12 — OVERDUE</strong></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="font-size:12px;color:var(--tx2);font-weight:600">Grant Progress:</span>
+                <div class="pb" style="flex:1"><div class="pf pf-wa" style="width:62%"></div></div>
+                <span style="font-size:12.5px;font-weight:700;color:var(--wa)">62% budget spent</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grant 2 -->
+          <div class="card fu" style="cursor:pointer" onclick="goTo('grant-view')">
+            <div style="padding:22px 26px">
+              <div class="fb" style="margin-bottom:16px">
+                <div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.3px">Water Infrastructure Grant</div>
+                  <div style="font-size:12px;color:var(--tx2);font-family:'JetBrains Mono',monospace;margin-top:3px">GMS-2023-004 · World Bank</div>
+                </div>
+                <div class="fg"><span class="bx b-g">Active</span><button class="btn btn-sm btn-ok" onclick="event.stopPropagation();goTo('grant-view')">View Grant →</button></div>
+              </div>
+              <div style="display:flex;gap:28px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:16px">
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">PI</div><strong>Dr. Jenkins</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Donor</div><strong>World Bank</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Period</div><strong>Mar 2023 – Mar 2026</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">My Tasks</div><strong style="color:var(--pr)">3 tasks</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">My Overdue</div><strong style="color:var(--ok)">None</strong></div>
+                <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--tx3);margin-bottom:3px">Next Deadline</div><strong style="color:var(--wa)">May 18 — 2 days</strong></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="font-size:12px;color:var(--tx2);font-weight:600">Grant Progress:</span>
+                <div class="pb" style="flex:1"><div class="pf pf-ok" style="width:45%"></div></div>
+                <span style="font-size:12.5px;font-weight:700;color:var(--ok)">45% budget spent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GRANT VIEW (read-only) ══════════ -->
+<div id="sc-grant-view" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni active" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search within grant…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">5</span></div><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <button class="btn btn-sm btn-ol" onclick="goTo('grants')">← My Grants</button>
+          <span class="bx b-r">At Risk</span>
+          <span style="font-size:12px;color:var(--tx3)">Read-only — contact your PI for changes</span>
+        </div>
+        <div class="grant-info" style="margin-bottom:20px">
+          <div class="gi-name">Agriculture Training Program</div>
+          <div class="gi-code">GMS-2023-001 · USAID · Tajikistan</div>
+          <div class="gi-meta">
+            <div class="gi-mi"><span>PI</span><strong>Dr. Jenkins</strong></div>
+            <div class="gi-mi"><span>Period</span><strong>Jan 2023 – Dec 2025</strong></div>
+            <div class="gi-mi"><span>Total Budget</span><strong>$485,000</strong></div>
+            <div class="gi-mi"><span>Status</span><strong style="color:#fca5a5">At Risk</strong></div>
+            <div class="gi-mi"><span>Country</span><strong>🇹🇯 Tajikistan</strong></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="gv-tabs">
+          <div class="tab active" onclick="switchTab('gv','my-tasks',this)">My Tasks</div>
+          <div class="tab" onclick="switchTab('gv','overview',this)">Grant Overview</div>
+          <div class="tab" onclick="switchTab('gv','documents',this)">Documents</div>
+        </div>
+
+        <!-- My Tasks tab -->
+        <div id="gv-tab-my-tasks" class="tp active">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="task-card overdue" onclick="goTo('task-detail')">
+              <div class="tc-top"><div><div class="tc-title">Submit Workshop Completion Report</div></div><span class="bx b-r">Overdue</span></div>
+              <div class="tc-meta"><div class="tc-mi">📅 <strong style="color:var(--er)">May 12 — OVERDUE</strong></div><div class="tc-mi">Submit to: <strong>ORD + Dean</strong></div></div>
+              <div class="tc-foot"><span class="ev-req missing">📸 Evidence Missing</span><button class="btn btn-sm btn-pr" onclick="event.stopPropagation();goTo('task-detail')">Open</button></div>
+            </div>
+            <div class="task-card due-soon" onclick="goTo('task-detail')">
+              <div class="tc-top"><div><div class="tc-title">Training Attendance Sheet</div></div><span class="bx b-y">3 days</span></div>
+              <div class="tc-meta"><div class="tc-mi">📅 <strong style="color:var(--wa)">May 19</strong></div><div class="tc-mi">Submit to: <strong>PI</strong></div></div>
+              <div class="tc-foot"><span class="ev-req none">No evidence required</span><button class="btn btn-sm btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></div>
+            </div>
+            <div class="task-card on-track" onclick="goTo('task-detail')">
+              <div class="tc-top"><div><div class="tc-title">Quarterly Activity Report</div></div><span class="bx b-b">In Progress</span></div>
+              <div class="tc-meta"><div class="tc-mi">📅 May 28</div><div class="tc-mi">Submit to: <strong>Dean + ORD</strong></div></div>
+              <div class="tc-foot"><span class="ev-req none">Evidence required</span><button class="btn btn-sm btn-ol" onclick="event.stopPropagation();goTo('task-detail')">Open</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overview tab -->
+        <div id="gv-tab-overview" class="tp">
+          <div class="alert-b wa"><span style="font-size:20px">⚠️</span><div><p style="color:#92400e">Grant is At Risk — 2 overdue tasks, evidence missing</p><small>Contact your PI (Dr. Jenkins) immediately to resolve outstanding items.</small></div></div>
+          <div class="g3" style="margin-bottom:20px">
+            <div class="stat pr"><div class="stat-lbl">Total Budget</div><div class="stat-val pr" style="font-size:22px">$485K</div><div class="stat-sub">Grant total</div></div>
+            <div class="stat wa"><div class="stat-lbl">Spent</div><div class="stat-val wa" style="font-size:22px">$298K</div><div class="stat-sub">62% utilization</div></div>
+            <div class="stat ok"><div class="stat-lbl">Remaining</div><div class="stat-val ok" style="font-size:22px">$187K</div><div class="stat-sub">Available</div></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><div class="card-t">Grant Milestones — Read Only</div><span style="font-size:12px;color:var(--tx3)">🔒 Set by PI · Changes by Director only</span></div>
+            <div class="card-b">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ok-l);border-radius:9px"><span style="color:var(--ok);font-size:18px">✅</span><div style="flex:1"><strong>Contract Signed</strong> — Jan 5, 2023</div><span class="bx b-g">Complete</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ok-l);border-radius:9px"><span style="color:var(--ok);font-size:18px">✅</span><div style="flex:1"><strong>Budget Released</strong> — Feb 15, 2023</div><span class="bx b-g">Complete</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--er-l);border-radius:9px"><span style="color:var(--er);font-size:18px">⚠️</span><div style="flex:1"><strong>Workshop Series</strong> — <span style="color:var(--er)">OVERDUE May 12</span></div><span class="bx b-r">Overdue</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f9fafb;border-radius:9px"><span style="color:var(--tx3);font-size:18px">🔵</span><div style="flex:1"><strong>Mid-term Review</strong> — Jun 1, 2025</div><span class="bx b-b">Upcoming</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents tab -->
+        <div id="gv-tab-documents" class="tp">
+          <div class="card">
+            <div class="card-h"><div class="card-t">📁 Grant Documents — Read Only</div></div>
+            <div class="card-b" style="display:flex;flex-direction:column;gap:8px">
+              <div class="file-item"><span style="font-size:20px">📄</span><div style="flex:1"><div class="file-item-name">Q1_Narrative_Report_FINAL.pdf</div><div class="file-item-meta">Uploaded by Dr. Jenkins · Mar 30, 2025 · v2 · Latest Approved</div></div><span class="bx b-g">Approved</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+              <div class="file-item"><span style="font-size:20px">📊</span><div style="flex:1"><div class="file-item-name">Budget_Q1_2025.xlsx</div><div class="file-item-meta">Uploaded by Z. Nazarova · Mar 25, 2025 · v1</div></div><span class="bx b-sl">Finance</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+              <div class="file-item"><span style="font-size:20px">📋</span><div style="flex:1"><div class="file-item-name">Signed_Grant_Agreement.pdf</div><div class="file-item-meta">Uploaded by ORD · Jan 10, 2023 · v1</div></div><span class="bx b-gr">Contract</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DOCUMENTS ══════════ -->
+<div id="sc-documents" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni active" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search documents…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">5</span></div><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb pg-h fu"><div><div class="pg-t">My Documents</div><div class="pg-s">Files you uploaded + grant documents you can access</div></div></div>
+        <div class="tabs" id="doc-tabs">
+          <div class="tab active" onclick="switchTab('doc','my-uploads',this)">My Uploads</div>
+          <div class="tab" onclick="switchTab('doc','grant-docs',this)">Grant Documents</div>
+        </div>
+        <div id="doc-tab-my-uploads" class="tp active">
+          <div class="uz" style="margin-bottom:20px" onclick="null">
+            <div class="uz-ic">📤</div>
+            <div class="uz-lbl">Upload a Document</div>
+            <div class="uz-hint">Link it to a task and grant · PDF, Word, Excel, Images</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="file-item fu"><span style="font-size:22px">📄</span><div style="flex:1"><div class="file-item-name">Workshop_Report_Draft_v1.pdf</div><div class="file-item-meta">Linked to: Workshop Completion Report task · May 14, 2025 · 2.4 MB</div></div><span class="bx b-y">Pending Review</span><button class="btn btn-xs btn-ol">View</button><button class="btn btn-xs btn-ol">Replace</button></div>
+            <div class="file-item fu"><span style="font-size:22px">📊</span><div style="flex:1"><div class="file-item-name">Budget_Summary.xlsx</div><div class="file-item-meta">Linked to: Workshop Completion Report task · May 14, 2025 · 184 KB</div></div><span class="bx b-y">Pending Review</span><button class="btn btn-xs btn-ol">View</button><button class="btn btn-xs btn-ol">Replace</button></div>
+            <div class="file-item fu"><span style="font-size:22px">📄</span><div style="flex:1"><div class="file-item-name">Beneficiary_Data_Collection.xlsx</div><div class="file-item-meta">Linked to: Beneficiary Data Collection task · May 15, 2025 · 312 KB</div></div><span class="bx b-g">Approved</span><button class="btn btn-xs btn-ol">View</button></div>
+            <div class="file-item fu"><span style="font-size:22px">🖼️</span><div style="flex:1"><div class="file-item-name">Field_Photos_March_2025.zip</div><div class="file-item-meta">Linked to: Q1 Narrative Report · Mar 28, 2025 · 18.4 MB</div></div><span class="bx b-g">Approved</span><button class="btn btn-xs btn-ol">View</button></div>
+          </div>
+        </div>
+        <div id="doc-tab-grant-docs" class="tp">
+          <div style="font-size:13px;color:var(--tx3);margin-bottom:14px">📖 These documents are shared by your PI and ORD. You can download them but not edit them.</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="file-item fu"><span style="font-size:22px">📋</span><div style="flex:1"><div class="file-item-name">Signed_Grant_Agreement.pdf</div><div class="file-item-meta">Shared by ORD · Jan 10, 2023</div></div><span class="bx b-gr">Contract</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+            <div class="file-item fu"><span style="font-size:22px">📊</span><div style="flex:1"><div class="file-item-name">Approved_Budget_2025.xlsx</div><div class="file-item-meta">Shared by Finance · Jan 15, 2025</div></div><span class="bx b-sl">Finance</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+            <div class="file-item fu"><span style="font-size:22px">📄</span><div style="flex:1"><div class="file-item-name">Q1_Narrative_Report_FINAL.pdf</div><div class="file-item-meta">Shared by Dr. Jenkins · Mar 30, 2025 · Latest Approved</div></div><span class="bx b-g">Approved</span><button class="btn btn-xs btn-ol">📥 Download</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NOTIFICATIONS ══════════ -->
+<div id="sc-notifications" class="screen">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sb-head"><div class="sb-brand"><div class="sb-ico">🎓</div><div><div class="sb-name">GMS Staff</div><div class="sb-role">Tajikistan</div></div></div></div>
+      <div class="sb-sec"><div class="sb-lbl">My Work</div>
+        <div class="ni" onclick="nav(this,'home')"><span class="ni-ic">🏠</span> My Dashboard</div>
+        <div class="ni" onclick="nav(this,'tasks')"><span class="ni-ic">✅</span> My Tasks <span class="ni-bd">3</span></div>
+        <div class="ni" onclick="nav(this,'grants')"><span class="ni-ic">📋</span> My Grants</div>
+        <div class="ni" onclick="nav(this,'documents')"><span class="ni-ic">📁</span> Documents</div>
+      </div>
+      <div class="sb-sec"><div class="sb-lbl">Alerts</div><div class="ni active" onclick="nav(this,'notifications')"><span class="ni-ic">🔔</span> Notifications <span class="ni-bd or">5</span></div></div>
+      <div class="sb-foot"><div class="ua">AK</div><div><div class="un">A. Karimov</div><div class="ur">Project Staff</div></div><button class="lb" onclick="goTo('login')">⏏</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search"><span style="color:var(--tx3)">🔍</span><input placeholder="Search notifications…"></div>
+        <div class="tb-r"><div class="tbi">🔔<span class="tbd">5</span></div><button class="btn btn-sm btn-ol">Mark All Read</button><div class="pp"><div class="pav">AK</div><span style="font-size:13px;font-weight:600">A. Karimov</span></div></div>
+      </div>
+      <div class="content">
+        <div class="fb pg-h fu"><div><div class="pg-t">Notifications</div><div class="pg-s">5 unread — task alerts and updates</div></div></div>
+        <div class="card fu">
+          <div class="notif unread" onclick="goTo('task-detail')"><div class="notif-ic" style="background:var(--er-l)">🔴</div><div style="flex:1"><div class="notif-t">Task Overdue — Submit Workshop Completion Report</div><div class="notif-d">Your task "Submit Workshop Completion Report" is now 4 days overdue. Upload the missing evidence (photos + attendance sheet) to unlock submission.</div><div class="notif-m">Agriculture Training Program · May 12, 2025</div><a style="font-size:12.5px;color:var(--pr);font-weight:600;margin-top:4px;display:inline-block">→ Open Task</a></div><div class="ud"></div></div>
+          <div class="notif unread" onclick="goTo('task-detail')"><div class="notif-ic" style="background:var(--or-l)">📸</div><div style="flex:1"><div class="notif-t">Evidence Reminder — Upload Field Visit Photos</div><div class="notif-d">Your task "Upload Field Visit Photos" is due in 2 days (May 18). Evidence must be uploaded before the deadline.</div><div class="notif-m">Water Infrastructure Grant · May 16, 2025</div><a style="font-size:12.5px;color:var(--pr);font-weight:600;margin-top:4px;display:inline-block">→ Upload Now</a></div><div class="ud"></div></div>
+          <div class="notif unread" onclick="goTo('task-detail')"><div class="notif-ic" style="background:var(--wa-l)">📅</div><div style="flex:1"><div class="notif-t">Reminder — Quarterly Activity Report due in 12 days</div><div class="notif-d">Your report is due May 28. You have started it — make sure it's submitted on time to ORD and the Dean.</div><div class="notif-m">Agriculture Training Program · May 16, 2025</div><a style="font-size:12.5px;color:var(--pr);font-weight:600;margin-top:4px;display:inline-block">→ Continue Report</a></div><div class="ud"></div></div>
+          <div class="notif unread"><div class="notif-ic" style="background:var(--pr-l)">💬</div><div style="flex:1"><div class="notif-t">Comment from PI — Dr. Jenkins</div><div class="notif-d">"Askar, please prioritise the attendance sheet for the workshop — ORD is asking about it. Let me know if you need help."</div><div class="notif-m">Agriculture Training Program · May 15, 2025 · 10:30 AM</div></div><div class="ud"></div></div>
+          <div class="notif unread"><div class="notif-ic" style="background:var(--er-l)">⚠️</div><div style="flex:1"><div class="notif-t">Escalation Notice — Your task has been flagged to ORD</div><div class="notif-d">Due to the overdue status of "Submit Workshop Completion Report", this has been escalated to the ORD Office. Please resolve immediately.</div><div class="notif-m">Agriculture Training Program · May 14, 2025</div></div><div class="ud"></div></div>
+          <div class="notif" onclick="goTo('task-detail')"><div class="notif-ic" style="background:var(--ok-l)">✅</div><div style="flex:1"><div class="notif-t">Task Approved — Q1 Narrative Report</div><div class="notif-d">Your Q1 Narrative Report submission was approved by Prof. Alimov (ORD). Great work!</div><div class="notif-m">Agriculture Training Program · Mar 31, 2025</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function goTo(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sc-' + name);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+function nav(el, name) {
+  // update sidebar active
+  if (el) {
+    const sidebar = el.closest('.sidebar');
+    if (sidebar) sidebar.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+  goTo(name);
+}
+
+function switchTab(prefix, name, el) {
+  const sidebar = el.closest('.main') || document.body;
+  document.getElementById(prefix + '-tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="' + prefix + '-tab-"]').forEach(p => p.classList.remove('active'));
+  const pane = document.getElementById(prefix + '-tab-' + name);
+  if (pane) pane.classList.add('active');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('sc-login').classList.contains('active')) goTo('home');
+});
+</script>
+</body>
+</html>
