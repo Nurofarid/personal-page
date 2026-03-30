@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GMS – Director Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#0f172a;min-height:100vh}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* ── SCREEN SYSTEM ── */
+.screen{display:none;width:100%;min-height:100vh}
+.screen.active{display:block}
+.screen.flex-screen{display:none;align-items:center;justify-content:center}
+.screen.flex-screen.active{display:flex}
+
+/* ── LOGIN ── */
+#login-screen{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 55%,#0c2340 100%);position:relative;overflow:hidden}
+#login-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(59,130,246,.18) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(99,102,241,.14) 0%,transparent 50%)}
+.login-card{background:rgba(255,255,255,.97);border-radius:22px;padding:52px 48px;width:430px;box-shadow:0 40px 80px rgba(0,0,0,.35);position:relative;z-index:1;animation:fadeUp .5s ease}
+.login-logo{width:66px;height:66px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:18px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 24px rgba(59,130,246,.4)}
+.login-subtitle{font-size:11px;letter-spacing:3px;color:#64748b;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.login-title{font-size:23px;font-weight:800;color:#0f172a;text-align:center;margin-bottom:34px}
+.field-label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:7px;letter-spacing:.3px}
+.field-input{width:100%;padding:12px 15px;border:1.5px solid #e2e8f0;border-radius:11px;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;color:#111;background:#fff}
+.field-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.field-group{margin-bottom:18px}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;transition:opacity .2s,transform .1s;letter-spacing:.3px}
+.btn-primary:hover{opacity:.92}
+.btn-primary:active{transform:scale(.98)}
+.btn-link{background:none;border:none;color:#3b82f6;font-size:13px;width:100%;text-align:center;margin-top:14px;padding:4px;font-family:inherit}
+.btn-link:hover{text-decoration:underline}
+
+/* ── COUNTRY SELECT ── */
+#country-screen{background:#f8fafc}
+.cs-topbar{background:#0f172a;padding:15px 40px;display:flex;align-items:center;justify-content:space-between}
+.cs-logo{display:flex;align-items:center;gap:12px}
+.cs-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.cs-logo-text{color:#fff;font-weight:800;font-size:16px;letter-spacing:.3px}
+.btn-all-countries{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:#fff;padding:9px 20px;border-radius:9px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;transition:background .2s}
+.btn-all-countries:hover{background:rgba(255,255,255,.18)}
+.cs-body{max-width:940px;margin:0 auto;padding:60px 24px}
+.cs-headline-tag{font-size:11px;letter-spacing:3.5px;color:#3b82f6;text-transform:uppercase;font-weight:700;text-align:center;margin-bottom:14px}
+.cs-headline{font-size:34px;font-weight:900;color:#0f172a;text-align:center;margin-bottom:10px}
+.cs-sub{color:#64748b;text-align:center;font-size:15px;margin-bottom:52px}
+.country-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.country-card{background:#fff;border-radius:20px;padding:28px;border:2px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:all .22s;position:relative;overflow:hidden}
+.country-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.country-card:hover{border-color:#3b82f6;box-shadow:0 14px 44px rgba(59,130,246,.16);transform:translateY(-2px)}
+.country-card:hover::before{transform:scaleX(1)}
+.card-flag{font-size:38px;margin-bottom:0}
+.card-name{font-size:21px;font-weight:900;color:#0f172a}
+.card-grants{font-size:12px;color:#64748b;margin-top:2px}
+.card-header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.stat-boxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.stat-box{border-radius:10px;padding:9px 12px}
+.stat-box.red{background:#fef2f2}
+.stat-box.orange{background:#fff7ed}
+.stat-box.yellow{background:#fefce8}
+.stat-label{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+.stat-label.red{color:#ef4444}
+.stat-label.orange{color:#f97316}
+.stat-label.yellow{color:#eab308}
+.stat-val{font-size:22px;font-weight:900}
+.stat-val.red{color:#ef4444}
+.stat-val.orange{color:#f97316}
+.stat-val.yellow{color:#eab308}
+.perf-row{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:7px}
+.prog-track{background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;margin-bottom:16px}
+.prog-fill{height:100%;border-radius:99px;transition:width .5s ease}
+.budget-row{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:18px}
+.btn-enter{width:100%;padding:12px;border:none;border-radius:11px;font-size:14px;font-weight:700;transition:all .22s;letter-spacing:.3px}
+.btn-enter-default{background:#f1f5f9;color:#374151}
+.country-card:hover .btn-enter{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.3)}
+
+/* ── APP LAYOUT ── */
+#app-screen{background:#f1f5f9}
+.app-wrapper{display:flex;min-height:100vh}
+.sidebar{width:224px;background:#0f172a;position:fixed;top:0;bottom:0;left:0;z-index:100;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px}
+.sidebar-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sidebar-logo-title{color:#fff;font-weight:800;font-size:14px}
+.sidebar-logo-sub{color:#64748b;font-size:10px;letter-spacing:1.5px}
+.sidebar-country{padding:11px 20px;background:rgba(59,130,246,.12);border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-country-label{font-size:9px;color:#64748b;letter-spacing:1.5px;margin-bottom:3px;text-transform:uppercase}
+.sidebar-country-val{color:#fff;font-weight:800;font-size:14px}
+.sidebar-nav{flex:1;padding:10px 0;overflow-y:auto}
+.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:11px 20px;background:none;border:none;color:#94a3b8;font-size:13px;font-weight:500;text-align:left;transition:all .15s;border-left:3px solid transparent;position:relative}
+.nav-btn:hover{background:rgba(255,255,255,.05);color:#e2e8f0}
+.nav-btn.active{background:rgba(59,130,246,.18);color:#93c5fd;border-left-color:#3b82f6;font-weight:700}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:#ef4444;color:#fff;border-radius:99px;font-size:9px;font-weight:700;padding:2px 6px}
+.sidebar-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.btn-switch-country{width:100%;padding:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;border-radius:8px;font-size:12px;transition:background .2s}
+.btn-switch-country:hover{background:rgba(255,255,255,.12);color:#e2e8f0}
+.main-area{margin-left:224px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 28px;height:60px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:90;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.country-switcher{position:relative}
+.cs-btn{display:flex;align-items:center;gap:8px;padding:7px 15px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;font-weight:700;color:#0f172a;transition:background .2s}
+.cs-btn:hover{background:#e2e8f0}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);z-index:999;min-width:190px;overflow:hidden;display:none}
+.dropdown-menu.open{display:block}
+.dropdown-item{width:100%;display:flex;align-items:center;gap:9px;padding:11px 16px;background:none;border:none;font-size:13px;color:#111;text-align:left;transition:background .15s}
+.dropdown-item:hover{background:#f8fafc}
+.search-bar{flex:1;max-width:420px;position:relative}
+.search-bar input{width:100%;padding:9px 13px 9px 38px;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;outline:none;color:#111;background:#f8fafc;transition:border-color .2s,background .2s}
+.search-bar input:focus{border-color:#3b82f6;background:#fff}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:14px;pointer-events:none}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.icon-btn{position:relative;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:background .2s}
+.icon-btn:hover{background:#e2e8f0}
+.icon-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:99px;font-size:9px;font-weight:800;padding:2px 5px;border:2px solid #fff}
+.profile-btn{display:flex;align-items:center;gap:9px;padding:7px 13px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;font-weight:700;color:#0f172a;transition:background .2s}
+.profile-btn:hover{background:#e2e8f0}
+.avatar{width:26px;height:26px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:800}
+.notif-panel{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 10px 32px rgba(0,0,0,.14);z-index:999;width:330px;overflow:hidden;display:none}
+.notif-panel.open{display:block}
+.notif-header{padding:13px 16px;border-bottom:1px solid #f1f5f9;font-weight:800;font-size:14px;color:#0f172a}
+.notif-item{padding:11px 16px;border-bottom:1px solid #f9fafb;display:flex;gap:11px;align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-title{font-size:12px;font-weight:700;color:#111;margin-bottom:2px}
+.notif-sub{font-size:11px;color:#64748b}
+.profile-menu{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.12);z-index:999;min-width:210px;overflow:hidden;display:none}
+.profile-menu.open{display:block}
+.profile-menu-top{padding:13px 16px;border-bottom:1px solid #f1f5f9}
+.profile-menu-name{font-weight:800;font-size:13px;color:#111}
+.profile-menu-role{font-size:11px;color:#64748b;margin-top:1px}
+.btn-logout{width:100%;padding:11px 16px;background:none;border:none;color:#ef4444;font-size:13px;text-align:left;font-weight:600;transition:background .15s}
+.btn-logout:hover{background:#fef2f2}
+.page-content{flex:1;overflow-y:auto}
+
+/* ── PAGE SECTIONS ── */
+.page{display:none;padding:28px 32px}
+.page.active{display:block}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:14px}
+.page-title{font-size:23px;font-weight:900;color:#0f172a}
+.page-sub{font-size:13px;color:#64748b;margin-top:4px}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap}
+.btn-sm{padding:8px 16px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;font-weight:600;color:#374151;transition:background .2s}
+.btn-sm:hover{background:#e2e8f0}
+.btn-danger-sm{background:#fef2f2;border-color:#fecaca;color:#ef4444}
+.btn-danger-sm:hover{background:#fee2e2}
+.btn-blue-sm{background:#eff6ff;border-color:#bfdbfe;color:#1e40af;font-weight:700}
+.btn-blue-sm:hover{background:#dbeafe}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:26px}
+.kpi-card{background:#fff;border-radius:15px;padding:18px 20px;border:1.5px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.05);cursor:pointer;transition:all .2s}
+.kpi-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-1px)}
+.kpi-card.alert{border-color:#fecaca;box-shadow:0 0 0 3px rgba(239,68,68,.07)}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
+.kpi-icon{font-size:22px}
+.kpi-val{font-size:28px;font-weight:900;line-height:1}
+.kpi-label{font-size:12px;font-weight:700;color:#374151;margin-top:5px}
+.kpi-sub{font-size:11px;color:#94a3b8;margin-top:2px}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:15px;padding:20px 22px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card-title{font-weight:800;font-size:13px;color:#0f172a;margin-bottom:4px}
+.card-sub{font-size:11px;color:#94a3b8;margin-bottom:14px}
+
+/* ── CHARTS ROW ── */
+.charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px}
+.charts-row-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+
+/* ── SVG CHARTS ── */
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding:0 4px}
+.chart-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.chart-bars-inner{display:flex;align-items:flex-end;gap:2px;width:100%}
+.chart-bar{flex:1;border-radius:3px 3px 0 0;min-height:4px;transition:height .4s ease}
+.chart-month{font-size:9px;color:#94a3b8;margin-top:3px}
+.chart-legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ── ALERT LISTS ── */
+.alerts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:18px}
+.alert-card{background:#fff;border-radius:15px;padding:20px 22px;border:1.5px solid}
+.alert-card.red{border-color:#fecaca}
+.alert-card.orange{border-color:#fed7aa}
+.alert-card.yellow{border-color:#fde68a}
+.alert-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.alert-card-title{font-weight:800;font-size:13px;color:#0f172a}
+.alert-count{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px}
+.alert-count.red{background:#fef2f2;color:#ef4444}
+.alert-count.orange{background:#fff7ed;color:#f97316}
+.alert-count.yellow{background:#fefce8;color:#a16207}
+.alert-item{padding:10px 0;border-bottom:1px solid #f9fafb}
+.alert-item:last-child{border-bottom:none}
+.alert-grant-link{background:none;border:none;color:#3b82f6;font-size:12px;font-weight:700;padding:0;text-align:left;display:block;margin-bottom:2px}
+.alert-grant-link:hover{text-decoration:underline}
+.alert-task{font-size:11px;color:#374151;margin-bottom:2px}
+.alert-owner{font-size:10px;color:#94a3b8}
+.overdue-badge{background:#fef2f2;color:#ef4444;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;white-space:nowrap;margin-left:6px}
+
+/* ── TABLE ── */
+.table-wrap{background:#fff;border-radius:15px;border:1px solid #e2e8f0;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f8fafc;border-bottom:2px solid #e2e8f0}
+th{padding:12px 14px;text-align:left;font-weight:700;color:#374151;font-size:11px;letter-spacing:.3px;white-space:nowrap}
+tbody tr{border-bottom:1px solid #f3f4f6;transition:background .15s}
+tbody tr:hover{background:#f8fafc}
+tbody tr.row-alt{background:#fafafa}
+tbody tr.row-danger{background:#fff5f5}
+td{padding:11px 14px;color:#374151;vertical-align:middle}
+.td-name{font-weight:700;color:#111;display:block;margin-bottom:2px}
+.td-sub{font-size:11px;color:#94a3b8}
+.td-link{background:none;border:none;color:#1e40af;font-weight:700;padding:0;font-size:13px;text-align:left;display:block}
+.td-link:hover{text-decoration:underline}
+
+/* ── BADGES / STATUS ── */
+.badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap;display:inline-block}
+.badge-green{background:#dcfce7;color:#15803d}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-orange{background:#ffedd5;color:#c2410c}
+.badge-purple{background:#ede9fe;color:#7c3aed}
+.badge-gray{background:#f3f4f6;color:#374151}
+.badge-red{background:#fef2f2;color:#ef4444}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.num-badge-red{background:#ef4444;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;display:inline-block}
+.num-badge-orange{background:#f97316;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;display:inline-block}
+
+/* ── PROGRESS ── */
+.prog-wrap{display:flex;align-items:center;gap:7px}
+.prog-mini{flex:1;background:#e5e7eb;border-radius:99px;overflow:hidden}
+.prog-mini-fill{height:5px;border-radius:99px;transition:width .4s}
+.prog-pct{font-size:11px;font-weight:700;min-width:32px}
+
+/* ── GRANT WORKSPACE ── */
+.gw-header{margin-bottom:20px}
+.gw-back{background:none;border:none;color:#64748b;font-size:13px;margin-bottom:13px;display:flex;align-items:center;gap:5px;padding:0}
+.gw-back:hover{color:#3b82f6}
+.gw-title-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.gw-title{font-size:22px;font-weight:900;color:#0f172a;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gw-meta{display:flex;gap:18px;margin-top:7px;font-size:13px;color:#64748b;flex-wrap:wrap}
+.gw-meta span{display:flex;align-items:center;gap:5px}
+.milestone-track{background:#fff;border-radius:15px;padding:18px 24px;border:1px solid #e2e8f0;margin-bottom:20px;overflow-x:auto}
+.milestone-row{display:flex;align-items:flex-start;min-width:560px}
+.ms-node{display:flex;flex-direction:column;align-items:center;min-width:80px}
+.ms-circle{width:30px;height:30px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.ms-circle.done{background:#22c55e;color:#fff}
+.ms-circle.current{background:#3b82f6;color:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.2)}
+.ms-circle.pending{background:#e5e7eb;color:#94a3b8}
+.ms-label{font-size:9px;color:#374151;font-weight:600;text-align:center;margin-top:5px;line-height:1.3}
+.ms-date{font-size:9px;color:#94a3b8;text-align:center;margin-top:2px}
+.ms-connector{flex:1;height:2px;margin-top:14px;margin-bottom:36px}
+.ms-connector.done{background:#22c55e}
+.ms-connector.pending{background:#e5e7eb}
+.tabs-bar{display:flex;gap:2px;background:#f1f5f9;border-radius:11px;padding:4px;width:fit-content;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{padding:8px 18px;border-radius:9px;border:none;background:none;color:#64748b;font-size:13px;font-weight:500;transition:all .18s;text-transform:capitalize}
+.tab-btn.active{background:#fff;color:#0f172a;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.09)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.info-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:13px;color:#1e40af;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.info-banner.warning{background:#fef2f2;border-color:#fecaca;color:#c62828}
+
+/* ── DEADLINE SUMMARIES ── */
+.ds-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ds-card{background:#fff;border-radius:18px;padding:22px 24px;border:1.5px solid;cursor:pointer;transition:box-shadow .2s}
+.ds-card.green{border-color:#bbf7d0}
+.ds-card.yellow{border-color:#fde68a}
+.ds-card.red{border-color:#fecaca}
+.ds-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:13px}
+.ds-stat{background:#f8fafc;border-radius:9px;padding:9px 11px;text-align:center}
+.ds-stat-val{font-size:19px;font-weight:900}
+.ds-stat-label{font-size:10px;color:#64748b;margin-top:1px}
+.ds-expand{display:none}
+.ds-card.expanded .ds-expand{display:block}
+.ds-task-row{display:flex;align-items:center;gap:13px;padding:9px 0;border-bottom:1px solid #f9fafb}
+.ds-task-row:last-child{border-bottom:none}
+.ds-task-num{width:28px;height:28px;border-radius:99px;background:linear-gradient(135deg,#eff6ff,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#3b82f6;flex-shrink:0}
+.ds-summary-box{background:#f8fafc;border-radius:9px;padding:12px 14px;font-size:13px;color:#374151;line-height:1.6;margin-bottom:14px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:2000;display:none}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:18px;padding:32px;width:440px;max-width:90vw;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:fadeUp .25s ease}
+.modal-title{font-size:19px;font-weight:900;color:#0f172a;margin-bottom:8px}
+.modal-desc{font-size:13px;color:#64748b;margin-bottom:22px;line-height:1.5}
+.modal-label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:7px;letter-spacing:.2px}
+.modal-input{width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;outline:none;color:#111;transition:border-color .2s;margin-bottom:16px}
+.modal-input:focus{border-color:#3b82f6}
+.modal-textarea{width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:13px;outline:none;resize:none;color:#111;margin-bottom:22px;font-family:inherit;transition:border-color .2s}
+.modal-textarea:focus{border-color:#3b82f6}
+.modal-actions{display:flex;gap:10px}
+.btn-modal-primary{flex:1;padding:12px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;transition:opacity .2s}
+.btn-modal-primary:hover{opacity:.9}
+.btn-modal-cancel{padding:12px 20px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9px;font-size:14px;color:#374151;font-weight:600}
+
+/* ── DONUT ── */
+.donut-wrap{display:flex;align-items:center;gap:16px}
+.donut-legend{flex:1}
+.donut-legend-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;font-size:12px;color:#374151}
+.donut-dot{width:9px;height:9px;border-radius:99px;flex-shrink:0}
+
+/* ── EVIDENCE GALLERY ── */
+.evidence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ev-card{background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0}
+.ev-thumb{height:96px;display:flex;align-items:center;justify-content:center;font-size:34px}
+.ev-info{padding:10px 12px}
+.ev-name{font-size:11px;font-weight:700;color:#111;margin-bottom:3px}
+.ev-meta{font-size:10px;color:#94a3b8}
+.ev-missing{font-size:10px;background:#fef2f2;color:#ef4444;padding:2px 7px;border-radius:99px;display:inline-block;margin-top:5px}
+
+/* ── AUDIT LOG ── */
+.audit-row{display:flex;gap:16px;padding:12px 18px;border-bottom:1px solid #f9fafb;align-items:flex-start}
+.audit-row:last-child{border-bottom:none}
+.audit-dot{width:7px;height:7px;background:#3b82f6;border-radius:99px;margin-top:5px;flex-shrink:0}
+.audit-time{font-size:12px;color:#94a3b8;white-space:nowrap;min-width:135px}
+.audit-text{flex:1;font-size:13px;color:#374151}
+.audit-item-badge{font-size:11px;background:#f1f5f9;color:#374151;padding:2px 9px;border-radius:6px;white-space:nowrap}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:#fff;border-radius:12px;padding:15px 20px;border:1px solid #e2e8f0;display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.filter-input{padding:8px 13px;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;outline:none;color:#111;min-width:190px}
+.filter-input:focus{border-color:#3b82f6}
+.filter-select{padding:8px 13px;border:1px solid #e2e8f0;border-radius:9px;font-size:13px;outline:none;color:#111;background:#fff}
+
+/* ── ESCALATIONS ── */
+.esc-filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.esc-filter-btn{padding:8px 18px;border-radius:9px;font-size:13px;font-weight:500;border:1px solid #e2e8f0;background:#fff;color:#374151;transition:all .18s}
+.esc-filter-btn.active{background:#0f172a;color:#fff;border-color:#0f172a;font-weight:700}
+.esc-level-dots{display:flex;gap:3px}
+.esc-level-dot{width:18px;height:18px;border-radius:99px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .35s ease}
+
+/* ── RESPONSIVE TWEAKS ── */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-row,.alerts-row{grid-template-columns:1fr}
+  .country-grid{grid-template-columns:1fr}
+  .gw-title{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!--  SCREEN A – LOGIN                                                      -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div id="login-screen" class="screen flex-screen active">
+  <div class="login-card">
+    <div class="login-logo">🎓</div>
+    <div class="login-subtitle">Grant Management System</div>
+    <div class="login-title">Director Portal</div>
+    <div class="field-group">
+      <label class="field-label">Email Address</label>
+      <input type="email" class="field-input" placeholder="director@university.edu" id="login-email"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Password</label>
+      <input type="password" class="field-input" placeholder="••••••••" id="login-pass"/>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
+    <button class="btn-link">Forgot password?</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!--  SCREEN B – COUNTRY SELECTION                                          -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div id="country-screen" class="screen" style="background:#f8fafc">
+  <div class="cs-topbar">
+    <div class="cs-logo">
+      <div class="cs-logo-icon">🎓</div>
+      <span class="cs-logo-text">GMS – Director Portal</span>
+    </div>
+    <button class="btn-all-countries" onclick="enterCountry('all')">🌍 All Countries Overview</button>
+  </div>
+  <div class="cs-body">
+    <div class="cs-headline-tag">Welcome, Director</div>
+    <div class="cs-headline">Select a Country</div>
+    <div class="cs-sub">Choose a country to enter its grant management dashboard</div>
+    <div class="country-grid">
+
+      <!-- Kyrgyzstan -->
+      <div class="country-card fade-in" onclick="enterCountry('kg')">
+        <div class="card-header">
+          <div class="card-flag">🇰🇬</div>
+          <div><div class="card-name">Kyrgyzstan</div><div class="card-grants">12 Active Grants</div></div>
+        </div>
+        <div class="stat-boxes">
+          <div class="stat-box red"><div class="stat-label red">Overdue</div><div class="stat-val red">7</div></div>
+          <div class="stat-box orange"><div class="stat-label orange">Reports Due</div><div class="stat-val orange">4</div></div>
+          <div class="stat-box yellow"><div class="stat-label yellow">At Risk</div><div class="stat-val yellow">3</div></div>
+        </div>
+        <div class="perf-row"><span>On-Time Performance</span><span style="font-weight:800;color:#eab308">78%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:78%;background:#eab308"></div></div>
+        <div class="budget-row"><span>Budget: <strong style="color:#111">$4.3M</strong></span><span>Spent: <strong style="color:#3b82f6">$2.9M</strong> (68%)</span></div>
+        <button class="btn-enter btn-enter-default">Enter Kyrgyzstan →</button>
+      </div>
+
+      <!-- Tajikistan -->
+      <div class="country-card fade-in" style="animation-delay:.08s" onclick="enterCountry('tj')">
+        <div class="card-header">
+          <div class="card-flag">🇹🇯</div>
+          <div><div class="card-name">Tajikistan</div><div class="card-grants">9 Active Grants</div></div>
+        </div>
+        <div class="stat-boxes">
+          <div class="stat-box red"><div class="stat-label red">Overdue</div><div class="stat-val red">3</div></div>
+          <div class="stat-box orange"><div class="stat-label orange">Reports Due</div><div class="stat-val orange">6</div></div>
+          <div class="stat-box yellow"><div class="stat-label yellow">At Risk</div><div class="stat-val yellow">2</div></div>
+        </div>
+        <div class="perf-row"><span>On-Time Performance</span><span style="font-weight:800;color:#22c55e">88%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:88%;background:#22c55e"></div></div>
+        <div class="budget-row"><span>Budget: <strong style="color:#111">$3.1M</strong></span><span>Spent: <strong style="color:#3b82f6">$1.7M</strong> (56%)</span></div>
+        <button class="btn-enter btn-enter-default">Enter Tajikistan →</button>
+      </div>
+
+      <!-- Kazakhstan -->
+      <div class="country-card fade-in" style="animation-delay:.16s" onclick="enterCountry('kz')">
+        <div class="card-header">
+          <div class="card-flag">🇰🇿</div>
+          <div><div class="card-name">Kazakhstan</div><div class="card-grants">15 Active Grants</div></div>
+        </div>
+        <div class="stat-boxes">
+          <div class="stat-box red"><div class="stat-label red">Overdue</div><div class="stat-val red">11</div></div>
+          <div class="stat-box orange"><div class="stat-label orange">Reports Due</div><div class="stat-val orange">8</div></div>
+          <div class="stat-box yellow"><div class="stat-label yellow">At Risk</div><div class="stat-val yellow">5</div></div>
+        </div>
+        <div class="perf-row"><span>On-Time Performance</span><span style="font-weight:800;color:#ef4444">64%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:64%;background:#ef4444"></div></div>
+        <div class="budget-row"><span>Budget: <strong style="color:#111">$7.8M</strong></span><span>Spent: <strong style="color:#3b82f6">$5.2M</strong> (67%)</span></div>
+        <button class="btn-enter btn-enter-default">Enter Kazakhstan →</button>
+      </div>
+
+      <!-- Afghanistan -->
+      <div class="country-card fade-in" style="animation-delay:.24s" onclick="enterCountry('af')">
+        <div class="card-header">
+          <div class="card-flag">🇦🇫</div>
+          <div><div class="card-name">Afghanistan</div><div class="card-grants">6 Active Grants</div></div>
+        </div>
+        <div class="stat-boxes">
+          <div class="stat-box red"><div class="stat-label red">Overdue</div><div class="stat-val red">2</div></div>
+          <div class="stat-box orange"><div class="stat-label orange">Reports Due</div><div class="stat-val orange">2</div></div>
+          <div class="stat-box yellow"><div class="stat-label yellow">At Risk</div><div class="stat-val yellow">1</div></div>
+        </div>
+        <div class="perf-row"><span>On-Time Performance</span><span style="font-weight:800;color:#22c55e">91%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:91%;background:#22c55e"></div></div>
+        <div class="budget-row"><span>Budget: <strong style="color:#111">$2.0M</strong></span><span>Spent: <strong style="color:#3b82f6">$0.9M</strong> (46%)</span></div>
+        <button class="btn-enter btn-enter-default">Enter Afghanistan →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!--  SCREEN C/D/E/F – APP                                                  -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div id="app-screen" class="screen" style="background:#f1f5f9">
+<div class="app-wrapper">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🎓</div>
+      <div><div class="sidebar-logo-title">GMS</div><div class="sidebar-logo-sub">DIRECTOR</div></div>
+    </div>
+    <div class="sidebar-country">
+      <div class="sidebar-country-label">Viewing</div>
+      <div class="sidebar-country-val" id="sidebar-country-val">🇰🇬 Kyrgyzstan</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon">⬛</span>Dashboard</button>
+      <button class="nav-btn" onclick="showPage('grants',this)"><span class="nav-icon">📋</span>Grants</button>
+      <button class="nav-btn" onclick="showPage('deadlines',this)"><span class="nav-icon">📅</span>Deadline Summaries</button>
+      <button class="nav-btn" onclick="showPage('reports-cal',this)"><span class="nav-icon">📊</span>Reports Calendar</button>
+      <button class="nav-btn" onclick="showPage('escalations',this)">
+        <span class="nav-icon">🚨</span>Escalations
+        <span class="nav-badge">5</span>
+      </button>
+      <button class="nav-btn" onclick="showPage('documents',this)"><span class="nav-icon">📁</span>Documents</button>
+      <button class="nav-btn" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Settings</button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-switch-country" onclick="goCountrySelect()">← Switch Country</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <!-- Country switcher -->
+      <div class="country-switcher">
+        <button class="cs-btn" onclick="toggleDropdown('country-dd')">
+          <span id="topbar-country-flag">🇰🇬</span>
+          <span id="topbar-country-name">Kyrgyzstan</span>
+          <span style="color:#94a3b8;font-size:11px">▾</span>
+        </button>
+        <div class="dropdown-menu" id="country-dd">
+          <button class="dropdown-item" onclick="switchCountry('kg','🇰🇬','Kyrgyzstan')">🇰🇬 Kyrgyzstan</button>
+          <button class="dropdown-item" onclick="switchCountry('tj','🇹🇯','Tajikistan')">🇹🇯 Tajikistan</button>
+          <button class="dropdown-item" onclick="switchCountry('kz','🇰🇿','Kazakhstan')">🇰🇿 Kazakhstan</button>
+          <button class="dropdown-item" onclick="switchCountry('af','🇦🇫','Afghanistan')">🇦🇫 Afghanistan</button>
+          <button class="dropdown-item" onclick="switchCountry('all','🌍','All Countries')">🌍 All Countries</button>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search grant, donor, PI, keyword…"/>
+      </div>
+      <div class="topbar-right">
+        <!-- Notifications -->
+        <div style="position:relative">
+          <button class="icon-btn" onclick="toggleDropdown('notif-panel')">
+            🔔<span class="icon-badge">5</span>
+          </button>
+          <div class="notif-panel" id="notif-panel">
+            <div class="notif-header">Notifications</div>
+            <div class="notif-item"><span style="font-size:17px">🚨</span><div><div class="notif-title">Rural Health Access Program</div><div class="notif-sub">Financial report overdue · Finance Officer Aigerim</div></div></div>
+            <div class="notif-item"><span style="font-size:17px">🚨</span><div><div class="notif-title">Climate Adaptation Fund</div><div class="notif-sub">Final impact assessment 30 days overdue</div></div></div>
+            <div class="notif-item"><span style="font-size:17px">⚠️</span><div><div class="notif-title">Education Reform Initiative</div><div class="notif-sub">Evidence missing · 2 items</div></div></div>
+            <div class="notif-item"><span style="font-size:17px">⚠️</span><div><div class="notif-title">Water & Sanitation Access</div><div class="notif-sub">Close-out report pending submission</div></div></div>
+          </div>
+        </div>
+        <!-- Profile -->
+        <div style="position:relative">
+          <button class="profile-btn" onclick="toggleDropdown('profile-menu')">
+            <div class="avatar">AD</div>
+            <span>Director</span>
+            <span style="color:#94a3b8;font-size:11px">▾</span>
+          </button>
+          <div class="profile-menu" id="profile-menu">
+            <div class="profile-menu-top">
+              <div class="profile-menu-name">Akylbek Dzhaksybekov</div>
+              <div class="profile-menu-role">Director, Office of Research & Development</div>
+            </div>
+            <button class="btn-logout" onclick="doLogout()">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="page-dashboard" class="page active" style="padding:28px 32px">
+        <div class="page-header">
+          <div>
+            <div class="page-title" id="dash-title">🇰🇬 Kyrgyzstan — Dashboard</div>
+            <div class="page-sub">Post-award monitoring overview · Updated just now</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-sm">📥 Export Excel</button>
+            <button class="btn-sm">📄 Download PDF</button>
+            <button class="btn-sm btn-danger-sm" onclick="showPage('escalations',null)">🚨 View Escalations</button>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card" onclick="showPage('grants',null)">
+            <div class="kpi-top"><span class="kpi-icon">📋</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#3b82f6" id="kpi-grants">12</div>
+            <div class="kpi-label">Active Grants</div>
+            <div class="kpi-sub">across all programs</div>
+          </div>
+          <div class="kpi-card" onclick="showPage('grants',null)">
+            <div class="kpi-top"><span class="kpi-icon">💰</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#8b5cf6" id="kpi-budget">$4.3M</div>
+            <div class="kpi-label">Total Budget</div>
+            <div class="kpi-sub" id="kpi-budget-sub">$2.9M spent (68%)</div>
+          </div>
+          <div class="kpi-card alert" onclick="showPage('grants',null)">
+            <div class="kpi-top"><span class="kpi-icon">🚨</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#ef4444" id="kpi-overdue">7</div>
+            <div class="kpi-label">Overdue Tasks</div>
+            <div class="kpi-sub">require immediate action</div>
+          </div>
+          <div class="kpi-card" onclick="showPage('grants',null)">
+            <div class="kpi-top"><span class="kpi-icon">⚠️</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#f59e0b" id="kpi-risk">5</div>
+            <div class="kpi-label">At Risk Items</div>
+            <div class="kpi-sub">grants flagged</div>
+          </div>
+          <div class="kpi-card" onclick="showPage('reports-cal',null)">
+            <div class="kpi-top"><span class="kpi-icon">📅</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#f97316">5</div>
+            <div class="kpi-label">Reports Due (14d)</div>
+            <div class="kpi-sub">narrative & financial</div>
+          </div>
+          <div class="kpi-card" onclick="showPage('grants',null)">
+            <div class="kpi-top"><span class="kpi-icon">📷</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#ec4899">9</div>
+            <div class="kpi-label">Evidence Missing</div>
+            <div class="kpi-sub">proof not uploaded</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><span class="kpi-icon">📊</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#6366f1">2</div>
+            <div class="kpi-label">Fin. Reports Pending</div>
+            <div class="kpi-sub">awaiting approval</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><span class="kpi-icon">✅</span><span style="font-size:11px;color:#94a3b8">↗</span></div>
+            <div class="kpi-val" style="color:#22c55e" id="kpi-ontime">78%</div>
+            <div class="kpi-label">On-Track %</div>
+            <div class="kpi-sub">projects on schedule</div>
+          </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="charts-row">
+          <!-- Tasks Bar Chart -->
+          <div class="card">
+            <div class="card-title">Tasks Completed vs Overdue</div>
+            <div class="card-sub">Last 6 months</div>
+            <div class="chart-bars" id="tasks-bar-chart">
+              <!-- filled by JS -->
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Completed</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Overdue</div>
+            </div>
+          </div>
+
+          <!-- Line Chart (SVG) -->
+          <div class="card">
+            <div class="card-title">Budget vs Actual Spending</div>
+            <div class="card-sub">Monthly trend</div>
+            <svg id="line-chart" viewBox="0 0 300 115" style="width:100%;height:115px"></svg>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;opacity:.5"></div>Budget</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Actual</div>
+            </div>
+          </div>
+
+          <!-- Donut Chart -->
+          <div class="card">
+            <div class="card-title">Grants by Status</div>
+            <div class="card-sub">Current portfolio</div>
+            <div class="donut-wrap">
+              <svg id="donut-svg" viewBox="0 0 110 110" style="width:110px;height:110px;flex-shrink:0"></svg>
+              <div class="donut-legend" id="donut-legend"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence Completeness -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-title">Evidence Completeness by Grant</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px" id="evidence-bars"></div>
+        </div>
+
+        <!-- Alert Lists -->
+        <div class="alerts-row">
+          <div class="alert-card red">
+            <div class="alert-card-header">
+              <div class="alert-card-title">🚨 Overdue Items</div>
+              <span class="alert-count red">5</span>
+            </div>
+            <div class="alert-item">
+              <button class="alert-grant-link" onclick="openGrant('G001')">Education Reform Initiative</button>
+              <div class="alert-task">Submit Q1 Narrative Report<span class="overdue-badge">+16d</span></div>
+              <div class="alert-owner">Dr. Asel Mamytova · Due: 2025-03-15</div>
+            </div>
+            <div class="alert-item">
+              <button class="alert-grant-link" onclick="openGrant('G002')">Rural Health Access Program</button>
+              <div class="alert-task">Upload financial reconciliation docs<span class="overdue-badge">+21d</span></div>
+              <div class="alert-owner">Finance Officer Aigerim · Due: 2025-03-10</div>
+            </div>
+            <div class="alert-item">
+              <button class="alert-grant-link" onclick="openGrant('G004')">Agricultural Resilience Project</button>
+              <div class="alert-task">Phase 2 kickoff meeting minutes<span class="overdue-badge">+11d</span></div>
+              <div class="alert-owner">Dr. Bakyt Toktosunov · Due: 2025-03-20</div>
+            </div>
+            <div class="alert-item">
+              <button class="alert-grant-link" onclick="openGrant('G006')">Water & Sanitation Access</button>
+              <div class="alert-task">Close-out financial statement<span class="overdue-badge">+6d</span></div>
+              <div class="alert-owner">Dr. Timur Nazarov · Due: 2025-03-25</div>
+            </div>
+            <div class="alert-item">
+              <button class="alert-grant-link" onclick="openGrant('G008')">Climate Adaptation Fund</button>
+              <div class="alert-task">Final impact assessment report<span class="overdue-badge">+30d</span></div>
+              <div class="alert-owner">Dr. Leila Jumanova · Due: 2025-03-01</div>
+            </div>
+          </div>
+
+          <div class="alert-card orange">
+            <div class="alert-card-header">
+              <div class="alert-card-title">📅 Reports Due Soon</div>
+              <span class="alert-count orange">5</span>
+            </div>
+            <div class="alert-item">
+              <div class="alert-task" style="font-weight:700;color:#111;margin-bottom:3px">Rural Health Access Program</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span class="badge badge-purple" style="font-size:10px">Financial</span>
+                <span style="font-size:10px;color:#64748b">Due: 2025-04-01</span>
+                <span class="badge badge-yellow" style="font-size:10px">In Review</span>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-task" style="font-weight:700;color:#111;margin-bottom:3px">Water & Sanitation Access</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span class="badge badge-blue" style="font-size:10px">Narrative</span>
+                <span style="font-size:10px;color:#64748b">Due: 2025-04-10</span>
+                <span class="badge badge-yellow" style="font-size:10px">Pending Submission</span>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-task" style="font-weight:700;color:#111;margin-bottom:3px">Education Reform Initiative</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span class="badge badge-blue" style="font-size:10px">Narrative</span>
+                <span style="font-size:10px;color:#64748b">Due: 2025-04-15</span>
+                <span class="badge badge-gray" style="font-size:10px">Draft</span>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-task" style="font-weight:700;color:#111;margin-bottom:3px">Agricultural Resilience</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span class="badge badge-purple" style="font-size:10px">Financial</span>
+                <span style="font-size:10px;color:#64748b">Due: 2025-04-20</span>
+                <span class="badge badge-gray" style="font-size:10px">Draft</span>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-task" style="font-weight:700;color:#111;margin-bottom:3px">Climate Adaptation Fund</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span class="badge badge-blue" style="font-size:10px">Narrative</span>
+                <span style="font-size:10px;color:#64748b">Due: 2025-04-05</span>
+                <span class="badge badge-yellow" style="font-size:10px">Pending Submission</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-card yellow">
+            <div class="alert-card-header">
+              <div class="alert-card-title">⚠️ High Risk Grants</div>
+              <span class="alert-count yellow">4</span>
+            </div>
+            <div class="alert-item">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+                <button class="alert-grant-link" onclick="openGrant('G001')">Education Reform Initiative</button>
+                <span class="badge badge-yellow" style="font-size:10px">At Risk</span>
+              </div>
+              <div class="alert-owner">3 overdue tasks · 2 missing evidence</div>
+            </div>
+            <div class="alert-item">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+                <button class="alert-grant-link" onclick="openGrant('G002')">Rural Health Access</button>
+                <span class="badge badge-red" style="font-size:10px">Overdue</span>
+              </div>
+              <div class="alert-owner">5 overdue tasks · 4 missing evidence</div>
+            </div>
+            <div class="alert-item">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+                <button class="alert-grant-link" onclick="openGrant('G004')">Agricultural Resilience</button>
+                <span class="badge badge-yellow" style="font-size:10px">At Risk</span>
+              </div>
+              <div class="alert-owner">2 overdue tasks · 3 missing evidence</div>
+            </div>
+            <div class="alert-item">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+                <button class="alert-grant-link" onclick="openGrant('G008')">Climate Adaptation Fund</button>
+                <span class="badge badge-red" style="font-size:10px">Overdue</span>
+              </div>
+              <div class="alert-owner">8 overdue tasks · 6 missing evidence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── GRANTS LIST ── -->
+      <div id="page-grants" class="page" style="padding:28px 32px">
+        <div class="page-header">
+          <div><div class="page-title">Grants</div><div class="page-sub">10 grants across all programmes</div></div>
+          <button class="btn-sm">📥 Export Table</button>
+        </div>
+        <div class="filter-bar">
+          <input class="filter-input" placeholder="🔍 Search grants, donor, PI…" oninput="filterGrants(this.value)"/>
+          <select class="filter-select"><option>All Statuses</option><option>Active</option><option>Reporting</option><option>Closing</option><option>Closed</option></select>
+          <select class="filter-select"><option>All Risk Levels</option><option>Normal</option><option>At Risk</option><option>Overdue</option></select>
+          <select class="filter-select"><option>All Donors</option><option>USAID</option><option>EU</option><option>World Bank</option><option>DFID</option><option>UNDP</option></select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Grant Name</th><th>Donor</th><th>PI</th><th>Next Report</th>
+              <th>Overdue</th><th>Evidence</th><th style="min-width:110px">Budget %</th>
+              <th>Status</th><th>Risk</th><th></th>
+            </tr></thead>
+            <tbody id="grants-tbody">
+              <!-- filled by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── GRANT WORKSPACE ── -->
+      <div id="page-grant" class="page" style="padding:24px 32px">
+        <div class="gw-header">
+          <button class="gw-back" onclick="showPage('grants',null)">← Back to Grants</button>
+          <div class="gw-title-row">
+            <div>
+              <div class="gw-title" id="gw-title">Education Reform Initiative <span class="badge badge-green">Active</span><span class="badge badge-yellow" style="margin-left:4px">At Risk</span></div>
+              <div class="gw-meta" id="gw-meta">
+                <span>🆔 G001</span><span>💼 USAID</span><span>👤 Dr. Asel Mamytova</span><span>🗓 2023-03-01 → 2025-02-28</span>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-sm">📥 Export Excel</button>
+              <button class="btn-sm">🗂 Audit Pack</button>
+              <button class="btn-sm btn-danger-sm" onclick="openModal('flag-modal')">🚩 Flag Concern</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone Timeline -->
+        <div class="milestone-track">
+          <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:14px">Project Timeline</div>
+          <div class="milestone-row">
+            <div class="ms-node"><div class="ms-circle done">✓</div><div class="ms-label">Contract Signed</div><div class="ms-date">2023-03-01</div></div>
+            <div class="ms-connector done"></div>
+            <div class="ms-node"><div class="ms-circle done">✓</div><div class="ms-label">Handover</div><div class="ms-date">2023-04-01</div></div>
+            <div class="ms-connector done"></div>
+            <div class="ms-node"><div class="ms-circle done">✓</div><div class="ms-label">SAP Budget Released</div><div class="ms-date">2023-05-01</div></div>
+            <div class="ms-connector pending"></div>
+            <div class="ms-node"><div class="ms-circle current">●</div><div class="ms-label">Mid-term Review</div><div class="ms-date">2024-06-30</div></div>
+            <div class="ms-connector pending"></div>
+            <div class="ms-node"><div class="ms-circle pending">○</div><div class="ms-label">Next Report Due</div><div class="ms-date">2025-04-15</div></div>
+            <div class="ms-connector pending"></div>
+            <div class="ms-node"><div class="ms-circle pending">○</div><div class="ms-label">Project End</div><div class="ms-date">2025-02-28</div></div>
+            <div class="ms-connector pending"></div>
+            <div class="ms-node"><div class="ms-circle pending">○</div><div class="ms-label">Close-out</div><div class="ms-date">2025-06-30</div></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="showTab('overview',this)">Overview</button>
+          <button class="tab-btn" onclick="showTab('tasks',this)">Tasks & Deadlines</button>
+          <button class="tab-btn" onclick="showTab('reports',this)">Reports</button>
+          <button class="tab-btn" onclick="showTab('financial',this)">Financial</button>
+          <button class="tab-btn" onclick="showTab('documents',this)">Documents</button>
+          <button class="tab-btn" onclick="showTab('evidence',this)">Evidence</button>
+          <button class="tab-btn" onclick="showTab('auditlog',this)">Audit Log</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-panel active">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
+            <div class="card"><span style="font-size:22px">💰</span><div style="font-size:24px;font-weight:900;color:#3b82f6;margin-top:6px">$1.2M</div><div style="font-size:12px;color:#64748b">Total Budget</div></div>
+            <div class="card"><span style="font-size:22px">📤</span><div style="font-size:24px;font-weight:900;color:#8b5cf6;margin-top:6px">$820K</div><div style="font-size:12px;color:#64748b">Spent</div></div>
+            <div class="card"><span style="font-size:22px">🏦</span><div style="font-size:24px;font-weight:900;color:#22c55e;margin-top:6px">$380K</div><div style="font-size:12px;color:#64748b">Remaining</div></div>
+            <div class="card"><span style="font-size:22px">📷</span><div style="font-size:24px;font-weight:900;color:#f97316;margin-top:6px">70%</div><div style="font-size:12px;color:#64748b">Evidence Complete</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="card">
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:14px">Next 3 Deadlines</div>
+              <div style="padding:9px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:flex-start">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Financial Report Q1</div><div style="font-size:11px;color:#94a3b8">Finance Officer Aigerim</div></div>
+                <div style="text-align:right"><div style="font-weight:700;color:#f97316;font-size:12px">2025-04-01</div><span class="badge badge-yellow" style="font-size:10px">In Review</span></div>
+              </div>
+              <div style="padding:9px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:flex-start">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Narrative Report Q1</div><div style="font-size:11px;color:#94a3b8">Dr. Asel Mamytova</div></div>
+                <div style="text-align:right"><div style="font-weight:700;color:#f97316;font-size:12px">2025-04-15</div><span class="badge badge-gray" style="font-size:10px">Draft</span></div>
+              </div>
+              <div style="padding:9px 0;display:flex;justify-content:space-between;align-items:flex-start">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Mid-term Review</div><div style="font-size:11px;color:#94a3b8">ORD Team</div></div>
+                <div style="text-align:right"><div style="font-weight:700;color:#374151;font-size:12px">2025-06-30</div><span class="badge badge-gray" style="font-size:10px">Pending</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:14px">Budget Utilisation</div>
+              <div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:6px"><span>Overall</span><span style="font-weight:700">68%</span></div>
+                <div class="prog-track" style="height:8px"><div class="prog-fill" style="width:68%;background:#3b82f6"></div></div>
+              </div>
+              <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px"><span>Personnel</span><span>72%</span></div><div class="prog-track" style="height:5px"><div class="prog-fill" style="width:72%;background:#8b5cf6"></div></div></div>
+              <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px"><span>Travel & DSA</span><span>81%</span></div><div class="prog-track" style="height:5px"><div class="prog-fill" style="width:81%;background:#8b5cf6"></div></div></div>
+              <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px"><span>Equipment</span><span>90%</span></div><div class="prog-track" style="height:5px"><div class="prog-fill" style="width:90%;background:#ef4444"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px"><span>Training</span><span>32%</span></div><div class="prog-track" style="height:5px"><div class="prog-fill" style="width:32%;background:#22c55e"></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TASKS TAB -->
+        <div id="tab-tasks" class="tab-panel">
+          <div class="info-banner">
+            <span>ℹ️</span><strong>Director Action:</strong>&nbsp;You can adjust task deadlines below. All changes are logged in the audit trail.
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Task</th><th>Owner</th><th>Due Date</th><th>Status</th><th>Evidence</th><th>Submitted To</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr class="row-danger">
+                  <td><div style="font-weight:700;color:#111">Submit Q1 Narrative Report</div></td>
+                  <td>Dr. Asel Mamytova</td>
+                  <td><span style="font-weight:700;color:#ef4444" id="task-date-1">2025-03-15</span></td>
+                  <td><span class="badge badge-red">Overdue</span></td>
+                  <td><span style="color:#ef4444;font-weight:700">✗ Missing</span></td>
+                  <td>ORD</td>
+                  <td><button class="btn-blue-sm" onclick="openDeadlineModal(1,'2025-03-15')">✏️ Adjust Deadline</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:700;color:#111">Beneficiary Data Entry</div></td>
+                  <td>M&amp;E Officer Bakyt</td>
+                  <td><span style="font-weight:700;color:#111" id="task-date-2">2025-03-20</span></td>
+                  <td><span class="badge badge-blue">In Progress</span></td>
+                  <td><span style="color:#22c55e;font-weight:700">✓ Uploaded</span></td>
+                  <td>PI</td>
+                  <td><button class="btn-blue-sm" onclick="openDeadlineModal(2,'2025-03-20')">✏️ Adjust Deadline</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:700;color:#111">Q1 Financial Report</div></td>
+                  <td>Finance Officer Aigerim</td>
+                  <td><span style="font-weight:700;color:#111" id="task-date-3">2025-04-01</span></td>
+                  <td><span class="badge badge-gray">Not Started</span></td>
+                  <td><span style="color:#ef4444;font-weight:700">✗ Missing</span></td>
+                  <td>Finance Dept</td>
+                  <td><button class="btn-blue-sm" onclick="openDeadlineModal(3,'2025-04-01')">✏️ Adjust Deadline</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:700;color:#111">Field Visit Documentation</div></td>
+                  <td>Field Officer Mira</td>
+                  <td><span style="font-weight:700;color:#111" id="task-date-4">2025-04-10</span></td>
+                  <td><span class="badge badge-green">Approved</span></td>
+                  <td><span style="color:#22c55e;font-weight:700">✓ Uploaded</span></td>
+                  <td>PI</td>
+                  <td><button class="btn-blue-sm" onclick="openDeadlineModal(4,'2025-04-10')">✏️ Adjust Deadline</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:700;color:#111">Phase 2 Kickoff Minutes</div><span class="badge badge-yellow" style="font-size:10px">At Risk</span></td>
+                  <td>Dr. Asel Mamytova</td>
+                  <td><span style="font-weight:700;color:#f59e0b" id="task-date-5">2025-04-15</span></td>
+                  <td><span class="badge badge-yellow">At Risk</span></td>
+                  <td><span style="color:#ef4444;font-weight:700">✗ Missing</span></td>
+                  <td>ORD</td>
+                  <td><button class="btn-blue-sm" onclick="openDeadlineModal(5,'2025-04-15')">✏️ Adjust Deadline</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REPORTS TAB -->
+        <div id="tab-reports" class="tab-panel">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="card">
+              <div style="font-weight:800;font-size:14px;color:#0f172a;margin-bottom:14px">Narrative Reports</div>
+              <div style="padding:11px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Narrative Report Q1</div><div style="font-size:11px;color:#94a3b8">Due: 2025-04-15 · Dr. Asel Mamytova</div></div>
+                <span class="badge badge-gray">Draft</span>
+              </div>
+              <div style="padding:11px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Narrative Report Q2</div><div style="font-size:11px;color:#94a3b8">Due: 2025-07-15 · Dr. Asel Mamytova</div></div>
+                <span class="badge badge-gray">Not Started</span>
+              </div>
+              <div style="padding:11px 0;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Mid-term Narrative</div><div style="font-size:11px;color:#94a3b8">Due: 2024-06-30 · Dr. Asel Mamytova</div></div>
+                <span class="badge badge-green">Submitted</span>
+              </div>
+            </div>
+            <div class="card">
+              <div style="font-weight:800;font-size:14px;color:#0f172a;margin-bottom:14px">Financial Reports</div>
+              <div style="padding:11px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Financial Report Q1</div><div style="font-size:11px;color:#94a3b8">Due: 2025-04-01 · Finance Officer Aigerim</div></div>
+                <span class="badge badge-yellow">In Review</span>
+              </div>
+              <div style="padding:11px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Financial Report Q2</div><div style="font-size:11px;color:#94a3b8">Due: 2025-07-01 · Finance Officer Aigerim</div></div>
+                <span class="badge badge-gray">Not Started</span>
+              </div>
+              <div style="padding:11px 0;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px;color:#111">Annual Financial Report</div><div style="font-size:11px;color:#94a3b8">Due: 2024-03-31 · Finance Officer Aigerim</div></div>
+                <span class="badge badge-green">Approved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINANCIAL TAB -->
+        <div id="tab-financial" class="tab-panel">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="card">
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:4px">Monthly Budget vs Actual</div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:12px">Monthly comparison</div>
+              <svg id="line-chart-gw" viewBox="0 0 300 115" style="width:100%;height:115px"></svg>
+              <div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:#3b82f6;opacity:.5"></div>Budget</div><div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Actual</div></div>
+            </div>
+            <div class="card">
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:4px">Spending by Budget Line</div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:12px">Allocated vs Spent</div>
+              <div class="chart-bars" id="budget-line-chart"></div>
+              <div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Allocated</div><div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Spent</div></div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div style="padding:13px 18px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-weight:800;font-size:13px;color:#0f172a">Budget Line Variance</span>
+              <button class="btn-sm">📥 Export</button>
+            </div>
+            <table>
+              <thead><tr><th>Budget Line</th><th>Allocated</th><th>Spent</th><th>Remaining</th><th style="min-width:110px">Variance %</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:700;color:#111">Personnel</td><td>$580K</td><td style="color:#3b82f6;font-weight:700">$420K</td><td style="color:#22c55e;font-weight:700">$160K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:72%;background:#3b82f6"></div></div><span class="prog-pct" style="color:#3b82f6">72%</span></div></td><td><span class="badge badge-green">On Track</span></td></tr>
+                <tr><td style="font-weight:700;color:#111">Travel & DSA</td><td>$180K</td><td style="color:#3b82f6;font-weight:700">$145K</td><td style="color:#22c55e;font-weight:700">$35K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:81%;background:#f59e0b"></div></div><span class="prog-pct" style="color:#f59e0b">81%</span></div></td><td><span class="badge badge-yellow">On Track</span></td></tr>
+                <tr><td style="font-weight:700;color:#111">Equipment</td><td>$220K</td><td style="color:#3b82f6;font-weight:700">$198K</td><td style="color:#ef4444;font-weight:700">$22K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:90%;background:#ef4444"></div></div><span class="prog-pct" style="color:#ef4444">90%</span></div></td><td><span class="badge badge-red">Over-spend Risk</span></td></tr>
+                <tr><td style="font-weight:700;color:#111">Training</td><td>$120K</td><td style="color:#3b82f6;font-weight:700">$38K</td><td style="color:#22c55e;font-weight:700">$82K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:32%;background:#22c55e"></div></div><span class="prog-pct" style="color:#22c55e">32%</span></div></td><td><span class="badge badge-green">Under-spend</span></td></tr>
+                <tr><td style="font-weight:700;color:#111">Subcontracts</td><td>$60K</td><td style="color:#3b82f6;font-weight:700">$14K</td><td style="color:#22c55e;font-weight:700">$46K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:23%;background:#22c55e"></div></div><span class="prog-pct" style="color:#22c55e">23%</span></div></td><td><span class="badge badge-green">Under-spend</span></td></tr>
+                <tr><td style="font-weight:700;color:#111">Indirect Costs</td><td>$40K</td><td style="color:#3b82f6;font-weight:700">$5K</td><td style="color:#22c55e;font-weight:700">$35K</td><td><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:13%;background:#22c55e"></div></div><span class="prog-pct" style="color:#22c55e">13%</span></div></td><td><span class="badge badge-green">Under-spend</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DOCUMENTS TAB -->
+        <div id="tab-documents" class="tab-panel">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">📊</span><span style="font-weight:800;font-size:13px;color:#0f172a">Reports</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">3</span></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Q1 Narrative v3.pdf</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Q1 Financial v2.xlsx</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Mid-term Draft v1.docx</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">📝</span><span style="font-weight:800;font-size:13px;color:#0f172a">Contracts</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">2</span></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Grant Agreement v2.pdf <span class="badge badge-green" style="font-size:9px">Latest</span></span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Amendment #1.pdf</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">💰</span><span style="font-weight:800;font-size:13px;color:#0f172a">Financial Records</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">2</span></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Bank Statement Jan.pdf</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Receipt Log Feb.xlsx</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">📷</span><span style="font-weight:800;font-size:13px;color:#0f172a">Field Evidence</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">2</span></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Field Visit Jan.zip</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Photos Feb.zip</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">🗒</span><span style="font-weight:800;font-size:13px;color:#0f172a">Meeting Minutes</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">2</span></div><div style="padding:7px 0;border-bottom:1px solid #f9fafb;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Kickoff Minutes.docx</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Steering Committee Mar.pdf</span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+            <div class="card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:13px"><span style="font-size:22px">✅</span><span style="font-weight:800;font-size:13px;color:#0f172a">Approved Outputs</span><span class="badge badge-gray" style="margin-left:auto;font-size:10px">1</span></div><div style="padding:7px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span>Q1 Report – APPROVED.pdf <span class="badge badge-green" style="font-size:9px">Approved</span></span><button style="background:none;border:none;color:#3b82f6;font-size:12px;cursor:pointer">↓</button></div></div>
+          </div>
+        </div>
+
+        <!-- EVIDENCE TAB -->
+        <div id="tab-evidence" class="tab-panel">
+          <div class="info-banner warning" style="margin-bottom:16px"><span>⚠️</span><strong>2 evidence items missing</strong> — Action required before report submission.</div>
+          <div class="evidence-grid">
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">📸</div><div class="ev-info"><div class="ev-name">Field Visit Jan – School 1</div><div class="ev-meta">Uploaded by: Field Officer Mira · 2025-01-12</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🏫</div><div class="ev-info"><div class="ev-name">Classroom Equipment Delivery</div><div class="ev-meta">Uploaded by: Field Officer Mira · 2025-01-18</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">👥</div><div class="ev-info"><div class="ev-name">Beneficiary Interview – Group 1</div><div class="ev-meta">Uploaded by: M&amp;E Officer Bakyt · 2025-02-05</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#fef9c3,#fde68a)">📊</div><div class="ev-info"><div class="ev-name">Data Collection Sheet – Feb</div><div class="ev-meta">Uploaded by: M&amp;E Officer Bakyt · 2025-02-20</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#ffedd5,#fed7aa)">🌾</div><div class="ev-info"><div class="ev-name">Training Workshop – Mar 1</div><div class="ev-meta">Uploaded by: Training Officer · 2025-03-01</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">📱</div><div class="ev-info"><div class="ev-name">Stakeholder Meeting Photos</div><div class="ev-meta">Uploaded by: Communications · 2025-03-10</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:#f1f5f9;border:2px dashed #cbd5e1">❓</div><div class="ev-info"><div class="ev-name">Phase 2 Kickoff Evidence</div><div class="ev-meta">Required for Task: Phase 2 Kickoff Minutes</div><div class="ev-missing">Missing</div></div></div>
+            <div class="ev-card"><div class="ev-thumb" style="background:#f1f5f9;border:2px dashed #cbd5e1">❓</div><div class="ev-info"><div class="ev-name">Q1 Report Supporting Photos</div><div class="ev-meta">Required for Task: Q1 Narrative Report</div><div class="ev-missing">Missing</div></div></div>
+          </div>
+        </div>
+
+        <!-- AUDIT LOG TAB -->
+        <div id="tab-auditlog" class="tab-panel">
+          <div class="table-wrap">
+            <div style="padding:13px 18px;border-bottom:1px solid #f3f4f6;font-weight:800;font-size:13px;color:#0f172a">Full Audit Trail</div>
+            <div id="audit-log-rows"></div>
+          </div>
+        </div>
+
+      </div><!-- /page-grant -->
+
+      <!-- ── DEADLINE SUMMARIES ── -->
+      <div id="page-deadlines" class="page" style="padding:28px 32px">
+        <div class="page-header">
+          <div>
+            <div class="page-title">📅 Deadline Completion Summaries</div>
+            <div class="page-sub">What was accomplished, by whom, and the tasks involved — for each deadline</div>
+          </div>
+        </div>
+        <div class="ds-grid">
+
+          <!-- Summary 1 -->
+          <div class="ds-card green" onclick="toggleDS(this)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <span class="badge badge-green">✓ Completed On Time</span>
+              <span style="font-size:11px;color:#94a3b8">▼ Expand</span>
+            </div>
+            <div style="font-weight:900;font-size:15px;color:#0f172a;margin-bottom:4px">Q1 2025 Narrative Report</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:14px">Education Reform Initiative · Deadline: 2025-03-31</div>
+            <div class="ds-stat-row">
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#3b82f6">4</div><div class="ds-stat-label">Tasks Done</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#8b5cf6">98h</div><div class="ds-stat-label">Total Hours</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#22c55e;font-size:12px">Mar 29</div><div class="ds-stat-label">Submitted</div></div>
+            </div>
+            <div class="ds-expand">
+              <div class="ds-summary-box">The Q1 report was submitted 2 days ahead of deadline. All 4 deliverables were completed. Field data covered 12 schools across 3 regions with 120 beneficiary interviews conducted. Financial reconciliation was completed with zero variance.</div>
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:10px">Tasks & Staff Contributions</div>
+              <div class="ds-task-row"><div class="ds-task-num">1</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Data collection from 12 schools</div><div style="font-size:11px;color:#64748b">👤 Field Officer Mira</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">40h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">2</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Beneficiary interviews (120 participants)</div><div style="font-size:11px;color:#64748b">👤 M&amp;E Officer Bakyt</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">32h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">3</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Report drafting & internal review</div><div style="font-size:11px;color:#64748b">👤 Dr. Asel Mamytova</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">18h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">4</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Financial reconciliation attachments</div><div style="font-size:11px;color:#64748b">👤 Finance Officer Aigerim</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">8h</div></div></div>
+            </div>
+          </div>
+
+          <!-- Summary 2 -->
+          <div class="ds-card yellow" onclick="toggleDS(this)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <span class="badge badge-yellow">⏱ Completed Late (+7 days)</span>
+              <span style="font-size:11px;color:#94a3b8">▼ Expand</span>
+            </div>
+            <div style="font-weight:900;font-size:15px;color:#0f172a;margin-bottom:4px">M12 Milestone Report</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:14px">Fintech Innovation Hub · Deadline: 2025-03-15</div>
+            <div class="ds-stat-row">
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#3b82f6">3</div><div class="ds-stat-label">Tasks Done</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#8b5cf6">100h</div><div class="ds-stat-label">Total Hours</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#eab308;font-size:12px">Mar 22</div><div class="ds-stat-label">Submitted</div></div>
+            </div>
+            <div class="ds-expand">
+              <div class="ds-summary-box">Milestone submitted 7 days late due to extended user testing phase. Prototype demonstrated to 50 SMEs with 84% positive feedback. The delay was approved by the donor but a corrective action plan has been filed.</div>
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:10px">Tasks & Staff Contributions</div>
+              <div class="ds-task-row"><div class="ds-task-num">1</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Tech prototype demonstration</div><div style="font-size:11px;color:#64748b">👤 Dev Team Lead Sanzhar</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">60h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">2</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">User testing with 50 SMEs</div><div style="font-size:11px;color:#64748b">👤 Research Analyst Dana</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">28h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">3</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Milestone documentation</div><div style="font-size:11px;color:#64748b">👤 Prof. Arman Bekovich</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">12h</div></div></div>
+            </div>
+          </div>
+
+          <!-- Summary 3 -->
+          <div class="ds-card green" onclick="toggleDS(this)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <span class="badge badge-green">✓ Completed On Time</span>
+              <span style="font-size:11px;color:#94a3b8">▼ Expand</span>
+            </div>
+            <div style="font-weight:900;font-size:15px;color:#0f172a;margin-bottom:4px">Q1 Activity Report</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:14px">Women Empowerment in SME · Deadline: 2025-03-31</div>
+            <div class="ds-stat-row">
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#3b82f6">4</div><div class="ds-stat-label">Tasks Done</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#8b5cf6">80h</div><div class="ds-stat-label">Total Hours</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#22c55e;font-size:12px">Mar 28</div><div class="ds-stat-label">Submitted</div></div>
+            </div>
+            <div class="ds-expand">
+              <div class="ds-summary-box">All Q1 activities completed on schedule. 8 business training workshops delivered to 160 women entrepreneurs. Database updated with 160 new beneficiary profiles. All photographic evidence uploaded and tagged.</div>
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:10px">Tasks & Staff Contributions</div>
+              <div class="ds-task-row"><div class="ds-task-num">1</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Business training sessions (8 workshops)</div><div style="font-size:11px;color:#64748b">👤 Training Officer Nargiza</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">48h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">2</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Participant registration & database update</div><div style="font-size:11px;color:#64748b">👤 Admin Officer Dilnoza</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">16h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">3</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Photo & video evidence upload</div><div style="font-size:11px;color:#64748b">👤 Communications Officer Maftuna</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">6h</div></div></div>
+              <div class="ds-task-row"><div class="ds-task-num">4</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Quarterly narrative compilation</div><div style="font-size:11px;color:#64748b">👤 Prof. Zarina Aliyeva</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#8b5cf6">10h</div></div></div>
+            </div>
+          </div>
+
+          <!-- Summary 4 placeholder -->
+          <div class="ds-card red" onclick="toggleDS(this)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <span class="badge badge-red">✗ Missed Deadline</span>
+              <span style="font-size:11px;color:#94a3b8">▼ Expand</span>
+            </div>
+            <div style="font-weight:900;font-size:15px;color:#0f172a;margin-bottom:4px">Final Impact Assessment</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:14px">Climate Adaptation Fund · Deadline: 2025-03-01</div>
+            <div class="ds-stat-row">
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#ef4444">1/5</div><div class="ds-stat-label">Tasks Done</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#8b5cf6">12h</div><div class="ds-stat-label">Logged Hours</div></div>
+              <div class="ds-stat"><div class="ds-stat-val" style="color:#ef4444;font-size:12px">Pending</div><div class="ds-stat-label">Status</div></div>
+            </div>
+            <div class="ds-expand">
+              <div class="ds-summary-box" style="background:#fef2f2;border:1px solid #fecaca;color:#c62828">Deadline missed by 30+ days. Only 1 of 5 required tasks completed. Field teams were unable to access survey areas due to security restrictions. Escalation Level 3 raised. Director intervention required.</div>
+              <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:10px">Tasks & Status</div>
+              <div class="ds-task-row"><div class="ds-task-num" style="background:#dcfce7;color:#15803d">1</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Desk review of secondary data</div><div style="font-size:11px;color:#64748b">👤 Research Analyst Dana</div></div><div style="text-align:right"><span class="badge badge-green" style="font-size:10px">Done</span></div></div>
+              <div class="ds-task-row"><div class="ds-task-num" style="background:#fef2f2;color:#ef4444">2</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Field household survey (300 HHs)</div><div style="font-size:11px;color:#64748b">👤 Field Officer Zarnigor</div></div><div style="text-align:right"><span class="badge badge-red" style="font-size:10px">Not Done</span></div></div>
+              <div class="ds-task-row"><div class="ds-task-num" style="background:#fef2f2;color:#ef4444">3</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Stakeholder focus groups (8 groups)</div><div style="font-size:11px;color:#64748b">👤 M&amp;E Officer Kamola</div></div><div style="text-align:right"><span class="badge badge-red" style="font-size:10px">Not Done</span></div></div>
+              <div class="ds-task-row"><div class="ds-task-num" style="background:#fef2f2;color:#ef4444">4</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#111">Data analysis & report writing</div><div style="font-size:11px;color:#64748b">👤 Dr. Leila Jumanova</div></div><div style="text-align:right"><span class="badge badge-red" style="font-size:10px">Not Done</span></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── REPORTS CALENDAR ── -->
+      <div id="page-reports-cal" class="page" style="padding:28px 32px">
+        <div class="page-header">
+          <div><div class="page-title">📊 Reports Calendar</div><div class="page-sub">All upcoming report deadlines across grants</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Grant</th><th>Report Type</th><th>Due Date</th><th>Responsible</th><th>Status</th><th>Days Until Due</th></tr></thead>
+            <tbody>
+              <tr class="row-danger"><td><span class="td-name">Rural Health Access Program</span></td><td><span class="badge badge-purple">Financial</span></td><td style="font-weight:700;color:#ef4444">2025-04-01</td><td style="color:#64748b">Finance Officer Aigerim</td><td><span class="badge badge-yellow">In Review</span></td><td style="font-weight:700;color:#ef4444">1 day</td></tr>
+              <tr><td><span class="td-name">Climate Adaptation Fund</span></td><td><span class="badge badge-blue">Narrative</span></td><td style="font-weight:700;color:#f97316">2025-04-05</td><td style="color:#64748b">Dr. Leila Jumanova</td><td><span class="badge badge-yellow">Pending Submission</span></td><td style="font-weight:700;color:#f97316">5 days</td></tr>
+              <tr><td><span class="td-name">Water & Sanitation Access</span></td><td><span class="badge badge-blue">Narrative</span></td><td style="font-weight:700;color:#f97316">2025-04-10</td><td style="color:#64748b">Dr. Timur Nazarov</td><td><span class="badge badge-yellow">Pending Submission</span></td><td style="font-weight:700;color:#f97316">10 days</td></tr>
+              <tr><td><span class="td-name">Education Reform Initiative</span></td><td><span class="badge badge-blue">Narrative</span></td><td style="font-weight:700;color:#374151">2025-04-15</td><td style="color:#64748b">Dr. Asel Mamytova</td><td><span class="badge badge-gray">Draft</span></td><td style="font-weight:700;color:#22c55e">15 days</td></tr>
+              <tr><td><span class="td-name">Agricultural Resilience Project</span></td><td><span class="badge badge-purple">Financial</span></td><td style="font-weight:700;color:#374151">2025-04-20</td><td style="color:#64748b">Finance Officer Bekzod</td><td><span class="badge badge-gray">Draft</span></td><td style="font-weight:700;color:#22c55e">20 days</td></tr>
+              <tr><td><span class="td-name">Community Health Workers</span></td><td><span class="badge badge-blue">Narrative</span></td><td style="font-weight:700;color:#374151">2025-04-25</td><td style="color:#64748b">Prof. Abdullah Karimi</td><td><span class="badge badge-gray">Not Started</span></td><td style="font-weight:700;color:#22c55e">25 days</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── ESCALATIONS ── -->
+      <div id="page-escalations" class="page" style="padding:28px 32px">
+        <div class="page-header">
+          <div><div class="page-title">🚨 Escalations & Notifications</div><div class="page-sub">Items requiring urgent Director attention</div></div>
+        </div>
+        <div class="esc-filter-bar">
+          <button class="esc-filter-btn active" onclick="escFilter('All',this)">All</button>
+          <button class="esc-filter-btn" onclick="escFilter('Task',this)">Task</button>
+          <button class="esc-filter-btn" onclick="escFilter('Report',this)">Report</button>
+          <button class="esc-filter-btn" onclick="escFilter('Evidence',this)">Evidence</button>
+          <button class="esc-filter-btn" onclick="escFilter('Finance',this)">Finance</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Grant</th><th>Item Type</th><th>Owner</th><th>Due Date</th><th>Status</th><th>Escalation Level</th><th></th></tr></thead>
+            <tbody id="esc-tbody">
+              <!-- filled by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── DOCUMENTS (stub) ── -->
+      <div id="page-documents" class="page" style="padding:28px 32px">
+        <div class="page-title" style="margin-bottom:8px">📁 Documents Repository</div>
+        <div class="page-sub" style="margin-bottom:28px">All documents across all grants</div>
+        <div style="background:#fff;border-radius:15px;padding:40px;text-align:center;border:1px solid #e2e8f0;color:#94a3b8;font-size:15px">Select a grant from the Grants page to view its document repository.</div>
+      </div>
+
+      <!-- ── SETTINGS (stub) ── -->
+      <div id="page-settings" class="page" style="padding:28px 32px">
+        <div class="page-title" style="margin-bottom:8px">⚙️ Settings</div>
+        <div style="background:#fff;border-radius:15px;padding:40px;text-align:center;border:1px solid #e2e8f0;color:#94a3b8;font-size:15px">Settings panel — coming soon.</div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main-area -->
+</div><!-- /app-wrapper -->
+</div><!-- /app-screen -->
+
+<!-- ══ MODALS ══ -->
+<!-- Deadline Adjust Modal -->
+<div class="modal-overlay" id="deadline-modal">
+  <div class="modal-box">
+    <div class="modal-title">✏️ Adjust Task Deadline</div>
+    <div class="modal-desc">As Director, you can extend or move this task deadline. All changes are recorded in the audit log with timestamp and reason.</div>
+    <label class="modal-label">New Deadline Date</label>
+    <input type="date" class="modal-input" id="new-deadline-input"/>
+    <label class="modal-label">Reason for Adjustment</label>
+    <textarea class="modal-textarea" id="deadline-reason" rows="3" placeholder="e.g. Extended due to field access delays in Osh region…"></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" onclick="saveDeadline()">✓ Save & Log Change</button>
+      <button class="btn-modal-cancel" onclick="closeModal('deadline-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flag Concern Modal -->
+<div class="modal-overlay" id="flag-modal">
+  <div class="modal-box">
+    <div class="modal-title">🚩 Add Flag / Concern</div>
+    <div class="modal-desc">This note will be attached to the grant record and sent to the ORD team for follow-up. It does not modify any grant data.</div>
+    <label class="modal-label">Your Concern</label>
+    <textarea class="modal-textarea" id="flag-text" rows="5" placeholder="Describe your concern or observation…" style="border-color:#fecaca"></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" style="background:linear-gradient(135deg,#dc2626,#ef4444)" onclick="submitFlag()">🚩 Submit Flag</button>
+      <button class="btn-modal-cancel" onclick="closeModal('flag-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ JAVASCRIPT ══ -->
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+var currentCountry = { id:'kg', flag:'🇰🇬', name:'Kyrgyzstan' };
+var currentTaskId = null;
+
+var COUNTRIES_DATA = {
+  kg: { flag:'🇰🇬', name:'Kyrgyzstan', grants:12, budget:'$4.3M', spent:'$2.9M (68%)', overdue:7, risk:5, ontime:'78%' },
+  tj: { flag:'🇹🇯', name:'Tajikistan',  grants:9,  budget:'$3.1M', spent:'$1.7M (56%)', overdue:3, risk:2, ontime:'88%' },
+  kz: { flag:'🇰🇿', name:'Kazakhstan', grants:15, budget:'$7.8M', spent:'$5.2M (67%)', overdue:11,risk:7, ontime:'64%' },
+  af: { flag:'🇦🇫', name:'Afghanistan', grants:6,  budget:'$2.0M', spent:'$0.9M (46%)', overdue:2, risk:1, ontime:'91%' },
+  all:{ flag:'🌍', name:'All Countries', grants:42, budget:'$17.2M',spent:'$10.7M (62%)', overdue:23,risk:15,ontime:'80%'},
+};
+
+var GRANTS_DATA = [
+  { id:'G001', name:'Education Reform Initiative',    donor:'USAID',     pi:'Dr. Asel Mamytova',       country:'kg', start:'2023-03-01', end:'2025-02-28', budget:'$1.2M', budgetPct:68, nextReport:'2025-04-15', overdue:3, missing:2, status:'Active',    risk:'At Risk' },
+  { id:'G002', name:'Rural Health Access Program',    donor:'EU',        pi:'Prof. Nurlan Dzhaksybekov',country:'kg',start:'2022-09-01', end:'2024-12-31', budget:'$870K', budgetPct:86, nextReport:'2025-04-01', overdue:5, missing:4, status:'Reporting', risk:'Overdue'  },
+  { id:'G003', name:'Digital Literacy for Youth',     donor:'World Bank',pi:'Dr. Kamila Rysbekova',    country:'kg', start:'2024-01-15', end:'2026-01-14', budget:'$540K', budgetPct:22, nextReport:'2025-05-30', overdue:0, missing:1, status:'Active',    risk:'Normal'  },
+  { id:'G004', name:'Agricultural Resilience Project',donor:'DFID',      pi:'Dr. Bakyt Toktosunov',   country:'kg', start:'2023-07-01', end:'2025-06-30', budget:'$1.6M', budgetPct:60, nextReport:'2025-04-20', overdue:2, missing:3, status:'Active',    risk:'At Risk' },
+  { id:'G005', name:'Women Empowerment in SME',       donor:'UNDP',      pi:'Prof. Zarina Aliyeva',   country:'tj', start:'2023-01-01', end:'2025-12-31', budget:'$760K', budgetPct:54, nextReport:'2025-06-01', overdue:0, missing:0, status:'Active',    risk:'Normal'  },
+  { id:'G006', name:'Water & Sanitation Access',      donor:'USAID',     pi:'Dr. Timur Nazarov',      country:'tj', start:'2022-06-01', end:'2024-05-31', budget:'$1.1M', budgetPct:95, nextReport:'2025-04-10', overdue:3, missing:5, status:'Closing',   risk:'At Risk' },
+  { id:'G007', name:'Fintech Innovation Hub',         donor:'ADB',       pi:'Prof. Arman Bekovich',   country:'kz', start:'2023-09-01', end:'2026-08-31', budget:'$2.2M', budgetPct:40, nextReport:'2025-05-15', overdue:1, missing:0, status:'Active',    risk:'Normal'  },
+  { id:'G008', name:'Climate Adaptation Fund',        donor:'GEF',       pi:'Dr. Leila Jumanova',     country:'kz', start:'2022-03-01', end:'2025-02-28', budget:'$3.1M', budgetPct:93, nextReport:'2025-04-05', overdue:8, missing:6, status:'Reporting', risk:'Overdue' },
+  { id:'G009', name:'Refugee Education Support',      donor:'UNHCR',     pi:'Dr. Fatima Rahimi',      country:'af', start:'2024-01-01', end:'2025-12-31', budget:'$650K', budgetPct:43, nextReport:'2025-06-30', overdue:0, missing:1, status:'Active',    risk:'Normal'  },
+  { id:'G010', name:'Community Health Workers',       donor:'WHO',       pi:'Prof. Abdullah Karimi',  country:'af', start:'2023-06-01', end:'2025-05-31', budget:'$1.3M', budgetPct:47, nextReport:'2025-04-25', overdue:2, missing:2, status:'Active',    risk:'At Risk' },
+];
+
+var ESCALATIONS_DATA = [
+  { grant:'G002', name:'Rural Health Access Program',   type:'Report',   owner:'Finance Officer Aigerim', due:'2025-04-01', status:'Critical', level:3 },
+  { grant:'G008', name:'Climate Adaptation Fund',       type:'Task',     owner:'Dr. Leila Jumanova',      due:'2025-04-05', status:'Critical', level:3 },
+  { grant:'G001', name:'Education Reform Initiative',   type:'Evidence', owner:'Dr. Asel Mamytova',       due:'2025-04-15', status:'Warning',  level:2 },
+  { grant:'G004', name:'Agricultural Resilience Project',type:'Finance', owner:'Finance Officer Bekzod',  due:'2025-04-20', status:'Warning',  level:2 },
+  { grant:'G006', name:'Water & Sanitation Access',     type:'Report',   owner:'Dr. Timur Nazarov',       due:'2025-04-10', status:'Critical', level:3 },
+];
+
+var AUDIT_DATA = [
+  { date:'2025-03-29 14:23', actor:'Dr. Asel Mamytova',             action:'Submitted Q1 Narrative Report',      item:'Report #QN-2025-01' },
+  { date:'2025-03-27 09:45', actor:'Finance Officer Aigerim',        action:'Uploaded financial reconciliation',  item:'Doc: FR-Q1-2025.pdf' },
+  { date:'2025-03-20 16:12', actor:'Director Akylbek Dzhaksybekov', action:'Adjusted deadline',                  item:'Task extended → Apr 5' },
+  { date:'2025-03-15 11:30', actor:'ORD Officer Nurbek',             action:'Approved internal review',           item:'Report #QN-2025-01 Draft' },
+  { date:'2025-03-10 08:00', actor:'System',                         action:'Auto-escalation triggered',          item:'Task overdue 5 days' },
+  { date:'2025-03-01 10:15', actor:'Dr. Asel Mamytova',             action:'Uploaded field data report',         item:'Doc: FieldData-Q1.xlsx' },
+];
+
+var EVIDENCE_DATA = [
+  { name:'Education Reform', pct:70 },
+  { name:'Rural Health Access', pct:40 },
+  { name:'Digital Literacy', pct:85 },
+  { name:'Agricultural Resilience', pct:55 },
+  { name:'Women Empowerment', pct:100 },
+  { name:'Water & Sanitation', pct:25 },
+];
+
+// ── SCREEN NAVIGATION ──────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function doLogin() {
+  var btn = event.target;
+  btn.textContent = 'Signing in…';
+  btn.style.opacity = '.7';
+  setTimeout(function(){ showScreen('country-screen'); btn.textContent='Sign In'; btn.style.opacity='1'; }, 1100);
+}
+
+function enterCountry(id) {
+  var c = COUNTRIES_DATA[id] || COUNTRIES_DATA['kg'];
+  currentCountry = { id:id, flag:c.flag, name:c.name };
+  updateCountryUI();
+  showScreen('app-screen');
+  showPage('dashboard', null);
+  buildAllCharts();
+  buildGrantsTable();
+  buildEscalations();
+  buildAuditLog();
+  buildEvidenceBars();
+}
+
+function goCountrySelect() { showScreen('country-screen'); }
+function doLogout() { showScreen('login-screen'); }
+
+// ── UPDATE COUNTRY INFO IN UI ──────────────────────────────────
+function updateCountryUI() {
+  var c = COUNTRIES_DATA[currentCountry.id];
+  document.getElementById('sidebar-country-val').textContent = currentCountry.flag + ' ' + currentCountry.name;
+  document.getElementById('topbar-country-flag').textContent = currentCountry.flag;
+  document.getElementById('topbar-country-name').textContent = currentCountry.name;
+  document.getElementById('dash-title').textContent = currentCountry.flag + ' ' + currentCountry.name + ' — Dashboard';
+  if (c) {
+    document.getElementById('kpi-grants').textContent  = c.grants;
+    document.getElementById('kpi-budget').textContent  = c.budget;
+    document.getElementById('kpi-budget-sub').textContent = c.spent + ' spent';
+    document.getElementById('kpi-overdue').textContent = c.overdue;
+    document.getElementById('kpi-risk').textContent    = c.risk;
+    document.getElementById('kpi-ontime').textContent  = c.ontime;
+  }
+  closeAllDropdowns();
+}
+
+function switchCountry(id, flag, name) {
+  currentCountry = { id:id, flag:flag, name:name };
+  updateCountryUI();
+  buildGrantsTable();
+  buildEscalations();
+  buildAllCharts();
+  buildEvidenceBars();
+}
+
+// ── PAGE NAVIGATION ────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) { btn.classList.add('active'); }
+  else {
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'"+id+"'") >= 0) b.classList.add('active');
+    });
+  }
+  closeAllDropdowns();
+}
+
+function openGrant(id) {
+  showPage('grant', null);
+  // update grant header based on id
+  var g = GRANTS_DATA.find(function(x){ return x.id === id; });
+  if (g) {
+    document.getElementById('gw-title').innerHTML = g.name + ' <span class="badge badge-green">' + g.status + '</span><span class="badge badge-yellow" style="margin-left:4px">' + g.risk + '</span>';
+    document.getElementById('gw-meta').innerHTML = '<span>🆔 '+g.id+'</span><span>💼 '+g.donor+'</span><span>👤 '+g.pi+'</span><span>🗓 '+g.start+' → '+g.end+'</span>';
+  }
+  showTab('overview', null);
+  buildFinancialCharts();
+}
+
+// ── TAB NAVIGATION ─────────────────────────────────────────────
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tp = document.getElementById('tab-' + id);
+  if (tp) tp.classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  else {
+    document.querySelectorAll('.tab-btn').forEach(function(b){
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'"+id+"'") >= 0) b.classList.add('active');
+    });
+  }
+  if (id === 'financial') buildFinancialCharts();
+}
+
+// ── DROPDOWNS ─────────────────────────────────────────────────
+function toggleDropdown(id) {
+  var el = document.getElementById(id);
+  var isOpen = el.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) el.classList.add('open');
+}
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-menu,.notif-panel,.profile-menu').forEach(function(d){ d.classList.remove('open'); });
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.country-switcher') && !e.target.closest('.icon-btn') && !e.target.closest('.profile-btn')) closeAllDropdowns();
+});
+
+// ── MODALS ──────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openDeadlineModal(taskId, currentDate) {
+  currentTaskId = taskId;
+  document.getElementById('new-deadline-input').value = currentDate;
+  document.getElementById('deadline-reason').value = '';
+  openModal('deadline-modal');
+}
+function saveDeadline() {
+  var newDate = document.getElementById('new-deadline-input').value;
+  if (newDate && currentTaskId) {
+    var el = document.getElementById('task-date-' + currentTaskId);
+    if (el) { el.textContent = newDate; el.style.color = '#22c55e'; }
+    // Add to audit log
+    AUDIT_DATA.unshift({ date: new Date().toISOString().slice(0,16).replace('T',' '), actor:'Director Akylbek Dzhaksybekov', action:'Adjusted deadline to ' + newDate, item:'Task #T00' + currentTaskId });
+    buildAuditLog();
+    closeModal('deadline-modal');
+    alert('✓ Deadline updated and logged in the audit trail.');
+  }
+}
+function submitFlag() {
+  var txt = document.getElementById('flag-text').value;
+  if (txt.trim()) {
+    AUDIT_DATA.unshift({ date: new Date().toISOString().slice(0,16).replace('T',' '), actor:'Director Akylbek Dzhaksybekov', action:'🚩 Flag raised: ' + txt.substring(0,60) + '…', item:'Grant concern' });
+    buildAuditLog();
+    closeModal('flag-modal');
+    document.getElementById('flag-text').value = '';
+    alert('🚩 Flag submitted and logged.');
+  }
+}
+
+// ── GRANTS TABLE ───────────────────────────────────────────────
+function buildGrantsTable(filter) {
+  var tbody = document.getElementById('grants-tbody');
+  if (!tbody) return;
+  var rows = GRANTS_DATA.filter(function(g){ return currentCountry.id === 'all' || g.country === currentCountry.id; });
+  if (filter) rows = rows.filter(function(g){ return g.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0 || g.donor.toLowerCase().indexOf(filter.toLowerCase()) >= 0 || g.pi.toLowerCase().indexOf(filter.toLowerCase()) >= 0; });
+  var riskCls = { Normal:'badge-green', 'At Risk':'badge-yellow', Overdue:'badge-red' };
+  var statCls = { Active:'badge-green', Reporting:'badge-blue', Closing:'badge-orange', Closing:'badge-orange', Closed:'badge-purple', Awarded:'badge-green' };
+  var progColor = function(p){ return p > 85 ? '#ef4444' : p > 60 ? '#3b82f6' : '#22c55e'; };
+  tbody.innerHTML = rows.map(function(g, i){
+    var rowCls = g.risk === 'Overdue' ? 'row-danger' : (i%2===1 ? 'row-alt' : '');
+    var overdueHtml = g.overdue > 0 ? '<span class="num-badge-red">'+g.overdue+'</span>' : '<span style="color:#22c55e;font-weight:700">—</span>';
+    var missingHtml = g.missing > 0 ? '<span class="num-badge-orange">'+g.missing+'</span>' : '<span style="color:#22c55e;font-weight:700">✓</span>';
+    return '<tr class="'+rowCls+'"><td><button class="td-link" onclick="openGrant(\''+g.id+'\')">'+g.name+'</button><span class="td-sub">'+g.id+' · '+g.start+' – '+g.end+'</span></td><td>'+g.donor+'</td><td style="white-space:nowrap">'+g.pi+'</td><td style="white-space:nowrap">'+g.nextReport+'</td><td>'+overdueHtml+'</td><td>'+missingHtml+'</td><td style="min-width:110px"><div class="prog-wrap"><div class="prog-mini"><div class="prog-mini-fill" style="width:'+g.budgetPct+'%;background:'+progColor(g.budgetPct)+'"></div></div><span class="prog-pct" style="color:'+progColor(g.budgetPct)+'">'+g.budgetPct+'%</span></div></td><td><span class="badge '+statCls[g.status]+'">'+g.status+'</span></td><td><span class="badge '+riskCls[g.risk]+'">'+g.risk+'</span></td><td><button class="btn-blue-sm" onclick="openGrant(\''+g.id+'\')">Open →</button></td></tr>';
+  }).join('');
+}
+function filterGrants(val) { buildGrantsTable(val); }
+
+// ── ESCALATIONS TABLE ──────────────────────────────────────────
+function buildEscalations(filter) {
+  var tbody = document.getElementById('esc-tbody');
+  if (!tbody) return;
+  var rows = ESCALATIONS_DATA;
+  if (filter && filter !== 'All') rows = rows.filter(function(e){ return e.type === filter; });
+  tbody.innerHTML = rows.map(function(e){
+    var rowCls = e.status === 'Critical' ? 'row-danger' : '';
+    var statBadge = e.status === 'Critical' ? '<span class="badge badge-red">🚨 Critical</span>' : '<span class="badge badge-yellow">⚠️ Warning</span>';
+    var dots = '';
+    for (var i=0;i<3;i++) { var col = i < e.level ? (e.level===3?'#ef4444':'#f59e0b') : '#e5e7eb'; dots += '<div class="esc-level-dot" style="background:'+col+'"></div>'; }
+    return '<tr class="'+rowCls+'"><td><span class="td-name">'+e.name+'</span><span class="td-sub">'+e.grant+'</span></td><td><span class="badge badge-gray">'+e.type+'</span></td><td>'+e.owner+'</td><td style="font-weight:700;color:#f97316">'+e.due+'</td><td>'+statBadge+'</td><td><div class="esc-level-dots">'+dots+'</div></td><td><button class="btn-blue-sm">View Details</button></td></tr>';
+  }).join('');
+}
+function escFilter(f, btn) {
+  document.querySelectorAll('.esc-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  buildEscalations(f);
+}
+
+// ── AUDIT LOG ──────────────────────────────────────────────────
+function buildAuditLog() {
+  var wrap = document.getElementById('audit-log-rows');
+  if (!wrap) return;
+  wrap.innerHTML = AUDIT_DATA.map(function(a){
+    return '<div class="audit-row"><div class="audit-dot"></div><div class="audit-time">'+a.date+'</div><div class="audit-text"><strong>'+a.actor+'</strong> — '+a.action+'</div><div class="audit-item-badge">'+a.item+'</div></div>';
+  }).join('');
+}
+
+// ── EVIDENCE BARS ──────────────────────────────────────────────
+function buildEvidenceBars() {
+  var wrap = document.getElementById('evidence-bars');
+  if (!wrap) return;
+  wrap.innerHTML = EVIDENCE_DATA.map(function(e){
+    var c = e.pct >= 80 ? '#22c55e' : e.pct >= 50 ? '#eab308' : '#ef4444';
+    return '<div style="padding:12px 14px;background:#f8fafc;border-radius:10px;border:1px solid #f1f5f9"><div style="font-size:12px;font-weight:700;color:#0f172a;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+e.name+'</div><div style="display:flex;align-items:center;gap:7px;margin-top:8px"><div style="flex:1;background:#e5e7eb;border-radius:99px;height:6px;overflow:hidden"><div style="width:'+e.pct+'%;background:'+c+';height:100%;border-radius:99px"></div></div><span style="font-size:11px;font-weight:800;color:'+c+'">'+e.pct+'%</span></div></div>';
+  }).join('');
+}
+
+// ── CHARTS ─────────────────────────────────────────────────────
+var MONTHS   = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+var COMPLETED = [42, 38, 45, 40, 35, 30];
+var OVERDUE_M = [8,  11, 6,  9,  14, 12];
+var BUDGET_M  = [95, 95, 95, 105,105,105];
+var ACTUAL_M  = [88,102, 79, 95, 118, 97];
+
+function buildTaskBars() {
+  var wrap = document.getElementById('tasks-bar-chart');
+  if (!wrap) return;
+  var maxVal = Math.max.apply(null, COMPLETED.concat(OVERDUE_M));
+  wrap.innerHTML = MONTHS.map(function(m, i){
+    var ch = Math.max(4, Math.round((COMPLETED[i]/maxVal)*100));
+    var oh = Math.max(4, Math.round((OVERDUE_M[i]/maxVal)*100));
+    return '<div class="chart-bar-group"><div class="chart-bars-inner"><div class="chart-bar" style="height:'+ch+'px;background:#22c55e" title="Completed: '+COMPLETED[i]+'"></div><div class="chart-bar" style="height:'+oh+'px;background:#ef4444" title="Overdue: '+OVERDUE_M[i]+'"></div></div><div class="chart-month">'+m+'</div></div>';
+  }).join('');
+}
+
+function buildLineChart(svgId) {
+  var svg = document.getElementById(svgId);
+  if (!svg) return;
+  var maxV = Math.max.apply(null, BUDGET_M.concat(ACTUAL_M));
+  var pts = function(arr){
+    return arr.map(function(v,i){
+      var x = 20 + i*(260/(arr.length-1));
+      var y = 90 - (v/maxV)*72;
+      return x+','+y;
+    }).join(' ');
+  };
+  var circles = ACTUAL_M.map(function(v,i){
+    var x = 20 + i*(260/(ACTUAL_M.length-1));
+    var y = 90 - (v/maxV)*72;
+    return '<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="#22c55e"/>';
+  }).join('');
+  var labels = MONTHS.map(function(m,i){
+    var x = 20 + i*(260/(MONTHS.length-1));
+    return '<text x="'+x+'" y="107" text-anchor="middle" font-size="7.5" fill="#94a3b8">'+m+'</text>';
+  }).join('');
+  svg.innerHTML = '<polyline points="'+pts(BUDGET_M)+'" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="5,3"/>'+
+    '<polyline points="'+pts(ACTUAL_M)+'" fill="none" stroke="#22c55e" stroke-width="2.5"/>'+circles+labels;
+}
+
+function buildDonutChart() {
+  var svg = document.getElementById('donut-svg');
+  var legend = document.getElementById('donut-legend');
+  if (!svg || !legend) return;
+  var segs = [
+    { label:'Active',    value:7, color:'#3b82f6' },
+    { label:'Reporting', value:2, color:'#8b5cf6' },
+    { label:'Closing',   value:2, color:'#f97316' },
+    { label:'Awarded',   value:1, color:'#22c55e' },
+  ];
+  var total = segs.reduce(function(a,b){ return a+b.value; }, 0);
+  var r=38, cx=55, cy=55, circ=2*Math.PI*r, offset=0;
+  var paths = segs.map(function(s){
+    var frac = s.value/total;
+    var dash = frac*circ;
+    var rot  = -90 + offset*360;
+    offset += frac;
+    return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="14" stroke-dasharray="'+dash+' '+(circ-dash)+'" transform="rotate('+rot+' '+cx+' '+cy+')" />';
+  }).join('');
+  svg.innerHTML = paths + '<circle cx="'+cx+'" cy="'+cy+'" r="27" fill="white"/><text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#111">'+total+'</text><text x="'+cx+'" y="'+(cy+17)+'" text-anchor="middle" font-size="7.5" fill="#94a3b8">Grants</text>';
+  legend.innerHTML = segs.map(function(s){
+    return '<div class="donut-legend-item"><div style="display:flex;align-items:center;gap:7px"><div class="donut-dot" style="background:'+s.color+'"></div>'+s.label+'</div><strong>'+s.value+'</strong></div>';
+  }).join('');
+}
+
+function buildBudgetLineBars() {
+  var wrap = document.getElementById('budget-line-chart');
+  if (!wrap) return;
+  var lines = [
+    { label:'Person', alloc:580, spent:420 },
+    { label:'Travel',  alloc:180, spent:145 },
+    { label:'Equip',  alloc:220, spent:198 },
+    { label:'Train',  alloc:120, spent:38  },
+    { label:'Subcon', alloc:60,  spent:14  },
+    { label:'Indir',  alloc:40,  spent:5   },
+  ];
+  var maxV = Math.max.apply(null, lines.map(function(l){ return l.alloc; }));
+  wrap.innerHTML = lines.map(function(l){
+    var ah = Math.max(4, Math.round((l.alloc/maxV)*100));
+    var sh = Math.max(4, Math.round((l.spent/maxV)*100));
+    return '<div class="chart-bar-group"><div class="chart-bars-inner"><div class="chart-bar" style="height:'+ah+'px;background:#bfdbfe" title="Allocated: $'+l.alloc+'K"></div><div class="chart-bar" style="height:'+sh+'px;background:#3b82f6" title="Spent: $'+l.spent+'K"></div></div><div class="chart-month">'+l.label+'</div></div>';
+  }).join('');
+}
+
+function buildAllCharts() {
+  buildTaskBars();
+  buildLineChart('line-chart');
+  buildDonutChart();
+}
+function buildFinancialCharts() {
+  buildLineChart('line-chart-gw');
+  buildBudgetLineBars();
+}
+
+// ── DEADLINE SUMMARY TOGGLE ────────────────────────────────────
+function toggleDS(card) {
+  var isExpanded = card.classList.contains('expanded');
+  card.classList.toggle('expanded', !isExpanded);
+  var arrow = card.querySelector('span:last-of-type');
+  if (arrow && arrow.parentElement === card.children[0]) {
+    arrow.textContent = isExpanded ? '▼ Expand' : '▲ Collapse';
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  buildGrantsTable();
+  buildEscalations();
+  buildAuditLog();
+  buildEvidenceBars();
+  buildAllCharts();
+});
+// Enter key on login
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Enter') {
+    var ls = document.getElementById('login-screen');
+    if (ls.classList.contains('active')) doLogin();
+  }
+});
+</script>
+</body>
+</html>
